@@ -25,6 +25,7 @@ const ChatInterface: React.FC = () => {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [modelLoaded, setModelLoaded] = useState(false);
+  const [loadingModel, setLoadingModel] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -32,6 +33,7 @@ const ChatInterface: React.FC = () => {
   useEffect(() => {
     const loadModel = async () => {
       try {
+        setLoadingModel(true);
         await initModel();
         setModelLoaded(true);
         toast({
@@ -45,6 +47,8 @@ const ChatInterface: React.FC = () => {
           description: "AI model couldn't be loaded, using fallback mode",
           variant: "destructive",
         });
+      } finally {
+        setLoadingModel(false);
       }
     };
     
@@ -81,7 +85,9 @@ const ChatInterface: React.FC = () => {
       // Get AI response with fallback to predefined responses
       const aiResponseText = await getAIResponse(userMessage.text, getResponse);
       
-      // Create AI message after a short delay to simulate thinking
+      // Add a small variable delay to simulate more natural conversation timing
+      const responseTime = Math.max(800, Math.min(2000, aiResponseText.length * 20));
+      
       setTimeout(() => {
         const aiResponse: Message = {
           text: aiResponseText,
@@ -91,7 +97,7 @@ const ChatInterface: React.FC = () => {
         
         setMessages((prev) => [...prev, aiResponse]);
         setIsTyping(false);
-      }, 1000); // Slightly shorter delay for better UX
+      }, responseTime);
     } catch (error) {
       console.error("Error getting AI response:", error);
       
@@ -126,9 +132,15 @@ const ChatInterface: React.FC = () => {
   return (
     <div className="chat-container">
       <div className="message-container">
-        {!modelLoaded && (
+        {loadingModel && (
           <div className="bg-amber-100 dark:bg-amber-900 rounded-lg p-2 mb-2 text-sm text-center">
-            Loading mental health AI model...
+            Loading advanced mental health AI model...
+          </div>
+        )}
+        
+        {!modelLoaded && !loadingModel && (
+          <div className="bg-orange-100 dark:bg-orange-900 rounded-lg p-2 mb-2 text-sm text-center">
+            Using basic response mode. Some features may be limited.
           </div>
         )}
         
@@ -164,8 +176,9 @@ const ChatInterface: React.FC = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Type your message here..."
+            placeholder={isTyping ? "Chetna is typing..." : "Type your message here..."}
             className="rounded-full bg-chetna-bubble border-none focus-visible:ring-chetna-primary"
+            disabled={isTyping}
           />
           <Button 
             type="submit" 
