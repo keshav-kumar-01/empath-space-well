@@ -1,12 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
 
-const Index = () => {
+import React, { useState } from "react";
+import Header from "@/components/Header";
+import IntroSection from "@/components/IntroSection";
+import ChatInterface from "@/components/ChatInterface";
+
+const Index: React.FC = () => {
+  const [showIntro, setShowIntro] = useState(true);
+
+  const startChat = () => {
+    setShowIntro(false);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-chetna-light to-white dark:from-chetna-dark dark:to-chetna-dark/80">
+      <Header />
+      
+      <main className="flex-grow container mx-auto px-4 py-6 flex items-center justify-center">
+        <div className="w-full max-w-4xl">
+          {showIntro ? (
+            <IntroSection onStartChat={startChat} />
+          ) : (
+            <ChatInterface />
+          )}
+        </div>
+      </main>
+      
+      <footer className="py-4 text-center text-xs text-muted-foreground">
+        <p>© {new Date().getFullYear()} Chetna_Ai - Your Mental Wellness Companion</p>
+      </footer>
     </div>
   );
 };
