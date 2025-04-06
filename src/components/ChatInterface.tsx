@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MessageBubble from "./MessageBubble";
 import { getResponse } from "@/utils/chatResponses";
+import { initModel, getAIResponse } from "@/services/aiService";
+import { toast } from "@/hooks/use-toast";
 
 interface Message {
   text: string;
@@ -22,8 +24,32 @@ const ChatInterface: React.FC = () => {
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [modelLoaded, setModelLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Initialize the AI model
+  useEffect(() => {
+    const loadModel = async () => {
+      try {
+        await initModel();
+        setModelLoaded(true);
+        toast({
+          title: "AI model loaded",
+          description: "Advanced mental health AI assistant is now active",
+        });
+      } catch (error) {
+        console.error("Failed to load AI model:", error);
+        toast({
+          title: "Using basic responses",
+          description: "AI model couldn't be loaded, using fallback mode",
+          variant: "destructive",
+        });
+      }
+    };
+    
+    loadModel();
+  }, []);
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
@@ -35,7 +61,7 @@ const ChatInterface: React.FC = () => {
     inputRef.current?.focus();
   }, []);
 
-  const handleSendMessage = (e?: React.FormEvent) => {
+  const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
     
     if (!input.trim()) return;
@@ -51,17 +77,43 @@ const ChatInterface: React.FC = () => {
     setInput("");
     setIsTyping(true);
     
-    // Simulate AI thinking and typing
-    setTimeout(() => {
-      const aiResponse: Message = {
-        text: getResponse(userMessage.text),
-        isUser: false,
-        timestamp: new Date()
-      };
+    try {
+      // Get AI response with fallback to predefined responses
+      const aiResponseText = await getAIResponse(userMessage.text, getResponse);
       
-      setMessages((prev) => [...prev, aiResponse]);
-      setIsTyping(false);
-    }, 1500); // Delay to simulate thinking time
+      // Create AI message after a short delay to simulate thinking
+      setTimeout(() => {
+        const aiResponse: Message = {
+          text: aiResponseText,
+          isUser: false,
+          timestamp: new Date()
+        };
+        
+        setMessages((prev) => [...prev, aiResponse]);
+        setIsTyping(false);
+      }, 1000); // Slightly shorter delay for better UX
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+      
+      // Use fallback response in case of error
+      setTimeout(() => {
+        const aiResponse: Message = {
+          text: getResponse(userMessage.text),
+          isUser: false,
+          timestamp: new Date()
+        };
+        
+        setMessages((prev) => [...prev, aiResponse]);
+        setIsTyping(false);
+        
+        // Notify user about the error
+        toast({
+          title: "Using fallback response",
+          description: "There was an issue with the AI model",
+          variant: "destructive",
+        });
+      }, 1000);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -74,6 +126,12 @@ const ChatInterface: React.FC = () => {
   return (
     <div className="chat-container">
       <div className="message-container">
+        {!modelLoaded && (
+          <div className="bg-amber-100 dark:bg-amber-900 rounded-lg p-2 mb-2 text-sm text-center">
+            Loading mental health AI model...
+          </div>
+        )}
+        
         {messages.map((message, index) => (
           <MessageBubble
             key={index}
