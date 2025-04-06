@@ -3,6 +3,7 @@ import React from "react";
 import { Heart, Menu, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
   const { toast } = useToast();
@@ -19,10 +20,10 @@ const Header: React.FC = () => {
 
   return (
     <header className="py-4 px-6 flex items-center justify-between">
-      <div className="flex items-center gap-2">
+      <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
         <Heart className="w-6 h-6 text-chetna-primary" fill="#7C65E1" />
         <h1 className="text-xl font-bold">Chetna_Ai</h1>
-      </div>
+      </Link>
       
       <div className="flex items-center gap-2">
         <Button 
