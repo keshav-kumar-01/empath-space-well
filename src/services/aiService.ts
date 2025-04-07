@@ -1,6 +1,7 @@
 
 // Using Mistral AI for improved mental health responses
 let modelInitialized = false;
+const MISTRAL_API_KEY = 'O9aVzeRjA44ADjwsAUwa48kHM5gOQON5';
 
 // Initialize the model - no actual loading needed with API approach
 export const initModel = async (): Promise<void> => {
@@ -53,15 +54,8 @@ export const getAIResponse = async (
     // Create the prompt for mental health
     const prompt = createMentalHealthPrompt(userMessage);
     
-    // Get API key from local storage or prompt for it
-    let apiKey = localStorage.getItem('mistralApiKey');
-    
-    // If no key is stored, save the one provided
-    if (!apiKey) {
-      // For initial setup, use the provided key (this will only happen once)
-      apiKey = 'O9aVzeRjA44ADjwsAUwa48kHM5gOQON5';
-      localStorage.setItem('mistralApiKey', apiKey);
-    }
+    // Always use the hardcoded API key
+    const apiKey = MISTRAL_API_KEY;
     
     // Make request to Mistral API
     const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
