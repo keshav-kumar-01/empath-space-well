@@ -7,6 +7,8 @@ import MessageBubble from "./MessageBubble";
 import { getResponse } from "@/utils/chatResponses";
 import { initModel, getAIResponse } from "@/services/aiService";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/context/AuthContext";
 
 interface Message {
   text: string;
@@ -28,6 +30,7 @@ const ChatInterface: React.FC = () => {
   const [loadingModel, setLoadingModel] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { user } = useAuth();
 
   // Initialize the AI model
   useEffect(() => {
@@ -65,6 +68,27 @@ const ChatInterface: React.FC = () => {
     inputRef.current?.focus();
   }, []);
 
+  // Save message to database
+  const saveMessageToDatabase = async (text: string, isUser: boolean) => {
+    if (!user) return; // Don't save if user is not logged in
+    
+    try {
+      const { error } = await supabase
+        .from('conversations')
+        .insert([
+          {
+            message: text,
+            is_bot: !isUser
+          }
+        ]);
+      
+      if (error) throw error;
+    } catch (error) {
+      console.error("Error saving message to database:", error);
+      // Silent fail - don't interrupt user experience
+    }
+  };
+
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
     
@@ -80,6 +104,9 @@ const ChatInterface: React.FC = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsTyping(true);
+    
+    // Save user message to database
+    await saveMessageToDatabase(userMessage.text, true);
     
     try {
       // Get AI response with fallback to predefined responses
@@ -97,6 +124,9 @@ const ChatInterface: React.FC = () => {
         
         setMessages((prev) => [...prev, aiResponse]);
         setIsTyping(false);
+        
+        // Save AI response to database
+        saveMessageToDatabase(aiResponse.text, false);
       }, responseTime);
     } catch (error) {
       console.error("Error getting AI response:", error);
@@ -111,6 +141,9 @@ const ChatInterface: React.FC = () => {
         
         setMessages((prev) => [...prev, aiResponse]);
         setIsTyping(false);
+        
+        // Save AI response to database
+        saveMessageToDatabase(aiResponse.text, false);
         
         // Notify user about the error
         toast({

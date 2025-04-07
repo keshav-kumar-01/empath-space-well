@@ -1,10 +1,18 @@
 
-import React from "react";
-import { Heart, Menu, Moon, Sun, LogIn, User } from "lucide-react";
+import React, { useState } from "react";
+import { Heart, Moon, Sun, LogIn, User, Menu as MenuIcon, Book, BookOpen, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header: React.FC = () => {
   const { toast } = useToast();
@@ -43,13 +51,34 @@ const Header: React.FC = () => {
             <span className="text-sm font-medium hidden md:inline-block">
               Hi, {user.name}!
             </span>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={handleLogout}
-            >
-              Logout
-            </Button>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="rounded-full"
+                >
+                  <MenuIcon className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Menu</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate('/')}>
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  <span>Chat</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/journal')}>
+                  <Book className="h-4 w-4 mr-2" />
+                  <span>Journal</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         ) : (
           <div className="flex items-center gap-2">
@@ -91,21 +120,6 @@ const Header: React.FC = () => {
           ) : (
             <Moon className="h-5 w-5" />
           )}
-        </Button>
-        
-        <Button 
-          variant="ghost" 
-          size="icon"
-          className="rounded-full"
-          onClick={() => {
-            toast({
-              title: "Menu coming soon",
-              description: "Additional features will be available in future updates.",
-              duration: 3000,
-            });
-          }}
-        >
-          <Menu className="h-5 w-5" />
         </Button>
       </div>
     </header>
