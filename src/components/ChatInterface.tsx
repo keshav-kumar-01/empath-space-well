@@ -158,7 +158,7 @@ const ChatInterface: React.FC = () => {
             <div className="w-8 h-8 rounded-full bg-chetna-primary flex items-center justify-center text-white font-semibold">
               C
             </div>
-            <div className="bg-chetna-ai-bubble p-4 rounded-2xl rounded-tl-none flex gap-1 items-center">
+            <div className="bg-chetna-ai-bubble dark:bg-chetna-primary/20 p-4 rounded-2xl rounded-tl-none flex gap-1 items-center">
               <div className="breathing-dot delay-0"></div>
               <div className="breathing-dot" style={{ animationDelay: "0.3s" }}></div>
               <div className="breathing-dot" style={{ animationDelay: "0.6s" }}></div>
@@ -177,7 +177,7 @@ const ChatInterface: React.FC = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={isTyping ? "Chetna is typing..." : "Type your message here..."}
-            className="rounded-full bg-chetna-bubble border-none focus-visible:ring-chetna-primary"
+            className="rounded-full bg-chetna-bubble dark:bg-chetna-dark/40 border-none focus-visible:ring-chetna-primary text-foreground dark:text-white"
             disabled={isTyping}
           />
           <Button 

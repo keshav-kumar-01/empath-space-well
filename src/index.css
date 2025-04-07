@@ -96,7 +96,7 @@
 
 @layer components {
   .chat-container {
-    @apply flex flex-col h-[calc(100vh-16rem)] md:h-[calc(100vh-12rem)] rounded-2xl bg-white shadow-md overflow-hidden border border-border;
+    @apply flex flex-col h-[calc(100vh-16rem)] md:h-[calc(100vh-12rem)] rounded-2xl bg-white dark:bg-card shadow-md overflow-hidden border border-border;
   }
   
   .message-container {
@@ -104,7 +104,7 @@
   }
   
   .message-input {
-    @apply p-4 border-t border-border bg-white;
+    @apply p-4 border-t border-border bg-white dark:bg-card;
   }
   
   .breathing-dot {
