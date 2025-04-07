@@ -1,12 +1,20 @@
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send } from "lucide-react";
+import { Send, Key } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MessageBubble from "./MessageBubble";
 import { getResponse } from "@/utils/chatResponses";
 import { initModel, getAIResponse } from "@/services/aiService";
 import { toast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface Message {
   text: string;
@@ -26,8 +34,19 @@ const ChatInterface: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [modelLoaded, setModelLoaded] = useState(false);
   const [loadingModel, setLoadingModel] = useState(true);
+  const [apiKeyDialogOpen, setApiKeyDialogOpen] = useState(false);
+  const [apiKeyInput, setApiKeyInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Check if API key exists in localStorage
+  useEffect(() => {
+    const savedApiKey = localStorage.getItem('mistralApiKey');
+    if (savedApiKey) {
+      // No need to show dialog if we already have a key
+      setApiKeyInput(savedApiKey);
+    }
+  }, []);
 
   // Initialize the AI model
   useEffect(() => {
@@ -37,11 +56,11 @@ const ChatInterface: React.FC = () => {
         await initModel();
         setModelLoaded(true);
         toast({
-          title: "AI model loaded",
+          title: "Mistral AI connected",
           description: "Advanced mental health AI assistant is now active",
         });
       } catch (error) {
-        console.error("Failed to load AI model:", error);
+        console.error("Failed to connect to Mistral AI:", error);
         toast({
           title: "Using basic responses",
           description: "AI model couldn't be loaded, using fallback mode",
@@ -64,6 +83,17 @@ const ChatInterface: React.FC = () => {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  const saveApiKey = () => {
+    if (apiKeyInput) {
+      localStorage.setItem('mistralApiKey', apiKeyInput);
+      setApiKeyDialogOpen(false);
+      toast({
+        title: "API Key saved",
+        description: "Your Mistral AI API key has been saved",
+      });
+    }
+  };
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -134,7 +164,7 @@ const ChatInterface: React.FC = () => {
       <div className="message-container">
         {loadingModel && (
           <div className="bg-amber-100 dark:bg-amber-900 rounded-lg p-2 mb-2 text-sm text-center">
-            Loading advanced mental health AI model...
+            Connecting to Mistral AI...
           </div>
         )}
         
@@ -169,6 +199,17 @@ const ChatInterface: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
       
+      <div className="flex justify-end mb-2">
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="text-xs flex items-center gap-1"
+          onClick={() => setApiKeyDialogOpen(true)}
+        >
+          <Key className="h-3 w-3" /> Manage API Key
+        </Button>
+      </div>
+      
       <form onSubmit={handleSendMessage} className="message-input">
         <div className="flex items-center gap-2">
           <Input
@@ -190,6 +231,28 @@ const ChatInterface: React.FC = () => {
           </Button>
         </div>
       </form>
+      
+      <Dialog open={apiKeyDialogOpen} onOpenChange={setApiKeyDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Mistral AI API Key</DialogTitle>
+            <DialogDescription>
+              Enter your Mistral AI API key for advanced mental health responses.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center space-y-2">
+            <Input
+              placeholder="Enter API key"
+              type="password"
+              value={apiKeyInput}
+              onChange={(e) => setApiKeyInput(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <Button type="submit" onClick={saveApiKey}>Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

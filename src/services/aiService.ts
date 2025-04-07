@@ -1,35 +1,17 @@
 
-import { pipeline } from "@huggingface/transformers";
-
+// Using Mistral AI for improved mental health responses
 let modelInitialized = false;
-let generator: any = null;
 
-// Using a larger model that's better for mental health conversations
-// This model is specifically chosen for its mental health capabilities
-const MODEL_ID = "microsoft/BioGPT-Large-PubMedQA";
-
-// Initialize the model
+// Initialize the model - no actual loading needed with API approach
 export const initModel = async (): Promise<void> => {
   try {
-    if (!modelInitialized) {
-      console.log("Initializing AI model...");
-      
-      // Use text-generation pipeline with our model
-      generator = await pipeline(
-        "text-generation", 
-        MODEL_ID,
-        { 
-          device: "cpu",
-          max_new_tokens: 150,
-        }
-      );
-      
-      modelInitialized = true;
-      console.log("AI model initialized successfully!");
-    }
+    console.log("Initializing Mistral AI connection...");
+    modelInitialized = true;
+    console.log("Mistral AI connection initialized!");
+    return Promise.resolve();
   } catch (error) {
-    console.error("Error initializing AI model:", error);
-    // If model fails to load, we'll fallback to predefined responses
+    console.error("Error initializing Mistral AI connection:", error);
+    return Promise.reject(error);
   }
 };
 
@@ -54,63 +36,69 @@ Always analyze the emotional content of messages before responding. When users e
 If the user appears to be in crisis, gently suggest professional resources while maintaining a supportive tone.
 Your responses should be conversational, personalized, and emotionally intelligent.
   
-  User: ${userMessage}
-  
-  Chetna:`;
+User message: ${userMessage}`;
 };
 
-// Get AI response based on user input
+// Get AI response from Mistral API
 export const getAIResponse = async (
   userMessage: string,
   fallbackFn: (message: string) => string
 ): Promise<string> => {
-  // If model isn't initialized or fails, use fallback
-  if (!modelInitialized || !generator) {
+  // Check if we should use the API
+  if (!modelInitialized) {
     return fallbackFn(userMessage);
   }
 
   try {
-    // Create a prompt that guides the model for mental health support
+    // Create the prompt for mental health
     const prompt = createMentalHealthPrompt(userMessage);
     
-    // Get response from model
-    const result = await generator(prompt, { 
-      max_length: 250,
-      min_length: 50,
-      temperature: 0.7,
-      top_p: 0.92,
-      top_k: 50,
-      repetition_penalty: 1.2,
-      no_repeat_ngram_size: 3
+    // Get API key from local storage or prompt for it
+    let apiKey = localStorage.getItem('mistralApiKey');
+    
+    // If no key is stored, save the one provided
+    if (!apiKey) {
+      // For initial setup, use the provided key (this will only happen once)
+      apiKey = 'O9aVzeRjA44ADjwsAUwa48kHM5gOQON5';
+      localStorage.setItem('mistralApiKey', apiKey);
+    }
+    
+    // Make request to Mistral API
+    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'mistral-small-latest', // Using their smaller model - adjust as needed
+        messages: [
+          {role: 'system', content: 'You are Chetna AI, a mental health and wellness assistant.'},
+          {role: 'user', content: prompt}
+        ],
+        max_tokens: 500,
+        temperature: 0.7,
+      })
     });
 
-    // Process the generated text
-    if (result && result.length > 0) {
-      // Extract just the assistant's response
-      let response = result[0].generated_text;
-      
-      // Remove the prompt part
-      response = response.substring(prompt.length).trim();
-      
-      // Clean up any incomplete sentences or trailing text
-      const lastSentenceEnd = Math.max(
-        response.lastIndexOf("."), 
-        response.lastIndexOf("?"), 
-        response.lastIndexOf("!")
-      );
-      
-      if (lastSentenceEnd > 0 && lastSentenceEnd < response.length - 1) {
-        response = response.substring(0, lastSentenceEnd + 1);
-      }
-      
-      return response;
+    // Handle the response
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Mistral API error:', errorData);
+      throw new Error(`API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    // Extract the AI's response text
+    if (data && data.choices && data.choices.length > 0) {
+      const aiMessage = data.choices[0].message.content.trim();
+      return aiMessage;
     } else {
-      // Fallback to predefined responses if model returns empty result
-      return fallbackFn(userMessage);
+      throw new Error('Unexpected API response format');
     }
   } catch (error) {
-    console.error("Error generating AI response:", error);
-    // Fallback to predefined responses if model fails
+    console.error("Error getting AI response:", error);
     return fallbackFn(userMessage);
   }
 };
