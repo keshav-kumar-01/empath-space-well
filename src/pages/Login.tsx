@@ -24,8 +24,7 @@ const Login: React.FC = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Please fill in all fields",
-        icon: <AlertCircle className="h-5 w-5" />
+        description: "Please fill in all fields"
       });
       return;
     }

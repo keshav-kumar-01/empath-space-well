@@ -26,8 +26,7 @@ const Signup: React.FC = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Please fill in all fields",
-        icon: <AlertCircle className="h-5 w-5" />
+        description: "Please fill in all fields"
       });
       return;
     }
@@ -36,8 +35,7 @@ const Signup: React.FC = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Passwords do not match",
-        icon: <AlertCircle className="h-5 w-5" />
+        description: "Passwords do not match"
       });
       return;
     }
