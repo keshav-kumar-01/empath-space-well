@@ -44,7 +44,13 @@ const Signup: React.FC = () => {
     
     // Simulate sign up - in a real app, this would call an API
     setTimeout(() => {
-      login({ name, email });
+      // Generate a random ID for the user (this would come from authentication in a real app)
+      login({ 
+        id: crypto.randomUUID(), 
+        name, 
+        email 
+      });
+      
       toast({
         title: "Account created!",
         description: "You've successfully signed up.",

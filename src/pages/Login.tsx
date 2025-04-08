@@ -33,7 +33,13 @@ const Login: React.FC = () => {
     
     // Simulate login - in a real app, this would call an API
     setTimeout(() => {
-      login({ name: email.split('@')[0], email });
+      // Generate a random ID for the user (this would come from authentication in a real app)
+      login({ 
+        id: crypto.randomUUID(), 
+        name: email.split('@')[0], 
+        email 
+      });
+      
       toast({
         title: "Welcome back!",
         description: "You've successfully logged in.",
