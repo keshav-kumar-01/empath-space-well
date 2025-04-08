@@ -42,6 +42,7 @@ const PostDetail: React.FC = () => {
   const [newComment, setNewComment] = useState("");
   
   const fetchPost = async (): Promise<Post> => {
+    // Type assertion for Supabase client
     const { data, error } = await supabase
       .from("community_posts")
       .select("*")
@@ -55,23 +56,25 @@ const PostDetail: React.FC = () => {
     // Try to get author name
     let authorName = "Anonymous";
     try {
-      const { data: userData, error: userError } = await supabase
+      // Type assertion for Supabase client
+      const userData = await supabase
         .from("profiles")
         .select("name")
         .eq("id", data.user_id)
         .maybeSingle();
       
-      if (userData && userData.name) {
-        authorName = userData.name;
+      if (userData.data && userData.data.name) {
+        authorName = userData.data.name;
       }
     } catch (error) {
       console.log("Could not fetch author name");
     }
     
-    return { ...data, author_name: authorName };
+    return { ...data as Post, author_name: authorName };
   };
   
   const fetchComments = async (): Promise<Comment[]> => {
+    // Type assertion for Supabase client
     const { data, error } = await supabase
       .from("post_comments")
       .select("*")
@@ -84,17 +87,18 @@ const PostDetail: React.FC = () => {
     
     // Get author names for comments
     const commentsWithAuthors = await Promise.all(
-      data.map(async (comment) => {
+      (data as Comment[]).map(async (comment) => {
         let authorName = "Anonymous";
         try {
-          const { data: userData, error: userError } = await supabase
+          // Type assertion for Supabase client
+          const userData = await supabase
             .from("profiles")
             .select("name")
             .eq("id", comment.user_id)
             .maybeSingle();
           
-          if (userData && userData.name) {
-            authorName = userData.name;
+          if (userData.data && userData.data.name) {
+            authorName = userData.data.name;
           }
         } catch (error) {
           console.log("Could not fetch comment author name");
@@ -137,6 +141,7 @@ const PostDetail: React.FC = () => {
     if (!post) return;
     
     try {
+      // Type assertion for Supabase client
       const { data, error } = await supabase
         .from("community_posts")
         .update({ upvotes: post.upvotes + 1 })
@@ -180,13 +185,14 @@ const PostDetail: React.FC = () => {
     }
     
     try {
+      // Type assertion and direct values for Supabase client
       const { data, error } = await supabase
         .from("post_comments")
         .insert({
           post_id: id,
           user_id: user.id,
           content: newComment.trim(),
-        })
+        } as any)
         .select();
         
       if (error) throw error;

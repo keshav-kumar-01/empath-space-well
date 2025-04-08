@@ -77,6 +77,7 @@ const CreatePost: React.FC = () => {
     setIsSubmitting(true);
     
     try {
+      // Type assertion for Supabase client
       const { data, error } = await supabase
         .from("community_posts")
         .insert({
@@ -84,7 +85,7 @@ const CreatePost: React.FC = () => {
           content: content.trim(),
           category: category || null,
           user_id: user.id,
-        })
+        } as any)
         .select();
         
       if (error) throw error;

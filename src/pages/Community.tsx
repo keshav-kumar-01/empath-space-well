@@ -48,6 +48,7 @@ const Community: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   
   const fetchPosts = async (): Promise<Post[]> => {
+    // Using type assertion for Supabase client
     const query = selectedCategory === "All" 
       ? supabase.from("community_posts").select("*").order("created_at", { ascending: false })
       : supabase.from("community_posts").select("*").eq("category", selectedCategory).order("created_at", { ascending: false });
@@ -60,7 +61,8 @@ const Community: React.FC = () => {
     
     // Get comment counts for each post
     const postsWithComments = await Promise.all(
-      data.map(async (post) => {
+      (data as Post[]).map(async (post) => {
+        // Type assertion for Supabase query
         const { count, error: countError } = await supabase
           .from("post_comments")
           .select("*", { count: "exact" })
@@ -69,14 +71,15 @@ const Community: React.FC = () => {
         // Try to get author name
         let authorName = "Anonymous";
         try {
-          const { data: userData, error: userError } = await supabase
+          // Type assertion for Supabase query
+          const userData = await supabase
             .from("profiles")
             .select("name")
             .eq("id", post.user_id)
             .maybeSingle();
           
-          if (userData && userData.name) {
-            authorName = userData.name;
+          if (userData.data && userData.data.name) {
+            authorName = userData.data.name;
           }
         } catch (error) {
           console.log("Could not fetch author name");
