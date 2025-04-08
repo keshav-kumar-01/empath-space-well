@@ -31,6 +31,7 @@ const ChatInterface: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuth();
+  const { toast } = useToast(); // Added the useToast hook correctly
 
   // Initialize the AI model
   useEffect(() => {
@@ -56,7 +57,7 @@ const ChatInterface: React.FC = () => {
     };
     
     loadModel();
-  }, []);
+  }, [toast]); // Added toast to the dependency array
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
