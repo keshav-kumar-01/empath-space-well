@@ -78,7 +78,8 @@ const ChatInterface: React.FC = () => {
         .insert([
           {
             message: text,
-            is_bot: !isUser
+            is_bot: !isUser,
+            user_id: user.id
           }
         ]);
       

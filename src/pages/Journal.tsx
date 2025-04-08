@@ -55,6 +55,7 @@ const Journal: React.FC = () => {
         const { data, error } = await supabase
           .from("journal_entries")
           .select("*")
+          .eq("user_id", user.id)
           .order("created_at", { ascending: false });
         
         if (error) throw error;
@@ -93,6 +94,15 @@ const Journal: React.FC = () => {
       return;
     }
 
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please login to save entries",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       if (isEditing) {
         // Update existing entry
@@ -104,7 +114,8 @@ const Journal: React.FC = () => {
             mood,
             updated_at: new Date().toISOString(),
           })
-          .eq("id", isEditing);
+          .eq("id", isEditing)
+          .eq("user_id", user.id);
 
         if (error) throw error;
 
@@ -129,6 +140,7 @@ const Journal: React.FC = () => {
               title,
               content,
               mood,
+              user_id: user.id
             },
           ])
           .select();
@@ -165,11 +177,14 @@ const Journal: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
+    if (!user) return;
+    
     try {
       const { error } = await supabase
         .from("journal_entries")
         .delete()
-        .eq("id", id);
+        .eq("id", id)
+        .eq("user_id", user.id);
 
       if (error) throw error;
 
