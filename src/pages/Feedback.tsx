@@ -54,29 +54,16 @@ const Feedback: React.FC = () => {
     }
 
     try {
-      // Using a raw SQL query with the PostgreSQL API instead of the typed API
-      // This is a workaround until the TypeScript definitions are updated
-      const { error } = await supabase.rpc('submit_feedback', {
-        p_user_id: user.id,
-        p_rating: data.rating,
-        p_comment: data.comment
-      }).single();
-
-      // If the RPC call fails, try direct insertion
-      if (error) {
-        console.error("RPC failed, trying direct insertion:", error);
+      // Using direct insertion with type casting as the primary method
+      const { error } = await supabase
+        .from('feedback')
+        .insert({
+          user_id: user.id,
+          rating: data.rating,
+          comment: data.comment
+        } as any);
         
-        // Using untyped query as a fallback
-        const { error: insertError } = await supabase
-          .from('feedback')
-          .insert({
-            user_id: user.id,
-            rating: data.rating,
-            comment: data.comment
-          } as any);
-          
-        if (insertError) throw insertError;
-      }
+      if (error) throw error;
 
       toast({
         title: "Feedback submitted",
