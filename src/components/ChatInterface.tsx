@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import MessageBubble from "./MessageBubble";
 import { getResponse } from "@/utils/chatResponses";
 import { initModel, getAIResponse } from "@/services/aiService";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 
@@ -70,7 +70,7 @@ const ChatInterface: React.FC = () => {
 
   // Save message to database
   const saveMessageToDatabase = async (text: string, isUser: boolean) => {
-    if (!user) {
+    if (!user || !user.id) {
       console.log("No user logged in, skipping database save");
       return;
     }

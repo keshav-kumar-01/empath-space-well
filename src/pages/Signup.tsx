@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { LogIn, Mail, User, AlertCircle } from 'lucide-react';
+import { LogIn, Mail, User } from 'lucide-react';
 import Header from '@/components/Header';
 
 const Signup: React.FC = () => {
@@ -16,10 +16,10 @@ const Signup: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const { login, loginWithGoogle } = useAuth();
+  const { signup, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!name || !email || !password || !confirmPassword) {
@@ -42,33 +42,45 @@ const Signup: React.FC = () => {
     
     setIsSubmitting(true);
     
-    // Simulate sign up - in a real app, this would call an API
-    setTimeout(() => {
-      // Generate a random ID for the user (this would come from authentication in a real app)
-      login({ 
-        id: crypto.randomUUID(), 
-        name, 
-        email 
-      });
+    try {
+      const { error } = await signup(email, password, { name });
+      
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Sign up failed",
+          description: error.message || "Please check your information and try again"
+        });
+        setIsSubmitting(false);
+        return;
+      }
       
       toast({
         title: "Account created!",
-        description: "You've successfully signed up.",
+        description: "You've successfully signed up. Please check your email to confirm your account.",
       });
       navigate('/');
+    } catch (error) {
+      console.error('Signup error:', error);
+      toast({
+        variant: "destructive",
+        title: "Sign up failed",
+        description: "An unexpected error occurred"
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   const handleGoogleSignup = () => {
     setIsSubmitting(true);
-    loginWithGoogle();
-    
-    // In a real implementation, this would wait for the OAuth response
-    setTimeout(() => {
-      navigate('/');
-      setIsSubmitting(false);
-    }, 1500);
+    loginWithGoogle()
+      .finally(() => {
+        // Google login will redirect, but set isSubmitting to false just in case
+        setTimeout(() => {
+          setIsSubmitting(false);
+        }, 3000);
+      });
   };
 
   return (

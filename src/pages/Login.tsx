@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { LogIn, Mail, User, AlertCircle } from 'lucide-react';
+import { LogIn, Mail, AlertCircle } from 'lucide-react';
 import Header from '@/components/Header';
 
 const Login: React.FC = () => {
@@ -17,7 +17,7 @@ const Login: React.FC = () => {
   const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -31,33 +31,45 @@ const Login: React.FC = () => {
     
     setIsSubmitting(true);
     
-    // Simulate login - in a real app, this would call an API
-    setTimeout(() => {
-      // Generate a random ID for the user (this would come from authentication in a real app)
-      login({ 
-        id: crypto.randomUUID(), 
-        name: email.split('@')[0], 
-        email 
-      });
+    try {
+      const { error } = await login(email, password);
+      
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Login failed",
+          description: error.message || "Please check your credentials and try again"
+        });
+        setIsSubmitting(false);
+        return;
+      }
       
       toast({
         title: "Welcome back!",
         description: "You've successfully logged in.",
       });
       navigate('/');
+    } catch (error) {
+      console.error('Login error:', error);
+      toast({
+        variant: "destructive",
+        title: "Login failed",
+        description: "An unexpected error occurred"
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   const handleGoogleLogin = () => {
     setIsSubmitting(true);
-    loginWithGoogle();
-    
-    // In a real implementation, this would wait for the OAuth response
-    setTimeout(() => {
-      navigate('/');
-      setIsSubmitting(false);
-    }, 1500);
+    loginWithGoogle()
+      .finally(() => {
+        // Google login will redirect, but set isSubmitting to false just in case
+        setTimeout(() => {
+          setIsSubmitting(false);
+        }, 3000);
+      });
   };
 
   return (

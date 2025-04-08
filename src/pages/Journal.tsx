@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Edit, Trash, Save, X, Smile, Frown, Meh } from "lucide-react";
@@ -31,26 +30,13 @@ const Journal: React.FC = () => {
   const [mood, setMood] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Redirect to login if not authenticated
   useEffect(() => {
-    if (!user && !isLoading) {
-      navigate("/login");
-      toast({
-        title: "Authentication required",
-        description: "Please login to access your journal",
-        variant: "destructive",
-      });
+    if (!user || !user.id) {
+      setIsLoading(false);
+      return;
     }
-  }, [user, isLoading, navigate, toast]);
-
-  // Fetch journal entries
-  useEffect(() => {
+    
     const fetchEntries = async () => {
-      if (!user) {
-        setIsLoading(false);
-        return;
-      }
-      
       try {
         console.log("Fetching journal entries for user:", user.id);
         const { data, error } = await supabase
@@ -98,7 +84,7 @@ const Journal: React.FC = () => {
       return;
     }
 
-    if (!user) {
+    if (!user || !user.id) {
       toast({
         title: "Authentication required",
         description: "Please login to save entries",
@@ -110,7 +96,6 @@ const Journal: React.FC = () => {
     try {
       console.log("Saving journal entry for user:", user.id);
       if (isEditing) {
-        // Update existing entry
         const { error } = await supabase
           .from("journal_entries")
           .update({
@@ -140,7 +125,6 @@ const Journal: React.FC = () => {
           description: "Your journal entry has been updated",
         });
       } else {
-        // Create new entry
         const { data, error } = await supabase
           .from("journal_entries")
           .insert([
