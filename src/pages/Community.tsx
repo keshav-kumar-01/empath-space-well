@@ -68,22 +68,9 @@ const Community: React.FC = () => {
           .select("*", { count: "exact" })
           .eq("post_id", post.id);
           
-        // Try to get author name
-        let authorName = "Anonymous";
-        try {
-          // Type assertion for Supabase query
-          const userData = await supabase
-            .from("profiles")
-            .select("name")
-            .eq("id", post.user_id)
-            .maybeSingle();
-          
-          if (userData.data && userData.data.name) {
-            authorName = userData.data.name;
-          }
-        } catch (error) {
-          console.log("Could not fetch author name");
-        }
+        // We're not using profiles table anymore since it doesn't exist
+        // Simply use "Anonymous" as the author name
+        const authorName = "Anonymous";
         
         return {
           ...post,

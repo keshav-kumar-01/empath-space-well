@@ -53,24 +53,11 @@ const PostDetail: React.FC = () => {
       throw error;
     }
     
-    // Try to get author name
-    let authorName = "Anonymous";
-    try {
-      // Type assertion for Supabase client
-      const userData = await supabase
-        .from("profiles")
-        .select("name")
-        .eq("id", data.user_id)
-        .maybeSingle();
-      
-      if (userData.data && userData.data.name) {
-        authorName = userData.data.name;
-      }
-    } catch (error) {
-      console.log("Could not fetch author name");
-    }
+    // We're not using profiles table anymore since it doesn't exist
+    // Simply use "Anonymous" as the author name
+    const authorName = "Anonymous";
     
-    return { ...data as Post, author_name: authorName };
+    return { ...(data as Post), author_name: authorName };
   };
   
   const fetchComments = async (): Promise<Comment[]> => {
@@ -85,28 +72,10 @@ const PostDetail: React.FC = () => {
       throw error;
     }
     
-    // Get author names for comments
-    const commentsWithAuthors = await Promise.all(
-      (data as Comment[]).map(async (comment) => {
-        let authorName = "Anonymous";
-        try {
-          // Type assertion for Supabase client
-          const userData = await supabase
-            .from("profiles")
-            .select("name")
-            .eq("id", comment.user_id)
-            .maybeSingle();
-          
-          if (userData.data && userData.data.name) {
-            authorName = userData.data.name;
-          }
-        } catch (error) {
-          console.log("Could not fetch comment author name");
-        }
-        
-        return { ...comment, author_name: authorName };
-      })
-    );
+    // Get author names for comments - simplified without profiles
+    const commentsWithAuthors = (data as Comment[]).map(comment => {
+      return { ...comment, author_name: "Anonymous" };
+    });
     
     return commentsWithAuthors;
   };
