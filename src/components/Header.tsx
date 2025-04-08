@@ -1,130 +1,178 @@
 
-import React, { useState } from "react";
-import { Heart, Moon, Sun, LogIn, User, Menu as MenuIcon, Book, BookOpen, MessageSquare, Star } from "lucide-react";
+import React from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Menu, X, Moon, Sun, User } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { useAuth } from "@/context/AuthContext";
 
 const Header: React.FC = () => {
-  const { toast } = useToast();
-  const [darkMode, setDarkMode] = React.useState(false);
-  const { user, logout } = useAuth();
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    document.documentElement.classList.toggle("dark");
-    toast({
-      title: darkMode ? "Light mode activated" : "Dark mode activated",
-      duration: 1500,
-    });
+  const location = useLocation();
+  const { user, logout } = useAuth();
+  
+  const routes = [
+    { path: "/", label: "Home" },
+    { path: "/community", label: "Community" },
+    { path: "/journal", label: "Journal" },
+    { path: "/feedback", label: "Feedback" },
+  ];
+  
+  const isActive = (path: string) => location.pathname === path;
+  
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
   };
-
-  const handleLogout = () => {
-    logout();
-    toast({
-      title: "Logged out",
-      description: "You've been successfully logged out.",
-      duration: 3000,
-    });
+  
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
   };
-
+  
   return (
-    <header className="py-4 px-6 flex items-center justify-between">
-      <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-        <Heart className="w-6 h-6 text-chetna-primary" fill="#7C65E1" />
-        <h1 className="text-xl font-bold">Chetna_Ai</h1>
-      </Link>
-      
-      <div className="flex items-center gap-4">
-        {user ? (
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium hidden md:inline-block">
-              Hi, {user.name}!
-            </span>
-            
+    <header className="bg-background border-b sticky top-0 z-40">
+      <div className="container mx-auto px-4 flex h-16 items-center justify-between">
+        <div className="flex items-center">
+          <Link to="/" className="flex items-center">
+            <h1 className="text-2xl font-bold text-chetna-primary hover:text-chetna-primary/80 transition-colors">
+              Chetna<span className="text-chetna-accent">_Ai</span>
+            </h1>
+          </Link>
+          
+          <nav className="ml-10 hidden md:flex items-center space-x-4">
+            {routes.map((route) => (
+              <Link
+                key={route.path}
+                to={route.path}
+                className={`font-medium hover:text-chetna-primary transition-colors ${
+                  isActive(route.path) ? "text-chetna-primary" : "text-muted-foreground"
+                }`}
+              >
+                {route.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+        
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="rounded-full"
+            aria-label="Toggle theme"
+          >
+            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+          
+          {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="rounded-full"
-                >
-                  <MenuIcon className="h-5 w-5" />
+                <Button variant="ghost" className="relative rounded-full h-8 w-8 p-0">
+                  <Avatar className="h-8 w-8">
+                    {user.photoURL ? (
+                      <AvatarImage src={user.photoURL} alt={user.name} />
+                    ) : (
+                      <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                    )}
+                  </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Menu</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate('/')}>
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  <span>Chat</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate('/journal')}>
-                  <Book className="h-4 w-4 mr-2" />
-                  <span>Journal</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate('/feedback')}>
-                  <Star className="h-4 w-4 mr-2" />
-                  <span>Feedback</span>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => navigate("/profile")}
+                >
+                  <User className="mr-2 h-4 w-4" />
+                  Profile
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
+                <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => navigate('/login')}
-              className="hidden md:flex"
-            >
-              Login
-              <LogIn className="ml-1 h-4 w-4" />
-            </Button>
-            <Button 
-              onClick={() => navigate('/signup')}
-              size="sm"
-              className="hidden md:flex"
-            >
-              Sign Up
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className="md:hidden rounded-full"
-              onClick={() => navigate('/login')}
-            >
-              <User className="h-5 w-5" />
-            </Button>
-          </div>
-        )}
-        
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={toggleDarkMode}
-          className="rounded-full"
-        >
-          {darkMode ? (
-            <Sun className="h-5 w-5" />
           ) : (
-            <Moon className="h-5 w-5" />
+            <Button size="sm" onClick={() => navigate("/login")}>
+              Login
+            </Button>
           )}
-        </Button>
+          
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+              <SheetHeader>
+                <SheetTitle className="text-left">
+                  <h2 className="text-2xl font-bold text-chetna-primary">
+                    Chetna<span className="text-chetna-accent">_Ai</span>
+                  </h2>
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col space-y-4 mt-8">
+                {routes.map((route) => (
+                  <Link
+                    key={route.path}
+                    to={route.path}
+                    className={`font-medium hover:text-chetna-primary transition-colors ${
+                      isActive(route.path) ? "text-chetna-primary" : "text-muted-foreground"
+                    }`}
+                  >
+                    {route.label}
+                  </Link>
+                ))}
+                
+                {user && (
+                  <Link
+                    to="/profile"
+                    className={`font-medium hover:text-chetna-primary transition-colors ${
+                      isActive("/profile") ? "text-chetna-primary" : "text-muted-foreground"
+                    }`}
+                  >
+                    Profile
+                  </Link>
+                )}
+                
+                {user ? (
+                  <Button variant="outline" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                ) : (
+                  <Button onClick={() => navigate("/login")}>
+                    Login
+                  </Button>
+                )}
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );
