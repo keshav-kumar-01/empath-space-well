@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Heart, Moon, Sun, LogIn, User, Menu as MenuIcon, Book, BookOpen, MessageSquare } from "lucide-react";
+import { Heart, Moon, Sun, LogIn, User, Menu as MenuIcon, Book, BookOpen, MessageSquare, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -72,6 +72,10 @@ const Header: React.FC = () => {
                 <DropdownMenuItem onClick={() => navigate('/journal')}>
                   <Book className="h-4 w-4 mr-2" />
                   <span>Journal</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/feedback')}>
+                  <Star className="h-4 w-4 mr-2" />
+                  <span>Feedback</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
