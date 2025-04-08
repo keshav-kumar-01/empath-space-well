@@ -10,6 +10,9 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Journal from "./pages/Journal";
 import Feedback from "./pages/Feedback";
+import Community from "./pages/Community";
+import PostDetail from "./pages/PostDetail";
+import CreatePost from "./pages/CreatePost";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +30,9 @@ const App = () => (
             <Route path="/signup" element={<Signup />} />
             <Route path="/journal" element={<Journal />} />
             <Route path="/feedback" element={<Feedback />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/community/post/:id" element={<PostDetail />} />
+            <Route path="/community/create" element={<CreatePost />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

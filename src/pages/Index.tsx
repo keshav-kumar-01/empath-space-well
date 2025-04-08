@@ -3,12 +3,17 @@ import React, { useState } from "react";
 import Header from "@/components/Header";
 import IntroSection from "@/components/IntroSection";
 import ChatInterface from "@/components/ChatInterface";
+import { MessageSquare, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Index: React.FC = () => {
   const [showIntro, setShowIntro] = useState(true);
+  const [activeTab, setActiveTab] = useState<'chat' | 'community'>('chat');
 
   const startChat = () => {
     setShowIntro(false);
+    setActiveTab('chat');
   };
 
   return (
@@ -20,7 +25,29 @@ const Index: React.FC = () => {
           {showIntro ? (
             <IntroSection onStartChat={startChat} />
           ) : (
-            <ChatInterface />
+            <div>
+              <div className="flex justify-center mb-6 bg-white dark:bg-card rounded-full p-1 shadow-md">
+                <Button
+                  variant={activeTab === 'chat' ? 'default' : 'ghost'}
+                  className={`rounded-full ${activeTab === 'chat' ? 'bg-chetna-primary' : ''}`}
+                  onClick={() => setActiveTab('chat')}
+                >
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Chat with Chetna
+                </Button>
+                <Link to="/community">
+                  <Button
+                    variant="ghost"
+                    className="rounded-full"
+                  >
+                    <Users className="mr-2 h-4 w-4" />
+                    Community
+                  </Button>
+                </Link>
+              </div>
+              
+              {activeTab === 'chat' && <ChatInterface />}
+            </div>
           )}
         </div>
       </main>
