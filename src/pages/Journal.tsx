@@ -52,13 +52,17 @@ const Journal: React.FC = () => {
       }
       
       try {
+        console.log("Fetching journal entries for user:", user.id);
         const { data, error } = await supabase
           .from("journal_entries")
           .select("*")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
         
-        if (error) throw error;
+        if (error) {
+          console.error("Error fetching journal entries:", error);
+          throw error;
+        }
         
         setEntries(data || []);
       } catch (error) {
@@ -104,6 +108,7 @@ const Journal: React.FC = () => {
     }
 
     try {
+      console.log("Saving journal entry for user:", user.id);
       if (isEditing) {
         // Update existing entry
         const { error } = await supabase
@@ -117,7 +122,10 @@ const Journal: React.FC = () => {
           .eq("id", isEditing)
           .eq("user_id", user.id);
 
-        if (error) throw error;
+        if (error) {
+          console.error("Error updating journal entry:", error);
+          throw error;
+        }
 
         setEntries(prevEntries =>
           prevEntries.map(entry =>
@@ -145,7 +153,10 @@ const Journal: React.FC = () => {
           ])
           .select();
 
-        if (error) throw error;
+        if (error) {
+          console.error("Error creating journal entry:", error);
+          throw error;
+        }
 
         if (data && data.length > 0) {
           setEntries(prev => [data[0], ...prev]);
@@ -180,13 +191,17 @@ const Journal: React.FC = () => {
     if (!user) return;
     
     try {
+      console.log("Deleting journal entry for user:", user.id);
       const { error } = await supabase
         .from("journal_entries")
         .delete()
         .eq("id", id)
         .eq("user_id", user.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error deleting journal entry:", error);
+        throw error;
+      }
 
       setEntries(entries.filter(entry => entry.id !== id));
       

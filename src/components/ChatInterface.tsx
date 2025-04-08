@@ -70,9 +70,13 @@ const ChatInterface: React.FC = () => {
 
   // Save message to database
   const saveMessageToDatabase = async (text: string, isUser: boolean) => {
-    if (!user) return; // Don't save if user is not logged in
+    if (!user) {
+      console.log("No user logged in, skipping database save");
+      return;
+    }
     
     try {
+      console.log("Saving message to database for user:", user.id);
       const { error } = await supabase
         .from('conversations')
         .insert([
@@ -83,7 +87,10 @@ const ChatInterface: React.FC = () => {
           }
         ]);
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error inserting into conversations:", error);
+        throw error;
+      }
     } catch (error) {
       console.error("Error saving message to database:", error);
       // Silent fail - don't interrupt user experience

@@ -1,7 +1,9 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 type User = {
+  id: string;      // Added id property
   name: string;
   email: string;
   photoURL?: string;
@@ -31,6 +33,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = (userData: User) => {
+    // Ensure user has an id
+    if (!userData.id) {
+      // Generate a random ID if none exists (this is a temporary solution)
+      // In a real app with Supabase, this would be the auth.user.id
+      userData.id = crypto.randomUUID();
+    }
+    
     setUser(userData);
     localStorage.setItem('chetna_user', JSON.stringify(userData));
   };
@@ -45,6 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // For now, we'll just simulate a successful login
     setTimeout(() => {
       const mockGoogleUser = {
+        id: crypto.randomUUID(), // Generate a random UUID for demo purposes
         name: 'Google User',
         email: 'user@example.com',
         photoURL: 'https://via.placeholder.com/40'
