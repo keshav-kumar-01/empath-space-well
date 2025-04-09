@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, X, Moon, Sun, User } from "lucide-react";
@@ -27,9 +26,7 @@ const Header: React.FC = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
   
-  // Fix dark mode toggle by forcing initial theme setting
   useEffect(() => {
-    // If no theme is set, set it based on system preference
     if (!theme) {
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       setTheme(prefersDark ? 'dark' : 'light');
@@ -60,14 +57,11 @@ const Header: React.FC = () => {
   };
   
   const toggleTheme = () => {
-    const newTheme = resolvedTheme === "dark" ? "light" : "dark";
+    const currentTheme = resolvedTheme || theme;
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    
+    console.log(`Toggling theme from ${currentTheme} to ${newTheme}`);
     setTheme(newTheme);
-    // Force document class update
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
   };
   
   return (
