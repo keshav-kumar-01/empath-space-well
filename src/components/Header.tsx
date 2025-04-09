@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, X, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -22,10 +22,19 @@ import {
 import { useAuth } from "@/context/AuthContext";
 
 const Header: React.FC = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  
+  // Fix dark mode toggle by forcing initial theme setting
+  useEffect(() => {
+    // If no theme is set, set it based on system preference
+    if (!theme) {
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(prefersDark ? 'dark' : 'light');
+    }
+  }, [theme, setTheme]);
   
   const routes = [
     { path: "/", label: "Home" },
@@ -48,6 +57,17 @@ const Header: React.FC = () => {
       .join('')
       .toUpperCase()
       .substring(0, 2);
+  };
+  
+  const toggleTheme = () => {
+    const newTheme = resolvedTheme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+    // Force document class update
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   };
   
   return (
@@ -79,7 +99,7 @@ const Header: React.FC = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={toggleTheme}
             className="rounded-full"
             aria-label="Toggle theme"
           >
