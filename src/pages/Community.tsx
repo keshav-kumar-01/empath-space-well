@@ -38,6 +38,8 @@ const categories = [
   "Trauma",
   "Relationships",
   "Work Stress",
+  "Study Pressure",
+  "Peer Pressure,
   "Other"
 ];
 
