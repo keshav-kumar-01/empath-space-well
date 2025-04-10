@@ -3,6 +3,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+/* Base styles with smoother curves */
+@layer base {
+  html {
+    font-family: 'Quicksand', sans-serif;
+  }
+  
+  button, 
+  .rounded-lg, 
+  .rounded-xl, 
+  .rounded-2xl,
+  .card,
+  input,
+  textarea,
+  .message-container {
+    @apply transition-all duration-200;
+  }
+}
+
 /* Breathing dots animation for chat typing indicator */
 .breathing-dot {
   @apply w-2 h-2 rounded-full bg-white/80 dark:bg-white/60;
@@ -53,11 +73,14 @@
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease;
+  border-radius: 1.5rem;
+  overflow: hidden;
 }
 
 .message-container {
   scrollbar-width: thin;
   scrollbar-color: rgba(124, 101, 225, 0.3) transparent;
+  border-radius: 1rem;
 }
 
 .message-container::-webkit-scrollbar {
@@ -75,4 +98,17 @@
 
 .message-input {
   transition: all 0.2s ease;
+  border-radius: 1rem;
 }
+
+/* Button hover effect */
+.chetna-button {
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(124, 101, 225, 0.25);
+}
+
+.chetna-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 101, 225, 0.35);
+}
+

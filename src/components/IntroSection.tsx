@@ -34,7 +34,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onStartChat }) => {
         <Button 
           size="lg" 
           onClick={onStartChat}
-          className="rounded-full px-8 py-6 text-lg"
+          className="rounded-full px-8 py-6 text-lg chetna-button bg-chetna-primary hover:bg-chetna-primary/90"
         >
           Start Chatting <MessageSquare className="ml-2" />
         </Button>
