@@ -21,12 +21,12 @@ const Index: React.FC = () => {
       <Header />
       
       <main className="flex-grow container mx-auto px-4 py-6 flex items-center justify-center">
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-5xl">
           {showIntro ? (
             <IntroSection onStartChat={startChat} />
           ) : (
-            <div>
-              <div className="flex justify-center mb-6 bg-white dark:bg-card rounded-full p-1 shadow-md">
+            <div className="flex flex-col">
+              <div className="flex justify-center mb-6 bg-white dark:bg-card rounded-full p-1 shadow-md self-center">
                 <Button
                   variant={activeTab === 'chat' ? 'default' : 'ghost'}
                   className={`rounded-full ${activeTab === 'chat' ? 'bg-chetna-primary' : ''}`}
@@ -46,7 +46,9 @@ const Index: React.FC = () => {
                 </Link>
               </div>
               
-              {activeTab === 'chat' && <ChatInterface />}
+              <div className="w-full">
+                {activeTab === 'chat' && <ChatInterface />}
+              </div>
             </div>
           )}
         </div>

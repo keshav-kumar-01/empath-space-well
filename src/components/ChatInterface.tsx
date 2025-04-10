@@ -251,8 +251,8 @@ const ChatInterface: React.FC = () => {
   };
 
   return (
-    <div className="chat-container">
-      <div className="message-container">
+    <div className="chat-container flex flex-col h-[70vh] md:h-[75vh] bg-white dark:bg-chetna-dark/30 rounded-xl shadow-lg overflow-hidden border border-chetna-primary/10">
+      <div className="message-container flex-grow p-4 md:p-6 overflow-y-auto space-y-4">
         {loadingModel && (
           <div className="bg-amber-100 dark:bg-amber-900 rounded-lg p-2 mb-2 text-sm text-center">
             Connecting to Mistral AI...
@@ -307,7 +307,7 @@ const ChatInterface: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
       
-      <form onSubmit={handleSendMessage} className="message-input">
+      <form onSubmit={handleSendMessage} className="message-input p-4 border-t border-chetna-primary/10 bg-chetna-bubble/50 dark:bg-chetna-dark/50">
         <div className="flex items-center gap-2">
           <Input
             ref={inputRef}
@@ -315,7 +315,7 @@ const ChatInterface: React.FC = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={showLoginPrompt && !user ? "Sign up to continue chatting..." : isTyping ? "Chetna is typing..." : "Type your message here..."}
-            className="rounded-full bg-chetna-bubble dark:bg-chetna-dark/40 border-none focus-visible:ring-chetna-primary text-foreground dark:text-white"
+            className="rounded-full bg-white dark:bg-chetna-dark/40 border-none focus-visible:ring-chetna-primary text-foreground dark:text-white shadow-sm"
             disabled={isTyping || (showLoginPrompt && !user)}
           />
 
@@ -323,7 +323,7 @@ const ChatInterface: React.FC = () => {
             <Button 
               type="button" 
               size="icon" 
-              className={`rounded-full ${isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-chetna-accent hover:bg-chetna-accent/90'}`}
+              className={`rounded-full ${isListening ? 'bg-red-500 hover:bg-red-600 mic-pulse' : 'bg-chetna-accent hover:bg-chetna-accent/90'}`}
               onClick={toggleSpeechRecognition}
               disabled={(showLoginPrompt && !user) || isTyping}
             >

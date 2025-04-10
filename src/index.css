@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -45,4 +46,33 @@
   100% {
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
   }
+}
+
+/* Chat container styles */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.message-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 101, 225, 0.3) transparent;
+}
+
+.message-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.message-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.message-container::-webkit-scrollbar-thumb {
+  background-color: rgba(124, 101, 225, 0.3);
+  border-radius: 6px;
+}
+
+.message-input {
+  transition: all 0.2s ease;
 }
