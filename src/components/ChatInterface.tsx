@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, LogIn } from "lucide-react";
+import { Send, LogIn, Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MessageBubble from "./MessageBubble";
@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import speechRecognition from "@/utils/speechRecognition";
 
 interface Message {
   text: string;
@@ -31,11 +32,18 @@ const ChatInterface: React.FC = () => {
   const [loadingModel, setLoadingModel] = useState(true);
   const [messageCount, setMessageCount] = useState(0);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Check if speech recognition is supported
+  useEffect(() => {
+    setSpeechSupported(speechRecognition.isSupported());
+  }, []);
 
   // Initialize the AI model
   useEffect(() => {
@@ -202,6 +210,46 @@ const ChatInterface: React.FC = () => {
     navigate("/signup");
   };
 
+  const toggleSpeechRecognition = () => {
+    if (isListening) {
+      // Stop listening
+      speechRecognition.stopListening();
+      setIsListening(false);
+    } else {
+      // Start listening
+      speechRecognition.startListening({
+        onStart: () => {
+          setIsListening(true);
+          toast({
+            title: "Listening...",
+            description: "Speak clearly into your microphone",
+          });
+        },
+        onResult: (text) => {
+          setInput(text);
+          setIsListening(false);
+          
+          // Automatically send message after a short delay
+          setTimeout(() => {
+            handleSendMessage();
+          }, 500);
+        },
+        onEnd: () => {
+          setIsListening(false);
+        },
+        onError: (error) => {
+          console.error("Speech recognition error:", error);
+          setIsListening(false);
+          toast({
+            title: "Speech recognition error",
+            description: error,
+            variant: "destructive",
+          });
+        }
+      });
+    }
+  };
+
   return (
     <div className="chat-container">
       <div className="message-container">
@@ -270,6 +318,19 @@ const ChatInterface: React.FC = () => {
             className="rounded-full bg-chetna-bubble dark:bg-chetna-dark/40 border-none focus-visible:ring-chetna-primary text-foreground dark:text-white"
             disabled={isTyping || (showLoginPrompt && !user)}
           />
+
+          {speechSupported && (
+            <Button 
+              type="button" 
+              size="icon" 
+              className={`rounded-full ${isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-chetna-accent hover:bg-chetna-accent/90'}`}
+              onClick={toggleSpeechRecognition}
+              disabled={(showLoginPrompt && !user) || isTyping}
+            >
+              {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+            </Button>
+          )}
+          
           {showLoginPrompt && !user ? (
             <Button 
               type="button" 

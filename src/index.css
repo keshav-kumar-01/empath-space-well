@@ -1,113 +1,48 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 220 33% 98%;
-    --foreground: 240 29% 19%;
+/* Breathing dots animation for chat typing indicator */
+.breathing-dot {
+  @apply w-2 h-2 rounded-full bg-white/80 dark:bg-white/60;
+  animation: breathe 1.5s infinite ease-in-out;
+}
 
-    --card: 0 0% 100%;
-    --card-foreground: 240 29% 19%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 29% 19%;
-
-    --primary: 258 65% 64%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 170 45% 59%;
-    --secondary-foreground: 240 29% 19%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 240 15% 60%;
-
-    --accent: 10 100% 80%;
-    --accent-foreground: 240 29% 19%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 220 13% 91%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 258 65% 64%;
-
-    --radius: 1rem;
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(0.5);
+    opacity: 0.3;
   }
-
-  .dark {
-    --background: 240 29% 15%;
-    --foreground: 220 33% 98%;
-
-    --card: 240 29% 19%;
-    --card-foreground: 220 33% 98%;
-
-    --popover: 240 29% 19%;
-    --popover-foreground: 220 33% 98%;
-
-    --primary: 258 65% 64%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 170 45% 59%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 240 14% 30%;
-    --muted-foreground: 240 5% 80%;
-
-    --accent: 10 100% 80%;
-    --accent-foreground: 240 29% 19%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 240 14% 30%;
-    --input: 240 14% 30%;
-    --ring: 258 65% 64%;
+  50% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground font-['Inter',sans-serif];
-  }
-
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/20 rounded-full;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/30;
-  }
+/* Pulsing animation for recording indicator */
+.mic-pulse {
+  position: relative;
 }
 
-@layer components {
-  .chat-container {
-    @apply flex flex-col h-[calc(100vh-16rem)] md:h-[calc(100vh-12rem)] rounded-2xl bg-white dark:bg-card shadow-md overflow-hidden border border-border;
+.mic-pulse::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 9999px;
+  animation: mic-pulse 2s infinite;
+}
+
+@keyframes mic-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
   }
-  
-  .message-container {
-    @apply flex-grow overflow-y-auto p-4 space-y-4;
+  70% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
   }
-  
-  .message-input {
-    @apply p-4 border-t border-border bg-white dark:bg-card;
-  }
-  
-  .breathing-dot {
-    @apply w-2 h-2 rounded-full bg-chetna-primary animate-pulse-slow;
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
   }
 }
