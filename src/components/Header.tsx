@@ -26,13 +26,6 @@ const Header: React.FC = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
   
-  useEffect(() => {
-    if (!theme) {
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(prefersDark ? 'dark' : 'light');
-    }
-  }, [theme, setTheme]);
-  
   const routes = [
     { path: "/", label: "Home" },
     { path: "/community", label: "Community" },
