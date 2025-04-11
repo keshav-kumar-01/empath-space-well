@@ -59,7 +59,7 @@ const Header: React.FC = () => {
   };
   
   return (
-    <header className="bg-gradient-to-r from-white to-[#FDE1D3] dark:from-chetna-dark dark:to-chetna-dark/80 border-b border-chetna-primary/10 shadow-sm backdrop-blur-sm">
+    <header className="bg-gradient-to-r from-white to-[#FDE1D3] dark:from-chetna-dark dark:to-chetna-darker border-b border-chetna-primary/10 dark:border-chetna-primary/20 shadow-sm backdrop-blur-sm">
       <div className="container mx-auto px-4 flex h-16 items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
@@ -111,7 +111,7 @@ const Header: React.FC = () => {
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-md border border-chetna-primary/10 shadow-lg rounded-xl">
+              <DropdownMenuContent align="end" className="bg-white/95 dark:bg-chetna-darker/95 backdrop-blur-md border border-chetna-primary/10 dark:border-chetna-primary/20 shadow-lg rounded-xl">
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() => navigate("/profile")}
@@ -142,7 +142,7 @@ const Header: React.FC = () => {
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="bg-white/95 backdrop-blur-md border-r border-chetna-primary/10">
+            <SheetContent side="left" className="bg-white/95 dark:bg-chetna-darker/95 backdrop-blur-md border-r border-chetna-primary/10 dark:border-chetna-primary/20">
               <SheetHeader>
                 <SheetTitle className="text-left">
                   <h2 className="text-2xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-primary/70 bg-clip-text text-transparent">
@@ -175,7 +175,7 @@ const Header: React.FC = () => {
                 )}
                 
                 {user ? (
-                  <Button variant="outline" onClick={handleLogout} className="rounded-xl">
+                  <Button variant="outline" onClick={handleLogout} className="rounded-xl dark:border-chetna-primary/30 dark:bg-chetna-primary/10">
                     Logout
                   </Button>
                 ) : (

@@ -71,7 +71,8 @@ export default {
 					'secondary': '#6FBFB1',  // Teal
 					'accent': '#FFA69E',     // Soft coral
 					'light': '#F7F9FC',      // Light background
-					'dark': '#383654',       // Dark text color
+					'dark': '#221F26',       // Updated: Darker background for dark mode
+					'darker': '#1A1421',     // New: Even darker shade for elements in dark mode
 					'bubble': '#EFF3FA',     // Message bubble background
 					'ai-bubble': '#E8E2FC',  // AI message bubble background
 					'peach': '#FDE1D3',      // Peach color for gradients
