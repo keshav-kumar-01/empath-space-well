@@ -17,7 +17,7 @@ const Index: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-chetna-light dark:from-chetna-dark dark:to-chetna-dark/80">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-white to-[#FDE1D3] dark:from-chetna-dark dark:to-chetna-dark/80">
       <Header />
       
       <main className="flex-grow container mx-auto px-4 py-6 flex items-center justify-center">
@@ -26,7 +26,7 @@ const Index: React.FC = () => {
             <IntroSection onStartChat={startChat} />
           ) : (
             <div className="flex flex-col">
-              <div className="flex justify-center mb-6 bg-white dark:bg-card rounded-full p-1 shadow-md self-center">
+              <div className="flex justify-center mb-6 bg-white/80 backdrop-blur-sm dark:bg-card rounded-full p-1 shadow-md self-center">
                 <Button
                   variant={activeTab === 'chat' ? 'default' : 'ghost'}
                   className={`rounded-full ${
@@ -58,7 +58,7 @@ const Index: React.FC = () => {
         </div>
       </main>
       
-      <footer className="py-6 mt-8 bg-white/50 backdrop-blur-sm dark:bg-chetna-dark/50 border-t border-chetna-primary/10">
+      <footer className="py-6 mt-8 bg-white/60 backdrop-blur-sm dark:bg-chetna-dark/50 border-t border-chetna-primary/10">
         <div className="container mx-auto px-4">
           <p className="text-center text-sm text-muted-foreground">
             © {new Date().getFullYear()} Chetna_Ai - Your Mental Wellness Companion

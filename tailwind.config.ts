@@ -74,6 +74,7 @@ export default {
 					'dark': '#383654',       // Dark text color
 					'bubble': '#EFF3FA',     // Message bubble background
 					'ai-bubble': '#E8E2FC',  // AI message bubble background
+					'peach': '#FDE1D3',      // Peach color for gradients
 				}
 			},
 			borderRadius: {

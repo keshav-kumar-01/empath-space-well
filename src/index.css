@@ -12,7 +12,7 @@
   }
   
   body {
-    background: linear-gradient(135deg, #f7f9fc 0%, #f1f0fb 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #FDE1D3 100%);
   }
   
   button, 
@@ -182,7 +182,7 @@
 /* Section styles */
 .section-container {
   @apply py-12 md:py-20 px-4 md:px-0;
-  background: linear-gradient(to bottom, rgba(247, 249, 252, 0.8), rgba(241, 240, 251, 0.8));
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(253, 225, 211, 0.8));
   border-radius: 2rem;
   margin: 1rem 0;
 }
@@ -200,7 +200,7 @@
 
 /* Header adjustments */
 .site-header {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(124, 101, 225, 0.1);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
@@ -214,7 +214,7 @@
 
 /* Community section styling */
 .community-card {
-  background: linear-gradient(to bottom, white, #fafafa);
+  background: linear-gradient(to bottom, white, #FDE1D3/10);
   border: 1px solid rgba(124, 101, 225, 0.1);
   border-radius: 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -229,7 +229,7 @@
 }
 
 .community-header {
-  background: linear-gradient(135deg, rgba(124, 101, 225, 0.05) 0%, rgba(155, 135, 245, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(253, 225, 211, 0.2) 0%, rgba(255, 255, 255, 0.5) 100%);
   padding: 1.5rem;
   border-bottom: 1px solid rgba(124, 101, 225, 0.1);
 }

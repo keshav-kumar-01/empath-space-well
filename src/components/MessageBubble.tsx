@@ -28,7 +28,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
           "max-w-[85%] p-4 rounded-2xl shadow-md",
           isUser 
             ? "bg-gradient-to-br from-chetna-primary to-chetna-primary/90 text-white rounded-tr-none" 
-            : "bg-gradient-to-br from-white to-chetna-ai-bubble dark:from-chetna-primary/20 dark:to-chetna-primary/10 text-chetna-dark dark:text-white rounded-tl-none"
+            : "bg-gradient-to-br from-white to-chetna-peach/30 dark:from-chetna-primary/20 dark:to-chetna-primary/10 text-chetna-dark dark:text-white rounded-tl-none"
         )}
       >
         <p className="text-sm md:text-base whitespace-pre-wrap">{message}</p>
