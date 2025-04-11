@@ -59,7 +59,7 @@ const Header: React.FC = () => {
   };
   
   return (
-    <header className="site-header">
+    <header className="bg-gradient-to-r from-white to-[#FDE1D3] dark:from-chetna-dark dark:to-chetna-dark/80 border-b border-chetna-primary/10 shadow-sm backdrop-blur-sm">
       <div className="container mx-auto px-4 flex h-16 items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
@@ -111,7 +111,7 @@ const Header: React.FC = () => {
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="dropdown-content">
+              <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-md border border-chetna-primary/10 shadow-lg rounded-xl">
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() => navigate("/profile")}
