@@ -17,7 +17,7 @@ const Index: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-chetna-light to-white dark:from-chetna-dark dark:to-chetna-dark/80">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-chetna-light dark:from-chetna-dark dark:to-chetna-dark/80">
       <Header />
       
       <main className="flex-grow container mx-auto px-4 py-6 flex items-center justify-center">
@@ -29,7 +29,11 @@ const Index: React.FC = () => {
               <div className="flex justify-center mb-6 bg-white dark:bg-card rounded-full p-1 shadow-md self-center">
                 <Button
                   variant={activeTab === 'chat' ? 'default' : 'ghost'}
-                  className={`rounded-full ${activeTab === 'chat' ? 'bg-chetna-primary' : ''}`}
+                  className={`rounded-full ${
+                    activeTab === 'chat' 
+                      ? 'bg-gradient-to-r from-chetna-primary to-chetna-primary/90' 
+                      : ''
+                  }`}
                   onClick={() => setActiveTab('chat')}
                 >
                   <MessageSquare className="mr-2 h-4 w-4" />
@@ -54,8 +58,23 @@ const Index: React.FC = () => {
         </div>
       </main>
       
-      <footer className="py-4 text-center text-xs text-muted-foreground">
-        <p>© {new Date().getFullYear()} Chetna_Ai - Your Mental Wellness Companion</p>
+      <footer className="py-6 mt-8 bg-white/50 backdrop-blur-sm dark:bg-chetna-dark/50 border-t border-chetna-primary/10">
+        <div className="container mx-auto px-4">
+          <p className="text-center text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Chetna_Ai - Your Mental Wellness Companion
+          </p>
+          <div className="flex justify-center gap-6 mt-4">
+            <a href="#" className="text-sm text-muted-foreground hover:text-chetna-primary transition-colors">
+              Privacy Policy
+            </a>
+            <a href="#" className="text-sm text-muted-foreground hover:text-chetna-primary transition-colors">
+              Terms of Service
+            </a>
+            <a href="#" className="text-sm text-muted-foreground hover:text-chetna-primary transition-colors">
+              Contact Us
+            </a>
+          </div>
+        </div>
       </footer>
     </div>
   );

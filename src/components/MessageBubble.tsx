@@ -15,20 +15,20 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 }) => {
   return (
     <div className={cn(
-      "flex items-end gap-2 animate-fade-in py-1.5",
+      "flex items-end gap-3 animate-fade-in py-2",
       isUser ? "justify-end" : "justify-start"
     )}>
       {!isUser && (
-        <div className="w-8 h-8 rounded-full bg-chetna-primary flex items-center justify-center text-white font-semibold shadow-sm">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-chetna-primary to-chetna-primary/80 flex items-center justify-center text-white font-semibold shadow-sm">
           C
         </div>
       )}
       <div
         className={cn(
-          "max-w-[85%] p-4 rounded-2xl shadow-sm",
+          "max-w-[85%] p-4 rounded-2xl shadow-md",
           isUser 
-            ? "bg-chetna-primary text-white rounded-tr-none" 
-            : "bg-chetna-ai-bubble dark:bg-chetna-primary/20 text-chetna-dark dark:text-white rounded-tl-none"
+            ? "bg-gradient-to-br from-chetna-primary to-chetna-primary/90 text-white rounded-tr-none" 
+            : "bg-gradient-to-br from-white to-chetna-ai-bubble dark:from-chetna-primary/20 dark:to-chetna-primary/10 text-chetna-dark dark:text-white rounded-tl-none"
         )}
       >
         <p className="text-sm md:text-base whitespace-pre-wrap">{message}</p>
@@ -40,7 +40,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
         </div>
       </div>
       {isUser && (
-        <div className="w-8 h-8 rounded-full bg-chetna-accent flex items-center justify-center text-chetna-dark font-semibold shadow-sm">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-chetna-accent to-chetna-accent/80 flex items-center justify-center text-chetna-dark font-semibold shadow-sm">
           U
         </div>
       )}

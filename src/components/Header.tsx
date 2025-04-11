@@ -59,11 +59,11 @@ const Header: React.FC = () => {
   };
   
   return (
-    <header className="bg-background border-b z-40">
+    <header className="site-header">
       <div className="container mx-auto px-4 flex h-16 items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
-            <h1 className="text-2xl font-bold text-chetna-primary hover:text-chetna-primary/80 transition-colors">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-primary/70 bg-clip-text text-transparent hover:from-chetna-primary/70 hover:to-chetna-primary transition-all duration-300">
               Chetna<span className="text-chetna-accent">_Ai</span>
             </h1>
           </Link>
@@ -104,12 +104,14 @@ const Header: React.FC = () => {
                     {user.photoURL ? (
                       <AvatarImage src={user.photoURL} alt={user.name} />
                     ) : (
-                      <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                      <AvatarFallback className="bg-gradient-to-br from-chetna-primary to-chetna-primary/70 text-white">
+                        {getInitials(user.name)}
+                      </AvatarFallback>
                     )}
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="dropdown-content">
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() => navigate("/profile")}
@@ -124,7 +126,11 @@ const Header: React.FC = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button size="sm" onClick={() => navigate("/login")} className="rounded-full px-4">
+            <Button 
+              size="sm" 
+              onClick={() => navigate("/login")} 
+              className="rounded-full px-4 bg-gradient-to-r from-chetna-primary to-chetna-primary/80 hover:from-chetna-primary/80 hover:to-chetna-primary"
+            >
               Login
             </Button>
           )}
@@ -136,10 +142,10 @@ const Header: React.FC = () => {
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left">
+            <SheetContent side="left" className="bg-white/95 backdrop-blur-md border-r border-chetna-primary/10">
               <SheetHeader>
                 <SheetTitle className="text-left">
-                  <h2 className="text-2xl font-bold text-chetna-primary">
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-primary/70 bg-clip-text text-transparent">
                     Chetna<span className="text-chetna-accent">_Ai</span>
                   </h2>
                 </SheetTitle>
@@ -169,11 +175,11 @@ const Header: React.FC = () => {
                 )}
                 
                 {user ? (
-                  <Button variant="outline" onClick={handleLogout} className="rounded-lg">
+                  <Button variant="outline" onClick={handleLogout} className="rounded-xl">
                     Logout
                   </Button>
                 ) : (
-                  <Button onClick={() => navigate("/login")} className="rounded-lg">
+                  <Button onClick={() => navigate("/login")} className="rounded-xl bg-gradient-to-r from-chetna-primary to-chetna-primary/80 hover:from-chetna-primary/80 hover:to-chetna-primary">
                     Login
                   </Button>
                 )}
