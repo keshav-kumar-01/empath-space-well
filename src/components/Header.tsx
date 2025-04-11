@@ -124,7 +124,7 @@ const Header: React.FC = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button size="sm" onClick={() => navigate("/login")}>
+            <Button size="sm" onClick={() => navigate("/login")} className="rounded-full px-4">
               Login
             </Button>
           )}
@@ -169,11 +169,11 @@ const Header: React.FC = () => {
                 )}
                 
                 {user ? (
-                  <Button variant="outline" onClick={handleLogout}>
+                  <Button variant="outline" onClick={handleLogout} className="rounded-lg">
                     Logout
                   </Button>
                 ) : (
-                  <Button onClick={() => navigate("/login")}>
+                  <Button onClick={() => navigate("/login")} className="rounded-lg">
                     Login
                   </Button>
                 )}

@@ -14,12 +14,12 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onStartChat }) => {
   return (
     <div className="text-center space-y-8 py-8 animate-fade-in">
       <div className="flex justify-center">
-        <div className="w-20 h-20 bg-chetna-primary/10 rounded-full flex items-center justify-center">
+        <div className="w-20 h-20 bg-chetna-primary/10 rounded-full flex items-center justify-center transform hover:scale-105 transition-all duration-300">
           <Heart className="w-10 h-10 text-chetna-primary" fill="#7C65E1" />
         </div>
       </div>
       
-      <h1 className="text-3xl md:text-4xl font-bold">
+      <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-primary/70 bg-clip-text text-transparent">
         {user ? `Welcome back, ${user.name}!` : "Your Mental Wellness Companion"}
       </h1>
       
@@ -34,24 +34,24 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onStartChat }) => {
         <Button 
           size="lg" 
           onClick={onStartChat}
-          className="rounded-full px-8 py-6 text-lg chetna-button bg-chetna-primary hover:bg-chetna-primary/90"
+          className="rounded-full px-8 py-6 text-lg chetna-button bg-chetna-primary hover:bg-chetna-primary/90 transform hover:scale-105 transition-all duration-300"
         >
           Start Chatting <MessageSquare className="ml-2" />
         </Button>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
-        <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm">
+        <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm feature-card">
           <h3 className="text-lg font-medium mb-2">Compassionate Listening</h3>
           <p className="text-muted-foreground">A supportive space to express your feelings without judgment.</p>
         </div>
         
-        <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm">
+        <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm feature-card">
           <h3 className="text-lg font-medium mb-2">Emotional Support</h3>
           <p className="text-muted-foreground">Guidance to help you navigate challenging emotions and situations.</p>
         </div>
         
-        <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm">
+        <div className="bg-white dark:bg-card p-6 rounded-xl shadow-sm feature-card">
           <h3 className="text-lg font-medium mb-2">Personal Growth</h3>
           <p className="text-muted-foreground">Insights to foster self-awareness and emotional well-being.</p>
         </div>

@@ -75,6 +75,7 @@
   transition: all 0.3s ease;
   border-radius: 1.5rem;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(124, 101, 225, 0.08);
 }
 
 .message-container {
@@ -110,5 +111,62 @@
 .chetna-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(124, 101, 225, 0.35);
+}
+
+/* Card hover animations */
+.feature-card {
+  transition: all 0.3s ease;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(124, 101, 225, 0.15);
+}
+
+/* Page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 200ms, transform 200ms;
+}
+
+/* Custom focus styles */
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-chetna-primary focus-visible:ring-opacity-75;
+}
+
+/* Section styles */
+.section-container {
+  @apply py-12 md:py-20 px-4 md:px-0;
+}
+
+.section-heading {
+  @apply text-3xl md:text-4xl font-bold mb-6 text-chetna-primary;
+  background: linear-gradient(to right, #7C65E1, #9b87f5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section-subheading {
+  @apply text-xl md:text-2xl font-medium mb-3 text-chetna-dark dark:text-white;
 }
 

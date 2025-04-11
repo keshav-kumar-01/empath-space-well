@@ -19,7 +19,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
       isUser ? "justify-end" : "justify-start"
     )}>
       {!isUser && (
-        <div className="w-8 h-8 rounded-full bg-chetna-primary flex items-center justify-center text-white font-semibold">
+        <div className="w-8 h-8 rounded-full bg-chetna-primary flex items-center justify-center text-white font-semibold shadow-sm">
           C
         </div>
       )}
@@ -40,7 +40,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
         </div>
       </div>
       {isUser && (
-        <div className="w-8 h-8 rounded-full bg-chetna-accent flex items-center justify-center text-chetna-dark font-semibold">
+        <div className="w-8 h-8 rounded-full bg-chetna-accent flex items-center justify-center text-chetna-dark font-semibold shadow-sm">
           U
         </div>
       )}
