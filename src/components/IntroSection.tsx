@@ -23,7 +23,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onStartChat }) => {
         {user ? `Welcome back, ${user.name}!` : "Your Mental Wellness Companion"}
       </h1>
       
-      <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+      <p className="text-lg md:text-xl text-muted-foreground dark:text-white/80 max-w-2xl mx-auto">
         {user 
           ? "Continue your journey toward better mental health with Chetna_Ai. I'm here to listen and support you."
           : "Chetna_Ai is here to provide compassionate support for your mental health journey. Share your thoughts and feelings in a safe, judgment-free space."
@@ -41,28 +41,28 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onStartChat }) => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
-        <div className="feature-card p-6 bg-gradient-to-b from-white to-chetna-peach/20 dark:from-chetna-dark dark:to-chetna-primary/5">
+        <div className="feature-card p-6 bg-gradient-to-b from-white to-chetna-peach/20 dark:from-chetna-dark/90 dark:to-chetna-primary/10">
           <div className="w-12 h-12 mx-auto mb-4 bg-chetna-primary/10 dark:bg-chetna-primary/20 rounded-full flex items-center justify-center">
             <Heart className="h-6 w-6 text-chetna-primary" />
           </div>
           <h3 className="text-lg font-medium mb-2 text-chetna-dark dark:text-white">Compassionate Listening</h3>
-          <p className="text-muted-foreground">A supportive space to express your feelings without judgment.</p>
+          <p className="text-muted-foreground dark:text-white/70">A supportive space to express your feelings without judgment.</p>
         </div>
         
-        <div className="feature-card p-6 bg-gradient-to-b from-white to-chetna-peach/20 dark:from-chetna-dark dark:to-chetna-primary/5">
+        <div className="feature-card p-6 bg-gradient-to-b from-white to-chetna-peach/20 dark:from-chetna-dark/90 dark:to-chetna-primary/10">
           <div className="w-12 h-12 mx-auto mb-4 bg-chetna-primary/10 dark:bg-chetna-primary/20 rounded-full flex items-center justify-center">
             <Shield className="h-6 w-6 text-chetna-primary" />
           </div>
           <h3 className="text-lg font-medium mb-2 text-chetna-dark dark:text-white">Emotional Support</h3>
-          <p className="text-muted-foreground">Guidance to help you navigate challenging emotions and situations.</p>
+          <p className="text-muted-foreground dark:text-white/70">Guidance to help you navigate challenging emotions and situations.</p>
         </div>
         
-        <div className="feature-card p-6 bg-gradient-to-b from-white to-chetna-peach/20 dark:from-chetna-dark dark:to-chetna-primary/5">
+        <div className="feature-card p-6 bg-gradient-to-b from-white to-chetna-peach/20 dark:from-chetna-dark/90 dark:to-chetna-primary/10">
           <div className="w-12 h-12 mx-auto mb-4 bg-chetna-primary/10 dark:bg-chetna-primary/20 rounded-full flex items-center justify-center">
             <Brain className="h-6 w-6 text-chetna-primary" />
           </div>
           <h3 className="text-lg font-medium mb-2 text-chetna-dark dark:text-white">Personal Growth</h3>
-          <p className="text-muted-foreground">Insights to foster self-awareness and emotional well-being.</p>
+          <p className="text-muted-foreground dark:text-white/70">Insights to foster self-awareness and emotional well-being.</p>
         </div>
       </div>
     </div>

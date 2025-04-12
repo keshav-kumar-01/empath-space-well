@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -41,7 +40,7 @@
     --secondary: 270 28% 20%;
     --secondary-foreground: 0 0% 98%;
     --muted: 270 28% 20%;
-    --muted-foreground: 240 5% 84.9%;
+    --muted-foreground: 240 5% 94.9%;
     --accent: 270 28% 20%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 50.6%;
@@ -189,10 +188,21 @@
   border: 1px solid rgba(124, 101, 225, 0.1);
 }
 
+.dark .feature-card {
+  background: linear-gradient(to bottom, rgba(34, 31, 38, 0.9), rgba(26, 20, 33, 0.95));
+  border: 1px solid rgba(124, 101, 225, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 .feature-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(124, 101, 225, 0.15);
   border-color: rgba(124, 101, 225, 0.2);
+}
+
+.dark .feature-card:hover {
+  box-shadow: 0 10px 25px rgba(124, 101, 225, 0.25);
+  border-color: rgba(124, 101, 225, 0.3);
 }
 
 /* Page transitions */
@@ -284,4 +294,17 @@
 
 .engagement-item {
   @apply flex items-center gap-1.5 hover:text-chetna-primary transition-colors;
+}
+
+/* Dark mode text adjustments */
+.dark .text-muted-foreground {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.dark .feature-card p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.dark a.text-muted-foreground:hover {
+  color: #9b87f5;
 }
