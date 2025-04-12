@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Filter, Heart, MessageSquare } from "lucide-react";
+import { Plus, Filter, Heart, MessageSquare, Search, RefreshCcw } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import PostCard from "@/components/PostCard";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +17,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+
+type MoodType = "happy" | "neutral" | "sad" | null;
 
 type Post = {
   id: string;
@@ -25,6 +28,7 @@ type Post = {
   upvotes: number;
   category: string | null;
   user_id: string;
+  mood?: MoodType;
   // For UI purposes
   author_name?: string;
   comment_count?: number;
@@ -48,14 +52,20 @@ const Community: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   
   const fetchPosts = async (): Promise<Post[]> => {
-    // Using type assertion for Supabase client
-    const query = selectedCategory === "All" 
-      ? supabase.from("community_posts").select("*").order("created_at", { ascending: false })
-      : supabase.from("community_posts").select("*").eq("category", selectedCategory).order("created_at", { ascending: false });
+    let query = supabase.from("community_posts").select("*");
     
-    const { data, error } = await query;
+    if (selectedCategory !== "All") {
+      query = query.eq("category", selectedCategory);
+    }
+    
+    if (searchTerm) {
+      query = query.or(`title.ilike.%${searchTerm}%,content.ilike.%${searchTerm}%`);
+    }
+    
+    const { data, error } = await query.order("created_at", { ascending: false });
     
     if (error) {
       throw error;
@@ -64,7 +74,6 @@ const Community: React.FC = () => {
     // Get comment counts for each post
     const postsWithComments = await Promise.all(
       (data as Post[]).map(async (post) => {
-        // Type assertion for Supabase query
         const { count, error: countError } = await supabase
           .from("post_comments")
           .select("*", { count: "exact" })
@@ -86,7 +95,7 @@ const Community: React.FC = () => {
   };
   
   const { data: posts, isLoading, error, refetch } = useQuery({
-    queryKey: ["posts", selectedCategory],
+    queryKey: ["posts", selectedCategory, searchTerm],
     queryFn: fetchPosts,
   });
   
@@ -103,10 +112,6 @@ const Community: React.FC = () => {
     
     navigate("/community/create");
   };
-  
-  useEffect(() => {
-    refetch();
-  }, [selectedCategory, refetch]);
   
   useEffect(() => {
     // Enable realtime subscription for posts
@@ -131,66 +136,110 @@ const Community: React.FC = () => {
   }, [refetch]);
   
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-chetna-light to-white dark:from-chetna-dark dark:to-chetna-dark/80">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-chetna-light to-white dark:from-chetna-dark dark:to-chetna-darker">
       <Header />
       
       <main className="flex-grow container mx-auto px-4 py-6 space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Community Support</h1>
+        <div className="bg-white dark:bg-card/80 backdrop-blur-sm rounded-xl p-6 shadow-md border border-border/30 dark:border-border/20">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-br from-chetna-primary to-purple-400 bg-clip-text text-transparent">
+                Community Support
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                Share your thoughts and connect with others
+              </p>
+            </div>
+            
+            <div className="flex gap-2 w-full md:w-auto">
+              <Button onClick={handleCreatePost} className="chetna-button">
+                <Plus className="mr-2 h-4 w-4" />
+                Create Post
+              </Button>
+              <Button 
+                variant="outline" 
+                size="icon"
+                onClick={() => refetch()}
+                className="shrink-0"
+              >
+                <RefreshCcw className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
           
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search posts..."
+                className="pl-10"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" className="w-full sm:w-auto justify-between">
                   <Filter className="mr-2 h-4 w-4" />
                   {selectedCategory}
+                  <span className="sr-only">Open menu</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="w-56">
                 {categories.map((category) => (
                   <DropdownMenuItem 
                     key={category}
                     onClick={() => setSelectedCategory(category)}
+                    className={selectedCategory === category ? "bg-muted font-medium" : ""}
                   >
                     {category}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            
-            <Button onClick={handleCreatePost}>
-              <Plus className="mr-2 h-4 w-4" />
-              Create Post
-            </Button>
           </div>
         </div>
         
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading && (
-            Array(3).fill(0).map((_, i) => (
+            Array(6).fill(0).map((_, i) => (
               <div key={i} className="bg-white dark:bg-card rounded-lg p-6 shadow-md">
-                <Skeleton className="h-6 w-3/4 mb-4" />
+                <div className="flex justify-between mb-4">
+                  <Skeleton className="h-6 w-3/4" />
+                  <Skeleton className="h-6 w-16" />
+                </div>
                 <Skeleton className="h-4 w-full mb-2" />
                 <Skeleton className="h-4 w-full mb-2" />
-                <Skeleton className="h-4 w-2/3" />
-                <div className="flex justify-between mt-4">
-                  <Skeleton className="h-4 w-20" />
-                  <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-2/3 mb-4" />
+                <div className="p-3 mb-3">
+                  <Skeleton className="h-16 w-full" />
+                </div>
+                <div className="flex justify-between">
+                  <Skeleton className="h-8 w-20" />
+                  <Skeleton className="h-8 w-20" />
                 </div>
               </div>
             ))
           )}
           
           {error && (
-            <div className="bg-red-100 dark:bg-red-900/20 p-4 rounded-lg text-center">
-              Failed to load posts. Please try again later.
+            <div className="col-span-full bg-red-100 dark:bg-red-900/20 p-6 rounded-lg text-center">
+              <p className="text-red-700 dark:text-red-300">Failed to load posts. Please try again later.</p>
+              <Button onClick={() => refetch()} variant="outline" className="mt-2">
+                <RefreshCcw className="mr-2 h-4 w-4" />
+                Retry
+              </Button>
             </div>
           )}
           
           {posts && posts.length === 0 && (
-            <div className="bg-white dark:bg-card rounded-lg p-6 text-center">
-              <p className="text-muted-foreground">No posts found in this category.</p>
-              <Button onClick={handleCreatePost} className="mt-4">
+            <div className="col-span-full bg-white dark:bg-card rounded-xl p-8 text-center shadow-md border border-border/30 dark:border-border/20">
+              <h3 className="text-xl font-medium mb-2">No posts found</h3>
+              <p className="text-muted-foreground mb-6">
+                {searchTerm ? "No results match your search" : "Be the first to share in this category"}
+              </p>
+              <Button onClick={handleCreatePost} className="chetna-button">
                 <Plus className="mr-2 h-4 w-4" />
                 Create the first post
               </Button>
@@ -202,12 +251,13 @@ const Community: React.FC = () => {
               key={post.id}
               post={post}
               onClick={() => navigate(`/community/post/${post.id}`)}
+              onDelete={refetch}
             />
           ))}
         </div>
       </main>
       
-      <footer className="py-4 text-center text-xs text-muted-foreground">
+      <footer className="py-6 text-center text-sm text-muted-foreground">
         <p>© {new Date().getFullYear()} Chetna_Ai - Your Mental Wellness Companion</p>
       </footer>
     </div>

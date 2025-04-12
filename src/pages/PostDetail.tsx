@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import { Heart, ArrowLeft, Send } from "lucide-react";
+import { Heart, ArrowLeft, Send, Trash2, Smile, Meh, Frown } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
@@ -10,9 +10,22 @@ import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
+type MoodType = "happy" | "neutral" | "sad" | null;
 
 type Post = {
   id: string;
@@ -23,6 +36,7 @@ type Post = {
   upvotes: number;
   category: string | null;
   user_id: string;
+  mood?: MoodType;
   author_name?: string;
 };
 
@@ -40,9 +54,9 @@ const PostDetail: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [newComment, setNewComment] = useState("");
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   
   const fetchPost = async (): Promise<Post> => {
-    // Type assertion for Supabase client
     const { data, error } = await supabase
       .from("community_posts")
       .select("*")
@@ -61,7 +75,6 @@ const PostDetail: React.FC = () => {
   };
   
   const fetchComments = async (): Promise<Comment[]> => {
-    // Type assertion for Supabase client
     const { data, error } = await supabase
       .from("post_comments")
       .select("*")
@@ -96,6 +109,8 @@ const PostDetail: React.FC = () => {
     enabled: !!id,
   });
   
+  const isAuthor = user && post && user.id === post.user_id;
+  
   const handleUpvote = async () => {
     if (!user) {
       toast({
@@ -110,7 +125,6 @@ const PostDetail: React.FC = () => {
     if (!post) return;
     
     try {
-      // Type assertion for Supabase client
       const { data, error } = await supabase
         .from("community_posts")
         .update({ upvotes: post.upvotes + 1 })
@@ -128,6 +142,47 @@ const PostDetail: React.FC = () => {
       console.error("Error upvoting post:", error);
       toast({
         title: "Failed to upvote",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
+  };
+  
+  const handleDeletePost = async () => {
+    if (!isAuthor || !post) {
+      toast({
+        title: "Permission denied",
+        description: "You can only delete your own posts",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    try {
+      // Delete all comments for this post first
+      await supabase
+        .from("post_comments")
+        .delete()
+        .eq("post_id", post.id);
+        
+      // Then delete the post
+      const { error } = await supabase
+        .from("community_posts")
+        .delete()
+        .eq("id", post.id);
+        
+      if (error) throw error;
+      
+      toast({
+        title: "Post deleted",
+        description: "Your post has been removed successfully",
+      });
+      
+      navigate("/community");
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      toast({
+        title: "Failed to delete post",
         description: "Please try again later",
         variant: "destructive",
       });
@@ -154,7 +209,6 @@ const PostDetail: React.FC = () => {
     }
     
     try {
-      // Type assertion and direct values for Supabase client
       const { data, error } = await supabase
         .from("post_comments")
         .insert({
@@ -183,6 +237,19 @@ const PostDetail: React.FC = () => {
     }
   };
   
+  const getMoodIcon = (mood?: MoodType) => {
+    switch(mood) {
+      case "happy":
+        return <Smile className="h-5 w-5 text-green-500" />;
+      case "neutral":
+        return <Meh className="h-5 w-5 text-amber-500" />;
+      case "sad":
+        return <Frown className="h-5 w-5 text-red-500" />;
+      default:
+        return null;
+    }
+  };
+  
   useEffect(() => {
     // Enable realtime subscription for comments
     const channel = supabase
@@ -207,16 +274,16 @@ const PostDetail: React.FC = () => {
   }, [id, refetchComments]);
   
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-chetna-light to-white dark:from-chetna-dark dark:to-chetna-dark/80">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-chetna-light to-white dark:from-chetna-dark dark:to-chetna-darker">
       <Header />
       
       <main className="flex-grow container mx-auto px-4 py-6 space-y-6">
         <Button
           variant="ghost"
           onClick={() => navigate("/community")}
-          className="mb-4"
+          className="group"
         >
-          <ArrowLeft className="h-4 w-4 mr-2" />
+          <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
           Back to Community
         </Button>
         
@@ -230,10 +297,13 @@ const PostDetail: React.FC = () => {
             </CardContent>
           </Card>
         ) : post ? (
-          <Card className="bg-white dark:bg-card">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <h1 className="text-2xl font-bold">{post.title}</h1>
+          <Card className="bg-white dark:bg-card overflow-hidden border border-border/30 dark:border-border/20">
+            <CardHeader className="p-6 pb-4 bg-muted/20">
+              <div className="flex items-start justify-between mb-1">
+                <div className="flex items-center gap-3">
+                  {post.mood && getMoodIcon(post.mood)}
+                  <h1 className="text-2xl font-bold">{post.title}</h1>
+                </div>
                 {post.category && (
                   <Badge variant="outline" className="ml-2">
                     {post.category}
@@ -241,22 +311,39 @@ const PostDetail: React.FC = () => {
                 )}
               </div>
               
-              <p className="text-muted-foreground mb-6">
+              <p className="text-muted-foreground">
                 Posted by {post.author_name || "Anonymous"} • {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
               </p>
-              
-              <p className="whitespace-pre-line">{post.content}</p>
+            </CardHeader>
+            
+            <CardContent className="p-6 pt-4">
+              <div className="bg-muted/10 dark:bg-card/80 p-4 rounded-lg border border-border/20 dark:border-border/10 mb-4">
+                <p className="whitespace-pre-line">{post.content}</p>
+              </div>
             </CardContent>
             
-            <CardFooter className="px-6 py-4 border-t">
+            <CardFooter className="px-6 py-4 border-t flex justify-between items-center">
               <Button 
                 variant="outline" 
                 onClick={handleUpvote}
-                className="ml-auto"
+                className="chetna-button text-white"
+                size="sm"
               >
                 <Heart className="h-4 w-4 mr-2" />
                 Upvote ({post.upvotes})
               </Button>
+              
+              {isAuthor && (
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowDeleteDialog(true)}
+                  className="text-destructive border-destructive hover:bg-destructive/10"
+                  size="sm"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete Post
+                </Button>
+              )}
             </CardFooter>
           </Card>
         ) : (
@@ -268,29 +355,36 @@ const PostDetail: React.FC = () => {
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Comments</h2>
           
-          <div className="flex gap-4">
-            <Textarea
-              placeholder="Share your thoughts..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="flex-grow"
-            />
-            <Button 
-              onClick={handleSubmitComment}
-              disabled={!newComment.trim()}
-              className="self-end"
-            >
-              <Send className="h-4 w-4 mr-2" />
-              Post
-            </Button>
-          </div>
+          <Card className="bg-white dark:bg-card border border-border/30 dark:border-border/20">
+            <CardContent className="p-4">
+              <div className="flex gap-4">
+                <Textarea
+                  placeholder="Share your thoughts..."
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  className="flex-grow"
+                />
+                <Button 
+                  onClick={handleSubmitComment}
+                  disabled={!newComment.trim()}
+                  className="self-end chetna-button"
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  Post
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
           
           <div className="space-y-4 mt-6">
             {commentsLoading ? (
               Array(3).fill(0).map((_, i) => (
                 <Card key={i} className="bg-white dark:bg-card">
                   <CardContent className="p-4">
-                    <Skeleton className="h-4 w-1/4 mb-2" />
+                    <div className="flex items-center gap-3 mb-2">
+                      <Skeleton className="h-8 w-8 rounded-full" />
+                      <Skeleton className="h-4 w-1/4" />
+                    </div>
                     <Skeleton className="h-4 w-full mb-1" />
                     <Skeleton className="h-4 w-2/3" />
                   </CardContent>
@@ -298,17 +392,29 @@ const PostDetail: React.FC = () => {
               ))
             ) : comments && comments.length > 0 ? (
               comments.map((comment) => (
-                <Card key={comment.id} className="bg-white dark:bg-card">
+                <Card key={comment.id} className="bg-white dark:bg-card border border-border/30 dark:border-border/20">
                   <CardContent className="p-4">
-                    <p className="text-muted-foreground text-sm mb-2">
-                      {comment.author_name || "Anonymous"} • {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
-                    </p>
-                    <p className="whitespace-pre-line">{comment.content}</p>
+                    <div className="flex items-center gap-3 mb-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-gradient-to-br from-chetna-primary to-purple-400 text-white text-xs">
+                          {comment.author_name?.charAt(0) || "A"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <p className="text-sm font-medium">
+                        {comment.author_name || "Anonymous"} 
+                        <span className="text-muted-foreground font-normal ml-2">
+                          {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="ml-11">
+                      <p className="whitespace-pre-line text-sm">{comment.content}</p>
+                    </div>
                   </CardContent>
                 </Card>
               ))
             ) : (
-              <div className="text-center p-6 bg-white dark:bg-card rounded-lg">
+              <div className="text-center p-8 bg-white dark:bg-card rounded-lg border border-border/30 dark:border-border/20">
                 <p className="text-muted-foreground">No comments yet. Be the first to share your thoughts!</p>
               </div>
             )}
@@ -319,6 +425,23 @@ const PostDetail: React.FC = () => {
       <footer className="py-4 text-center text-xs text-muted-foreground">
         <p>© {new Date().getFullYear()} Chetna_Ai - Your Mental Wellness Companion</p>
       </footer>
+      
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your post and all its comments.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeletePost} className="bg-destructive text-destructive-foreground">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
