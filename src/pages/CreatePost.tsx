@@ -37,6 +37,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 type MoodType = "happy" | "neutral" | "sad" | null;
 
@@ -74,6 +75,7 @@ const CreatePost: React.FC = () => {
   const { toast } = useToast();
   const [mood, setMood] = useState<MoodType>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -96,8 +98,17 @@ const CreatePost: React.FC = () => {
   }, [user, navigate, toast]);
   
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (!user) return;
+    if (!user) {
+      toast({
+        title: "Login required",
+        description: "Please login first to create a post",
+        variant: "destructive",
+      });
+      navigate("/login");
+      return;
+    }
     
+    setError(null);
     setIsSubmitting(true);
     
     try {
@@ -106,6 +117,16 @@ const CreatePost: React.FC = () => {
         mood, 
         user_id: user.id 
       });
+      
+      // Check if the user is authenticated before attempting to create a post
+      if (!user.id) {
+        throw new Error("User authentication issue. Please log out and log back in.");
+      }
+      
+      // Make sure all required fields are present
+      if (!values.title || !values.content || !values.category) {
+        throw new Error("Please fill in all required fields");
+      }
       
       const { data, error } = await supabase
         .from("community_posts")
@@ -135,11 +156,27 @@ const CreatePost: React.FC = () => {
       });
       
       navigate(`/community/post/${data[0].id}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating post:", error);
+      
+      // Set specific error message based on the error
+      let errorMessage = "Please try again later";
+      
+      if (error.message) {
+        if (error.message.includes("violates foreign key constraint")) {
+          errorMessage = "Authentication issue. Please log out and log back in.";
+        } else if (error.message.includes("auth/uid()")) {
+          errorMessage = "You must be logged in to create a post";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      setError(errorMessage);
+      
       toast({
         title: "Failed to create post",
-        description: "Please try again later",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -168,6 +205,15 @@ const CreatePost: React.FC = () => {
               Share your thoughts, experiences, or ask for support from the community
             </CardDescription>
           </CardHeader>
+          
+          {error && (
+            <div className="px-6">
+              <Alert variant="destructive" className="mb-6">
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            </div>
+          )}
           
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
