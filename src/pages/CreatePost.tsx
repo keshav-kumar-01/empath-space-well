@@ -101,6 +101,12 @@ const CreatePost: React.FC = () => {
     setIsSubmitting(true);
     
     try {
+      console.log("Creating post with values:", { 
+        ...values, 
+        mood, 
+        user_id: user.id 
+      });
+      
       const { data, error } = await supabase
         .from("community_posts")
         .insert({
@@ -111,8 +117,17 @@ const CreatePost: React.FC = () => {
           mood: mood,
         })
         .select();
-        
-      if (error) throw error;
+      
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
+      
+      if (!data || data.length === 0) {
+        throw new Error("No data returned from insert operation");
+      }
+      
+      console.log("Post created successfully:", data);
       
       toast({
         title: "Post created",
