@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Send, Smile, Meh, Frown } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -86,7 +86,8 @@ const CreatePost: React.FC = () => {
     },
   });
   
-  React.useEffect(() => {
+  useEffect(() => {
+    // Check if user is logged in on component mount
     if (!user) {
       toast({
         title: "Login required",
@@ -112,36 +113,39 @@ const CreatePost: React.FC = () => {
     setIsSubmitting(true);
     
     try {
+      // Debug information
+      console.log("User ID being used:", user.id);
+      console.log("Form values:", values);
       console.log("Creating post with values:", { 
         ...values, 
         mood, 
         user_id: user.id 
       });
       
-      // Check if the user is authenticated before attempting to create a post
+      // Additional validation
       if (!user.id) {
         throw new Error("User authentication issue. Please log out and log back in.");
       }
       
-      // Make sure all required fields are present
       if (!values.title || !values.content || !values.category) {
         throw new Error("Please fill in all required fields");
       }
       
-      const { data, error } = await supabase
+      // Make sure to use proper error handling with Supabase
+      const { data, error: supabaseError } = await supabase
         .from("community_posts")
-        .insert({
+        .insert([{
           title: values.title,
           content: values.content,
           category: values.category,
           user_id: user.id,
           mood: mood,
-        })
+        }])
         .select();
       
-      if (error) {
-        console.error("Supabase error:", error);
-        throw error;
+      if (supabaseError) {
+        console.error("Supabase error:", supabaseError);
+        throw supabaseError;
       }
       
       if (!data || data.length === 0) {
@@ -167,8 +171,19 @@ const CreatePost: React.FC = () => {
           errorMessage = "Authentication issue. Please log out and log back in.";
         } else if (error.message.includes("auth/uid()")) {
           errorMessage = "You must be logged in to create a post";
+        } else if (error.message.includes("duplicate key")) {
+          errorMessage = "A similar post already exists";
         } else {
           errorMessage = error.message;
+        }
+      } else if (error.code) {
+        // Handle Supabase error codes
+        if (error.code === "42501") {
+          errorMessage = "You don't have permission to create posts";
+        } else if (error.code === "23505") {
+          errorMessage = "A similar post already exists";
+        } else {
+          errorMessage = `Database error (${error.code}). Please try again later.`;
         }
       }
       
