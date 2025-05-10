@@ -121,6 +121,7 @@ const CreatePost: React.FC = () => {
         mood, 
         user_id: user.id 
       });
+      console.log("Mood value:", mood); // Extra debug for mood value
       
       // Additional validation
       if (!user.id) {
@@ -131,16 +132,21 @@ const CreatePost: React.FC = () => {
         throw new Error("Please fill in all required fields");
       }
       
+      // Create the post object explicitly to ensure all fields are correctly formatted
+      const postData = {
+        title: values.title,
+        content: values.content,
+        category: values.category,
+        user_id: user.id,
+        mood: mood, // This should now match the column in the database
+      };
+      
+      console.log("Final post data being inserted:", postData);
+      
       // Make sure to use proper error handling with Supabase
       const { data, error: supabaseError } = await supabase
         .from("community_posts")
-        .insert([{
-          title: values.title,
-          content: values.content,
-          category: values.category,
-          user_id: user.id,
-          mood: mood,
-        }])
+        .insert([postData])
         .select();
       
       if (supabaseError) {
@@ -173,6 +179,8 @@ const CreatePost: React.FC = () => {
           errorMessage = "You must be logged in to create a post";
         } else if (error.message.includes("duplicate key")) {
           errorMessage = "A similar post already exists";
+        } else if (error.message.includes("column")) {
+          errorMessage = `Database schema issue: ${error.message}`;
         } else {
           errorMessage = error.message;
         }
@@ -182,6 +190,8 @@ const CreatePost: React.FC = () => {
           errorMessage = "You don't have permission to create posts";
         } else if (error.code === "23505") {
           errorMessage = "A similar post already exists";
+        } else if (error.code === "42703") {
+          errorMessage = "Database column missing. Please contact support.";
         } else {
           errorMessage = `Database error (${error.code}). Please try again later.`;
         }

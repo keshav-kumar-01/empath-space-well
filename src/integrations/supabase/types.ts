@@ -15,6 +15,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          mood: string | null
           title: string
           updated_at: string
           upvotes: number
@@ -25,6 +26,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          mood?: string | null
           title: string
           updated_at?: string
           upvotes?: number
@@ -35,6 +37,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          mood?: string | null
           title?: string
           updated_at?: string
           upvotes?: number
