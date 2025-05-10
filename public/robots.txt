@@ -1,3 +1,13 @@
+
+# Robots.txt for Chetna_AI Mental Wellness Companion
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://chetna-ai.com/sitemap.xml
+
+# Specific agent rules
 User-agent: Googlebot
 Allow: /
 
@@ -10,5 +20,7 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+# Disallow certain paths
+Disallow: /admin/
+Disallow: /private/
+Disallow: /temp/

@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import IntroSection from "@/components/IntroSection";
@@ -19,6 +20,33 @@ const Index: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-white to-[#FDE1D3] dark:from-chetna-dark dark:to-chetna-darker">
+      <Helmet>
+        <title>Chetna_AI - Your Mental Wellness Companion</title>
+        <meta name="description" content="Experience compassionate AI support for anxiety, depression, stress, and other mental health challenges with Chetna_AI - your mental wellness companion." />
+        <meta name="keywords" content="mental health AI, anxiety help, depression support, stress management, emotional wellness, mental health chat" />
+        <link rel="canonical" href="https://chetna-ai.com/" />
+        <script type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "HealthAndBeautyBusiness",
+              "name": "Chetna_AI",
+              "description": "Your AI Mental Wellness Companion",
+              "url": "https://chetna-ai.com",
+              "sameAs": [
+                "https://www.instagram.com/_chetna_ai_?utm_source=qr&igsh=YzU4eThnZzMxMXMw"
+              ],
+              "openingHours": "Mo-Su 00:00-24:00",
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "customer support",
+                "email": "support@chetna-ai.com"
+              }
+            }
+          `}
+        </script>
+      </Helmet>
+      
       <Header />
       
       <main className="flex-grow container mx-auto px-4 py-6 flex items-center justify-center">
