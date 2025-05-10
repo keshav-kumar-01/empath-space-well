@@ -17,13 +17,13 @@ const Footer: React.FC = () => {
           <div className="flex justify-center gap-6">
             <div className="flex items-center gap-2">
               <a 
-                href="https://www.instagram.com/chetna_ai?utm_source=qr&igsh=YzU4eThnZzMxMXMw" 
+                href="https://www.instagram.com/_chetna_ai?utm_source=qr&igsh=YzU4eThnZzMxMXMw" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-sm text-muted-foreground dark:text-white/70 hover:text-chetna-primary dark:hover:text-chetna-primary transition-colors"
               >
                 <Instagram size={18} className="text-pink-500" />
-                <span>chetna_ai</span>
+                <span>_chetna_ai</span>
               </a>
             </div>
             <Link to="/about" className="text-sm text-muted-foreground dark:text-white/70 hover:text-chetna-primary dark:hover:text-chetna-primary transition-colors">
