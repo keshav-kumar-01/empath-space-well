@@ -84,7 +84,7 @@ const Privacy: React.FC = () => {
               <li>Withdraw consent at any time</li>
             </ul>
             <p className="mb-4">
-              Email us at support@chetna.live to request data changes.
+              Email us at keshavkumarhf@gmail.com to request data changes.
             </p>
             
             <h2 className="text-xl font-semibold mt-6 mb-3">5. Security</h2>
@@ -104,7 +104,7 @@ const Privacy: React.FC = () => {
             
             <h2 className="text-xl font-semibold mt-6 mb-3">Contact Us</h2>
             <p className="mb-4">
-              If you have any questions about this Privacy Policy, please contact us at support@chetna.live
+              If you have any questions about this Privacy Policy, please contact us at keshavkumarhf@gmail.com
             </p>
           </div>
         </div>
