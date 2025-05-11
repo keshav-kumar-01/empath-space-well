@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
             © {currentYear} Chetna_Ai - Your Mental Wellness Companion
           </p>
           
-          <div className="flex justify-center gap-6">
+          <div className="flex flex-wrap justify-center gap-3 md:gap-6">
             <div className="flex items-center gap-2">
               <a 
                 href="https://www.instagram.com/_chetna_ai_?utm_source=qr&igsh=YzU4eThnZzMxMXMw" 
