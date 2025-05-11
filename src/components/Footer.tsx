@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Instagram } from "lucide-react";
+import { Instagram, BrainCircuit } from "lucide-react";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -26,6 +26,10 @@ const Footer: React.FC = () => {
                 <span>_chetna_ai_</span>
               </a>
             </div>
+            <Link to="/quiz" className="flex items-center gap-1.5 text-sm text-muted-foreground dark:text-white/70 hover:text-chetna-primary dark:hover:text-chetna-primary transition-colors">
+              <BrainCircuit size={18} className="text-chetna-primary" />
+              <span>Chetna Quest</span>
+            </Link>
             <Link to="/about" className="text-sm text-muted-foreground dark:text-white/70 hover:text-chetna-primary dark:hover:text-chetna-primary transition-colors">
               About
             </Link>
