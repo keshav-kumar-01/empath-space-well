@@ -1,8 +1,9 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageSquare, Shield, Brain } from "lucide-react";
+import { Heart, MessageSquare, Shield, Brain, Star } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { Link } from "react-router-dom";
 
 interface IntroSectionProps {
   onStartChat: () => void;
@@ -30,7 +31,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onStartChat }) => {
         }
       </p>
       
-      <div className="pt-6">
+      <div className="flex justify-center space-x-4 pt-6">
         <Button 
           size="lg" 
           onClick={onStartChat}
@@ -38,6 +39,16 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onStartChat }) => {
         >
           Start Chatting <MessageSquare className="ml-2" />
         </Button>
+        
+        <Link to="/quiz">
+          <Button 
+            size="lg"
+            variant="outline" 
+            className="rounded-full px-8 py-6 text-lg border-chetna-primary text-chetna-primary hover:bg-chetna-primary/10 transform hover:scale-105 transition-all duration-300"
+          >
+            Chetna Quest <Star className="ml-2" />
+          </Button>
+        </Link>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">

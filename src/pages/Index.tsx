@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import IntroSection from "@/components/IntroSection";
 import ChatInterface from "@/components/ChatInterface";
-import { MessageSquare, Users } from "lucide-react";
+import { MessageSquare, Users, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -75,6 +75,15 @@ const Index: React.FC = () => {
                   >
                     <Users className="mr-2 h-4 w-4" />
                     Community
+                  </Button>
+                </Link>
+                <Link to="/quiz">
+                  <Button
+                    variant="ghost"
+                    className="rounded-full"
+                  >
+                    <Star className="mr-2 h-4 w-4" />
+                    Chetna Quest
                   </Button>
                 </Link>
               </div>
