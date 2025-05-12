@@ -4,15 +4,17 @@ import { QuizResult as QuizResultType } from '@/types/quiz';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, BrainCircuit, RefreshCw } from 'lucide-react';
+import { CheckCircle, BrainCircuit, RefreshCw, Save } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface QuizResultProps {
   result: QuizResultType;
   onRetakeQuiz: () => void;
+  isSaved?: boolean;
+  isSaving?: boolean;
 }
 
-const QuizResult: React.FC<QuizResultProps> = ({ result, onRetakeQuiz }) => {
+const QuizResult: React.FC<QuizResultProps> = ({ result, onRetakeQuiz, isSaved = false, isSaving = false }) => {
   React.useEffect(() => {
     // Trigger confetti animation when results are shown
     confetti({
@@ -30,6 +32,17 @@ const QuizResult: React.FC<QuizResultProps> = ({ result, onRetakeQuiz }) => {
             <BrainCircuit size={32} />
           </div>
           <CardTitle className="text-2xl font-bold text-chetna-primary">{result.personalityType}</CardTitle>
+          {isSaved && (
+            <div className="flex items-center justify-center mt-2 text-sm text-green-600 dark:text-green-400">
+              <Save className="h-4 w-4 mr-1" />
+              Results saved to your profile
+            </div>
+          )}
+          {isSaving && (
+            <div className="flex items-center justify-center mt-2 text-sm text-amber-600 dark:text-amber-400">
+              Saving results...
+            </div>
+          )}
         </CardHeader>
         
         <CardContent className="pt-6 pb-4">
