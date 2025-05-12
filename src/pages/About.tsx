@@ -1,8 +1,9 @@
-
 import React from "react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, Heart, User, MessageSquare, HeartHandshake, Lightbulb } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 const AboutPage = () => {
   const teamMembers = [
@@ -28,6 +29,12 @@ const AboutPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-white to-[#FDE1D3] dark:from-chetna-dark dark:to-chetna-darker">
+      <Helmet>
+        <title>About Us - Chetna AI</title>
+        <meta name="description" content="Learn about Chetna AI - Your Mental Wellness Companion and the team behind it." />
+        <link rel="canonical" href="https://chetna.live/about" />
+      </Helmet>
+      
       <Header />
       
       <main className="flex-grow container mx-auto px-4 py-8">
@@ -238,24 +245,7 @@ const AboutPage = () => {
         </section>
       </main>
       
-      <footer className="py-6 mt-8 bg-white/60 dark:bg-chetna-darker/60 backdrop-blur-sm border-t border-chetna-primary/10 dark:border-chetna-primary/20">
-        <div className="container mx-auto px-4">
-          <p className="text-center text-sm text-muted-foreground dark:text-white/80">
-            © {new Date().getFullYear()} Chetna_Ai - Your Mental Wellness Companion
-          </p>
-          <div className="flex justify-center gap-6 mt-4">
-            <a href="#" className="text-sm text-muted-foreground dark:text-white/70 hover:text-chetna-primary dark:hover:text-chetna-primary transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-sm text-muted-foreground dark:text-white/70 hover:text-chetna-primary dark:hover:text-chetna-primary transition-colors">
-              Terms of Service
-            </a>
-            <a href="#" className="text-sm text-muted-foreground dark:text-white/70 hover:text-chetna-primary dark:hover:text-chetna-primary transition-colors">
-              Contact Us
-            </a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
