@@ -10,6 +10,9 @@ import QuizResult from '@/components/quiz/QuizResult';
 import { quizQuestions, getQuizResult } from '@/data/quizData';
 import { PersonalityTraits, QuizResult as QuizResultType } from '@/types/quiz';
 import { BrainCircuit, ArrowRight } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const PersonalityQuiz: React.FC = () => {
   const [started, setStarted] = useState(false);
@@ -20,7 +23,11 @@ const PersonalityQuiz: React.FC = () => {
     social: 0,
     creative: 0
   });
+  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
   const [quizResult, setQuizResult] = useState<QuizResultType | null>(null);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleStartQuiz = () => {
     setStarted(true);
@@ -31,31 +38,91 @@ const PersonalityQuiz: React.FC = () => {
       social: 0,
       creative: 0
     });
+    setUserAnswers({});
     setQuizResult(null);
   };
 
-  const handleAnswer = (optionId: string) => {
+  const handleAnswer = async (optionId: string) => {
     const currentQuestion = quizQuestions[currentQuestionIndex];
     const selectedOption = currentQuestion.options.find(option => option.id === optionId);
     
     if (selectedOption) {
-      setUserTraits(prev => ({
-        ...prev,
-        [selectedOption.trait]: prev[selectedOption.trait] + selectedOption.value
-      }));
+      // Store the user's answer
+      const updatedAnswers = {
+        ...userAnswers,
+        [currentQuestion.id]: optionId
+      };
+      setUserAnswers(updatedAnswers);
+      
+      // Update traits based on the answer
+      const updatedTraits = {
+        ...userTraits,
+        [selectedOption.trait]: userTraits[selectedOption.trait] + selectedOption.value
+      };
+      setUserTraits(updatedTraits);
       
       // Move to next question or finish quiz
       if (currentQuestionIndex < quizQuestions.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
       } else {
-        // Calculate and show result
-        const updatedTraits = {
-          ...userTraits,
-          [selectedOption.trait]: userTraits[selectedOption.trait] + selectedOption.value
-        };
+        // Calculate result
         const result = getQuizResult(updatedTraits);
         setQuizResult(result);
+        
+        // Save result to database if user is logged in
+        if (user) {
+          await saveQuizResult(result, updatedTraits, updatedAnswers);
+        } else {
+          toast({
+            title: "Not logged in",
+            description: "Log in to save your quiz results",
+            variant: "default",
+          });
+        }
       }
+    }
+  };
+
+  const saveQuizResult = async (
+    result: QuizResultType, 
+    traits: Record<string, number>,
+    answers: Record<string, string>
+  ) => {
+    if (!user) return;
+    
+    setIsSaving(true);
+    
+    try {
+      const { error } = await supabase
+        .from('quiz_results')
+        .insert({
+          user_id: user.id,
+          personality_type: result.personalityType,
+          emotional: traits.emotional,
+          analytical: traits.analytical,
+          social: traits.social,
+          creative: traits.creative,
+          answers: answers
+        });
+        
+      if (error) {
+        throw error;
+      }
+      
+      toast({
+        title: "Results saved!",
+        description: "Your personality quiz results have been saved.",
+        variant: "default",
+      });
+    } catch (error) {
+      console.error("Error saving quiz results:", error);
+      toast({
+        title: "Couldn't save results",
+        description: "There was a problem saving your quiz results.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -95,7 +162,7 @@ const PersonalityQuiz: React.FC = () => {
         </div>
       );
     } else if (quizResult) {
-      return <QuizResult result={quizResult} onRetakeQuiz={handleStartQuiz} />;
+      return <QuizResult result={quizResult} onRetakeQuiz={handleStartQuiz} isSaved={user !== null} isSaving={isSaving} />;
     } else {
       return (
         <div className="w-full max-w-3xl mx-auto">

@@ -158,6 +158,42 @@ export type Database = {
           },
         ]
       }
+      quiz_results: {
+        Row: {
+          analytical: number
+          answers: Json | null
+          created_at: string
+          creative: number
+          emotional: number
+          id: string
+          personality_type: string
+          social: number
+          user_id: string
+        }
+        Insert: {
+          analytical: number
+          answers?: Json | null
+          created_at?: string
+          creative: number
+          emotional: number
+          id?: string
+          personality_type: string
+          social: number
+          user_id: string
+        }
+        Update: {
+          analytical?: number
+          answers?: Json | null
+          created_at?: string
+          creative?: number
+          emotional?: number
+          id?: string
+          personality_type?: string
+          social?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
