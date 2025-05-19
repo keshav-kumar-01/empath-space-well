@@ -5,7 +5,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://chetna-ai.com/sitemap.xml
+Sitemap: https://empath-space-well.vercel.app/sitemap.xml
 
 # Specific agent rules
 User-agent: Googlebot
