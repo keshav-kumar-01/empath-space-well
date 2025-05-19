@@ -24,7 +24,7 @@ const Index: React.FC = () => {
         <title>Chetna_AI - Your Mental Wellness Companion</title>
         <meta name="description" content="Experience compassionate AI support for anxiety, depression, stress, and other mental health challenges with Chetna_AI - your mental wellness companion." />
         <meta name="keywords" content="mental health AI, anxiety help, depression support, stress management, emotional wellness, mental health chat" />
-        <link rel="canonical" href="https://chetna-ai.com/" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/" />
         <script type="application/ld+json">
           {`
             {
@@ -32,7 +32,7 @@ const Index: React.FC = () => {
               "@type": "HealthAndBeautyBusiness",
               "name": "Chetna_AI",
               "description": "Your AI Mental Wellness Companion",
-              "url": "https://chetna-ai.com",
+              "url": "https://empath-space-well.vercel.app",
               "sameAs": [
                 "https://www.instagram.com/_chetna_ai_?utm_source=qr&igsh=YzU4eThnZzMxMXMw"
               ],
