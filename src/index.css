@@ -1,10 +1,11 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
-/* Base styles with smoother curves */
+/* Base styles */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -57,17 +58,6 @@
   body {
     @apply bg-gradient-to-b from-white to-[#FDE1D3] dark:from-chetna-dark dark:to-chetna-darker;
   }
-  
-  button, 
-  .rounded-lg, 
-  .rounded-xl, 
-  .rounded-2xl,
-  .card,
-  input,
-  textarea,
-  .message-container {
-    @apply transition-all duration-200;
-  }
 }
 
 /* Breathing dots animation for chat typing indicator */
@@ -84,34 +74,6 @@
   50% {
     transform: scale(1);
     opacity: 1;
-  }
-}
-
-/* Pulsing animation for recording indicator */
-.mic-pulse {
-  position: relative;
-}
-
-.mic-pulse::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 9999px;
-  animation: mic-pulse 2s infinite;
-}
-
-@keyframes mic-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
   }
 }
 
@@ -204,61 +166,6 @@
   background: linear-gradient(135deg, #9b87f5 0%, #7C65E1 100%);
 }
 
-/* Card hover animations */
-.feature-card {
-  transition: all 0.3s ease;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  background: linear-gradient(to bottom, white, #fafafa);
-  border: 1px solid rgba(124, 101, 225, 0.1);
-}
-
-.dark .feature-card {
-  background: linear-gradient(to bottom, rgba(34, 31, 38, 0.9), rgba(26, 20, 33, 0.95));
-  border: 1px solid rgba(124, 101, 225, 0.2);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(124, 101, 225, 0.15);
-  border-color: rgba(124, 101, 225, 0.2);
-}
-
-.dark .feature-card:hover {
-  box-shadow: 0 10px 25px rgba(124, 101, 225, 0.25);
-  border-color: rgba(124, 101, 225, 0.3);
-}
-
-/* Page transitions */
-.page-enter {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.page-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 300ms, transform 300ms;
-}
-
-.page-exit {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.page-exit-active {
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 200ms, transform 200ms;
-}
-
-/* Custom focus styles */
-.focus-ring {
-  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-chetna-primary focus-visible:ring-opacity-75;
-}
-
 /* Section styles */
 .section-container {
   @apply py-12 md:py-20 px-4 md:px-0;
@@ -286,48 +193,8 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
 }
 
-/* Dropdown menu fixes */
-.dropdown-content {
-  @apply bg-white dark:bg-card border border-border shadow-lg rounded-xl;
-  backdrop-filter: blur(10px);
-}
-
-/* Community section styling */
-.community-card {
-  background: linear-gradient(to bottom, white, #FDE1D3/10);
-  border: 1px solid rgba(124, 101, 225, 0.1);
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.community-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(124, 101, 225, 0.15);
-  border-color: rgba(124, 101, 225, 0.2);
-}
-
-.community-header {
-  background: linear-gradient(135deg, rgba(253, 225, 211, 0.2) 0%, rgba(255, 255, 255, 0.5) 100%);
-  padding: 1.5rem;
-  border-bottom: 1px solid rgba(124, 101, 225, 0.1);
-}
-
-.community-engagement {
-  @apply flex items-center gap-3 mt-4 text-sm text-gray-500;
-}
-
-.engagement-item {
-  @apply flex items-center gap-1.5 hover:text-chetna-primary transition-colors;
-}
-
 /* Dark mode text adjustments */
 .dark .text-muted-foreground {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.dark .feature-card p {
   color: rgba(255, 255, 255, 0.8);
 }
 
