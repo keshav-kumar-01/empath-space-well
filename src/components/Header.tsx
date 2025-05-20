@@ -53,7 +53,7 @@ const MobileNavLink = ({ href, children, onClick, active = false }) => {
 };
 
 const Header = () => {
-  const { user, signOut } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") || "light"
@@ -75,7 +75,7 @@ const Header = () => {
   };
 
   const handleSignOut = async () => {
-    await signOut();
+    await logout();
   };
 
   const isActive = (path) => {
@@ -273,16 +273,16 @@ const Header = () => {
 
           {user ? (
             <>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2"
-                as={Link}
-                to="/profile"
-              >
-                <User size={16} />
-                Profile
-              </Button>
+              <Link to="/profile">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-2"
+                >
+                  <User size={16} />
+                  Profile
+                </Button>
+              </Link>
               <Button
                 variant="ghost"
                 size="sm"
@@ -294,16 +294,16 @@ const Header = () => {
               </Button>
             </>
           ) : (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-2"
-              as={Link}
-              to="/login"
-            >
-              <LogIn size={16} />
-              Sign in
-            </Button>
+            <Link to="/login">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-2"
+              >
+                <LogIn size={16} />
+                Sign in
+              </Button>
+            </Link>
           )}
         </div>
       </div>
