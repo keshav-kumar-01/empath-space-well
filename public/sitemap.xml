@@ -1,44 +1,51 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://empath-space-well.vercel.app/</loc>
-    <lastmod>2025-05-19</lastmod>
+    <lastmod>2025-05-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://empath-space-well.vercel.app/about</loc>
-    <lastmod>2025-05-19</lastmod>
+    <lastmod>2025-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://empath-space-well.vercel.app/journal</loc>
-    <lastmod>2025-05-19</lastmod>
+    <lastmod>2025-05-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://empath-space-well.vercel.app/community</loc>
-    <lastmod>2025-05-19</lastmod>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://empath-space-well.vercel.app/blog</loc>
+    <lastmod>2025-05-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://empath-space-well.vercel.app/feedback</loc>
-    <lastmod>2025-05-19</lastmod>
+    <lastmod>2025-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://empath-space-well.vercel.app/privacy</loc>
-    <lastmod>2025-05-19</lastmod>
+    <lastmod>2025-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://empath-space-well.vercel.app/terms</loc>
-    <lastmod>2025-05-19</lastmod>
+    <lastmod>2025-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>

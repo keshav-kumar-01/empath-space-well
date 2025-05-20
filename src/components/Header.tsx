@@ -1,192 +1,310 @@
 
-import React, { useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Menu, X, Moon, Sun, User } from "lucide-react";
-import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { Button } from "@/components/ui/button";
+import { useMediaQuery } from "@/hooks/use-mobile";
 import {
   Sheet,
+  SheetTrigger,
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
-import { useAuth } from "@/context/AuthContext";
+import { Menu, X, Sun, Moon, LogOut, LogIn, User } from "lucide-react";
 
-const Header: React.FC = () => {
-  const { theme, setTheme, resolvedTheme } = useTheme();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { user, logout } = useAuth();
-  
-  const routes = [
-    { path: "/", label: "Home" },
-    { path: "/community", label: "Community" },
-    { path: "/journal", label: "Journal" },
-    { path: "/feedback", label: "Feedback" },
-    { path: "/about", label: "About Us" },
-  ];
-  
-  const isActive = (path: string) => location.pathname === path;
-  
-  const handleLogout = async () => {
-    await logout();
-    navigate("/");
-  };
-  
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(part => part[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
-  };
-  
-  const toggleTheme = () => {
-    const currentTheme = resolvedTheme || theme;
-    const newTheme = currentTheme === "dark" ? "light" : "dark";
-    
-    console.log(`Toggling theme from ${currentTheme} to ${newTheme}`);
-    setTheme(newTheme);
-  };
-  
+const NavLink = ({ href, children, active = false }) => {
   return (
-    <header className="bg-gradient-to-r from-white to-[#FDE1D3] dark:from-chetna-dark dark:to-chetna-darker border-b border-chetna-primary/10 dark:border-chetna-primary/20 shadow-sm backdrop-blur-sm">
-      <div className="container mx-auto px-4 flex h-16 items-center justify-between">
-        <div className="flex items-center">
+    <Link
+      to={href}
+      className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+        active
+          ? "bg-primary/10 text-primary dark:bg-chetna-primary/20"
+          : "text-foreground/80 hover:text-foreground hover:bg-muted/50"
+      }`}
+    >
+      {children}
+    </Link>
+  );
+};
+
+const MobileNavLink = ({ href, children, onClick, active = false }) => {
+  return (
+    <Link
+      to={href}
+      onClick={onClick}
+      className={`px-4 py-3 text-base font-medium rounded-md block transition-colors ${
+        active
+          ? "bg-primary/10 text-primary dark:bg-primary/20"
+          : "text-foreground/80 hover:text-foreground hover:bg-muted/50"
+      }`}
+    >
+      {children}
+    </Link>
+  );
+};
+
+const Header = () => {
+  const { user, signOut } = useAuth();
+  const location = useLocation();
+  const [theme, setTheme] = useState(
+    localStorage.getItem("theme") || "light"
+  );
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
+  return (
+    <header className="site-header sticky top-0 z-40 w-full bg-white/80 dark:bg-chetna-darker/80 backdrop-blur-md border-b border-border/40">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-primary/70 bg-clip-text text-transparent hover:from-chetna-primary/70 hover:to-chetna-primary transition-all duration-300">
-              Chetna<span className="text-chetna-accent">_Ai</span>
-            </h1>
+            <h2 className="text-lg md:text-xl font-bold text-chetna-primary">
+              Chetna
+              <span className="text-gray-600 dark:text-gray-300">_AI</span>
+            </h2>
           </Link>
-          
-          <nav className="ml-10 hidden md:flex items-center space-x-4">
-            {routes.map((route) => (
-              <Link
-                key={route.path}
-                to={route.path}
-                className={`font-medium hover:text-chetna-primary transition-colors ${
-                  isActive(route.path) ? "text-chetna-primary" : "text-muted-foreground"
-                }`}
-              >
-                {route.label}
-              </Link>
-            ))}
-          </nav>
         </div>
-        
-        <div className="flex items-center space-x-2">
+
+        {isMobile ? (
+          <>
+            <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden"
+                  aria-label="Menu"
+                >
+                  {showMobileMenu ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <Menu className="h-5 w-5" />
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-[300px] sm:w-[350px]">
+                <SheetHeader className="mb-4">
+                  <SheetTitle>Menu</SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col gap-2">
+                  <MobileNavLink
+                    href="/"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/")}
+                  >
+                    Home
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/journal"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/journal")}
+                  >
+                    Journal
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/community"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/community")}
+                  >
+                    Community
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/blog"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/blog")}
+                  >
+                    Blog
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/feedback"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/feedback")}
+                  >
+                    Feedback
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/about"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/about")}
+                  >
+                    About
+                  </MobileNavLink>
+                  
+                  <div className="border-t border-border/50 my-2 pt-2">
+                    {user ? (
+                      <>
+                        <MobileNavLink
+                          href="/profile"
+                          onClick={() => setShowMobileMenu(false)}
+                          active={isActive("/profile")}
+                        >
+                          <div className="flex items-center gap-2">
+                            <User size={16} />
+                            Profile
+                          </div>
+                        </MobileNavLink>
+                        <Button
+                          variant="ghost"
+                          onClick={() => {
+                            handleSignOut();
+                            setShowMobileMenu(false);
+                          }}
+                          className="w-full justify-start px-4 py-3 h-auto font-medium"
+                        >
+                          <LogOut size={16} className="mr-2" />
+                          Sign out
+                        </Button>
+                      </>
+                    ) : (
+                      <MobileNavLink
+                        href="/login"
+                        onClick={() => setShowMobileMenu(false)}
+                      >
+                        <div className="flex items-center gap-2">
+                          <LogIn size={16} />
+                          Sign In
+                        </div>
+                      </MobileNavLink>
+                    )}
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        toggleTheme();
+                        setShowMobileMenu(false);
+                      }}
+                      className="w-full justify-start px-4 py-3 h-auto font-medium mt-2"
+                    >
+                      {theme === "dark" ? (
+                        <>
+                          <Sun size={16} className="mr-2" />
+                          Light Mode
+                        </>
+                      ) : (
+                        <>
+                          <Moon size={16} className="mr-2" />
+                          Dark Mode
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </>
+        ) : (
+          <NavigationMenu>
+            <NavigationMenuList className="gap-1">
+              <NavigationMenuItem>
+                <NavLink href="/" active={isActive("/")}>
+                  Home
+                </NavLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavLink href="/journal" active={isActive("/journal")}>
+                  Journal
+                </NavLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavLink href="/community" active={isActive("/community")}>
+                  Community
+                </NavLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavLink href="/blog" active={isActive("/blog")}>
+                  Blog
+                </NavLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavLink href="/feedback" active={isActive("/feedback")}>
+                  Feedback
+                </NavLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavLink href="/about" active={isActive("/about")}>
+                  About
+                </NavLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        )}
+
+        <div className="hidden md:flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
-            onClick={toggleTheme}
-            className="rounded-full"
             aria-label="Toggle theme"
+            onClick={toggleTheme}
           >
-            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            <span className="sr-only">Toggle theme</span>
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
           </Button>
-          
+
           {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative rounded-full h-8 w-8 p-0">
-                  <Avatar className="h-8 w-8">
-                    {user.photoURL ? (
-                      <AvatarImage src={user.photoURL} alt={user.name} />
-                    ) : (
-                      <AvatarFallback className="bg-gradient-to-br from-chetna-primary to-chetna-primary/70 text-white">
-                        {getInitials(user.name)}
-                      </AvatarFallback>
-                    )}
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-white/95 dark:bg-chetna-darker/95 backdrop-blur-md border border-chetna-primary/10 dark:border-chetna-primary/20 shadow-lg rounded-xl">
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() => navigate("/profile")}
-                >
-                  <User className="mr-2 h-4 w-4" />
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-2"
+                as={Link}
+                to="/profile"
+              >
+                <User size={16} />
+                Profile
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-2"
+                onClick={handleSignOut}
+              >
+                <LogOut size={16} />
+                Sign out
+              </Button>
+            </>
           ) : (
-            <Button 
-              size="sm" 
-              onClick={() => navigate("/login")} 
-              className="rounded-full px-4 bg-gradient-to-r from-chetna-primary to-chetna-primary/80 hover:from-chetna-primary/80 hover:to-chetna-primary"
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2"
+              as={Link}
+              to="/login"
             >
-              Login
+              <LogIn size={16} />
+              Sign in
             </Button>
           )}
-          
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Open menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="bg-white/95 dark:bg-chetna-darker/95 backdrop-blur-md border-r border-chetna-primary/10 dark:border-chetna-primary/20">
-              <SheetHeader>
-                <SheetTitle className="text-left">
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-primary/70 bg-clip-text text-transparent">
-                    Chetna<span className="text-chetna-accent">_Ai</span>
-                  </h2>
-                </SheetTitle>
-              </SheetHeader>
-              <nav className="flex flex-col space-y-4 mt-8">
-                {routes.map((route) => (
-                  <Link
-                    key={route.path}
-                    to={route.path}
-                    className={`font-medium hover:text-chetna-primary transition-colors ${
-                      isActive(route.path) ? "text-chetna-primary" : "text-muted-foreground"
-                    }`}
-                  >
-                    {route.label}
-                  </Link>
-                ))}
-                
-                {user && (
-                  <Link
-                    to="/profile"
-                    className={`font-medium hover:text-chetna-primary transition-colors ${
-                      isActive("/profile") ? "text-chetna-primary" : "text-muted-foreground"
-                    }`}
-                  >
-                    Profile
-                  </Link>
-                )}
-                
-                {user ? (
-                  <Button variant="outline" onClick={handleLogout} className="rounded-xl dark:border-chetna-primary/30 dark:bg-chetna-primary/10">
-                    Logout
-                  </Button>
-                ) : (
-                  <Button onClick={() => navigate("/login")} className="rounded-xl bg-gradient-to-r from-chetna-primary to-chetna-primary/80 hover:from-chetna-primary/80 hover:to-chetna-primary">
-                    Login
-                  </Button>
-                )}
-              </nav>
-            </SheetContent>
-          </Sheet>
         </div>
       </div>
     </header>

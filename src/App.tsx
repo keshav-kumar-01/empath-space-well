@@ -20,7 +20,11 @@ import NotFound from "./pages/NotFound";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
-import PersonalityQuiz from "./pages/PersonalityQuiz"; // Add this import
+import PersonalityQuiz from "./pages/PersonalityQuiz";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import CreateBlogPost from "./pages/CreateBlogPost";
+import EditBlogPost from "./pages/EditBlogPost";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +50,10 @@ const App = () => (
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/quiz" element={<PersonalityQuiz />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/post/:id" element={<BlogPost />} />
+              <Route path="/blog/create" element={<CreateBlogPost />} />
+              <Route path="/blog/edit/:id" element={<EditBlogPost />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
