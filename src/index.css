@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -57,26 +56,7 @@
   
   body {
     @apply bg-gradient-to-b from-white to-[#FDE1D3] dark:from-chetna-dark dark:to-chetna-darker;
-    min-height: 100vh;
-    overflow-x: hidden;
   }
-}
-
-/* Header styles */
-.site-header {
-  @apply fixed top-0 left-0 right-0 z-40;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.15);
-  border-bottom: 1px solid rgba(124, 101, 225, 0.1);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-
-.dark .site-header {
-  background: rgba(26, 20, 33, 0.25);
-  border-bottom: 1px solid rgba(124, 101, 225, 0.15);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
 }
 
 /* Breathing dots animation for chat typing indicator */
