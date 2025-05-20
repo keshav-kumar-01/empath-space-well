@@ -63,7 +63,10 @@ const Header = () => {
     }
   };
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = useCallback((path) => location.pathname === path, [location.pathname]);
+
+  const getLabel = (path) =>
+    path === "/" ? "Home" : path.replace("/", "").charAt(0).toUpperCase() + path.slice(2);
 
   return (
     <header className="site-header">
@@ -102,7 +105,7 @@ const Header = () => {
                     onClick={() => setShowMobileMenu(false)}
                     active={isActive(path)}
                   >
-                    {path === "/" ? "Home" : path.replace("/", "").charAt(0).toUpperCase() + path.slice(2)}
+                    {getLabel(path)}
                   </MobileNavLink>
                 ))}
                 <div className="border-t border-chetna-primary/10 my-2 pt-2">
@@ -162,19 +165,20 @@ const Header = () => {
               </nav>
             </SheetContent>
           </Sheet>
-        ) : (
-          <nav className="mx-auto">
-            <ul className="flex gap-1 px-4 py-1 bg-white/30 dark:bg-black/20 backdrop-blur-md rounded-full shadow-sm">
-              {["/", "/journal", "/community", "/blog", "/feedback", "/about"].map((path) => (
-                <li key={path}>
-                  <NavLink href={path} active={isActive(path)}>
-                    {path === "/" ? "Home" : path.replace("/", "").charAt(0).toUpperCase() + path.slice(2)}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )}
+        ) : null}
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-2">
+          <ul className="flex gap-1 px-4 py-1 bg-white/30 dark:bg-black/20 backdrop-blur-md rounded-full shadow-sm">
+            {["/", "/journal", "/community", "/blog", "/feedback", "/about"].map((path) => (
+              <li key={path}>
+                <NavLink href={path} active={isActive(path)}>
+                  {getLabel(path)}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         {/* Desktop Auth and Theme Toggle */}
         <div className="hidden md:flex items-center gap-2">
@@ -184,6 +188,7 @@ const Header = () => {
             aria-label="Toggle theme"
             onClick={toggleTheme}
             className="text-gray-800 dark:text-white hover:bg-white/10"
+            title="Toggle Theme"
           >
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>
