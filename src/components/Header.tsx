@@ -27,8 +27,8 @@ const NavLink = ({ href, children, active = false }) => {
       to={href}
       className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
         active
-          ? "bg-primary/10 text-primary dark:bg-chetna-primary/20"
-          : "text-foreground/80 hover:text-foreground hover:bg-muted/50"
+          ? "bg-primary/10 text-primary font-bold dark:bg-primary/20"
+          : "text-foreground hover:text-primary hover:bg-muted/20"
       }`}
     >
       {children}
@@ -43,8 +43,8 @@ const MobileNavLink = ({ href, children, onClick, active = false }) => {
       onClick={onClick}
       className={`px-4 py-3 text-base font-medium rounded-md block transition-colors ${
         active
-          ? "bg-primary/10 text-primary dark:bg-primary/20"
-          : "text-foreground/80 hover:text-foreground hover:bg-muted/50"
+          ? "bg-primary/10 text-primary font-bold dark:bg-primary/20"
+          : "text-foreground hover:text-primary hover:bg-muted/20"
       }`}
     >
       {children}
@@ -83,13 +83,13 @@ const Header = () => {
   };
 
   return (
-    <header className="site-header sticky top-0 z-40 w-full bg-white/80 dark:bg-chetna-darker/80 backdrop-blur-md border-b border-border/40">
+    <header className="site-header sticky top-0 z-40 w-full bg-transparent backdrop-blur-md border-b border-white/10 dark:border-chetna-primary/20 shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center">
-            <h2 className="text-lg md:text-xl font-bold text-chetna-primary">
+            <h2 className="text-lg md:text-xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-accent bg-clip-text text-transparent">
               Chetna
-              <span className="text-gray-600 dark:text-gray-300">_AI</span>
+              <span className="text-gray-800 dark:text-white">_AI</span>
             </h2>
           </Link>
         </div>
@@ -101,7 +101,7 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="md:hidden"
+                  className="md:hidden text-gray-800 dark:text-white hover:bg-white/10"
                   aria-label="Menu"
                 >
                   {showMobileMenu ? (
@@ -111,9 +111,9 @@ const Header = () => {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[300px] sm:w-[350px]">
+              <SheetContent className="w-[300px] sm:w-[350px] bg-white/95 dark:bg-chetna-darker/95 backdrop-blur-lg border-chetna-primary/20">
                 <SheetHeader className="mb-4">
-                  <SheetTitle>Menu</SheetTitle>
+                  <SheetTitle className="text-chetna-primary">Menu</SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col gap-2">
                   <MobileNavLink
@@ -159,7 +159,7 @@ const Header = () => {
                     About
                   </MobileNavLink>
                   
-                  <div className="border-t border-border/50 my-2 pt-2">
+                  <div className="border-t border-chetna-primary/10 my-2 pt-2">
                     {user ? (
                       <>
                         <MobileNavLink
@@ -178,7 +178,7 @@ const Header = () => {
                             handleSignOut();
                             setShowMobileMenu(false);
                           }}
-                          className="w-full justify-start px-4 py-3 h-auto font-medium"
+                          className="w-full justify-start px-4 py-3 h-auto font-medium hover:bg-red-500/10 hover:text-red-500"
                         >
                           <LogOut size={16} className="mr-2" />
                           Sign out
@@ -201,7 +201,7 @@ const Header = () => {
                         toggleTheme();
                         setShowMobileMenu(false);
                       }}
-                      className="w-full justify-start px-4 py-3 h-auto font-medium mt-2"
+                      className="w-full justify-start px-4 py-3 h-auto font-medium mt-2 hover:bg-primary/10"
                     >
                       {theme === "dark" ? (
                         <>
@@ -221,8 +221,8 @@ const Header = () => {
             </Sheet>
           </>
         ) : (
-          <NavigationMenu>
-            <NavigationMenuList className="gap-1">
+          <NavigationMenu className="mx-auto">
+            <NavigationMenuList className="gap-1 px-4 py-1 bg-white/30 dark:bg-black/10 backdrop-blur-md rounded-full shadow-sm">
               <NavigationMenuItem>
                 <NavLink href="/" active={isActive("/")}>
                   Home
@@ -263,6 +263,7 @@ const Header = () => {
             size="icon"
             aria-label="Toggle theme"
             onClick={toggleTheme}
+            className="text-gray-800 dark:text-white hover:bg-white/10"
           >
             {theme === "dark" ? (
               <Sun className="h-5 w-5" />
@@ -277,7 +278,7 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="gap-2"
+                  className="gap-2 text-gray-800 dark:text-white hover:bg-white/10"
                 >
                   <User size={16} />
                   Profile
@@ -286,7 +287,7 @@ const Header = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="gap-2"
+                className="gap-2 text-gray-800 dark:text-white hover:bg-white/10 hover:text-red-500"
                 onClick={handleSignOut}
               >
                 <LogOut size={16} />
@@ -296,9 +297,9 @@ const Header = () => {
           ) : (
             <Link to="/login">
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="gap-2"
+                className="gap-2 border-chetna-primary/30 bg-white/20 text-gray-800 dark:text-white hover:bg-white/30"
               >
                 <LogIn size={16} />
                 Sign in
