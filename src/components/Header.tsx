@@ -83,7 +83,7 @@ const Header = () => {
   };
 
   return (
-    <header className="site-header sticky top-0 z-40 w-full bg-transparent backdrop-blur-md border-b border-white/10 dark:border-chetna-primary/20 shadow-sm">
+    <header className="site-header sticky top-0 z-40 w-full backdrop-blur-xl bg-white/10 dark:bg-black/10 border-b border-white/10 dark:border-chetna-primary/20 shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center">
@@ -222,7 +222,7 @@ const Header = () => {
           </>
         ) : (
           <NavigationMenu className="mx-auto">
-            <NavigationMenuList className="gap-1 px-4 py-1 bg-white/30 dark:bg-black/10 backdrop-blur-md rounded-full shadow-sm">
+            <NavigationMenuList className="gap-1 px-4 py-1 bg-white/30 dark:bg-black/20 backdrop-blur-md rounded-full shadow-sm">
               <NavigationMenuItem>
                 <NavLink href="/" active={isActive("/")}>
                   Home
