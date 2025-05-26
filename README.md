@@ -1,13 +1,5 @@
 # Welcome to Chetna_AI
 
-## Project info
-
-**URL**: https://lovable.dev/projects/afda3065-4489-4d5f-9954-4254d8a39899
-
-[lovable](https://lovable.dev/projects/afda3065-4489-4d5f-9954-4254d8a39899) and start prompting.
-
-
-
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
 Follow these steps:
@@ -36,4 +28,4 @@ This project is built with:
 
 ## How can I deploy this project?
 
-(https://lovable.dev/projects/afda3065-4489-4d5f-9954-4254d8a39899)
+https://chetna.life/
