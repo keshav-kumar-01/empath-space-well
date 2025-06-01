@@ -131,6 +131,13 @@ const Header = () => {
                     Journal
                   </MobileNavLink>
                   <MobileNavLink
+                    href="/psych-tests"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/psych-tests")}
+                  >
+                    Psych Tests
+                  </MobileNavLink>
+                  <MobileNavLink
                     href="/community"
                     onClick={() => setShowMobileMenu(false)}
                     active={isActive("/community")}
@@ -231,6 +238,11 @@ const Header = () => {
               <NavigationMenuItem>
                 <NavLink href="/journal" active={isActive("/journal")}>
                   Journal
+                </NavLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavLink href="/psych-tests" active={isActive("/psych-tests")}>
+                  Psych Tests
                 </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>

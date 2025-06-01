@@ -191,6 +191,45 @@ export type Database = {
           },
         ]
       }
+      psychological_test_results: {
+        Row: {
+          additional_data: Json | null
+          created_at: string
+          id: string
+          responses: Json
+          severity_level: string | null
+          test_name: string
+          test_type: string
+          total_score: number | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          additional_data?: Json | null
+          created_at?: string
+          id?: string
+          responses: Json
+          severity_level?: string | null
+          test_name: string
+          test_type: string
+          total_score?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          additional_data?: Json | null
+          created_at?: string
+          id?: string
+          responses?: Json
+          severity_level?: string | null
+          test_name?: string
+          test_type?: string
+          total_score?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       quiz_results: {
         Row: {
           analytical: number
