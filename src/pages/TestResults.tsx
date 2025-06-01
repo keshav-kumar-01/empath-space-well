@@ -63,17 +63,20 @@ const TestResults = () => {
         "Your scores suggest mild symptoms that may benefit from attention.",
         "Consider lifestyle changes like regular exercise and stress reduction.",
         "Monitor your symptoms and consider talking to a counselor if they persist.",
-        "Practice relaxation techniques and maintain social connections."
+        "Practice relaxation techniques and maintain social connections.",
+        "Have a normal Talk with Chetna AI ."
       ];
     } else if (severityLower.includes('moderate')) {
       return [
         "Your scores suggest moderate symptoms that warrant professional attention.",
         "Consider speaking with a mental health professional for evaluation.",
         "Explore therapy options such as cognitive-behavioral therapy (CBT).",
-        "Discuss with your doctor whether medication might be helpful."
+        "Discuss with your doctor whether medication might be helpful.",
+        "Dicuss with Chetna AI and tell her your problems"
       ];
     } else {
       return [
+        "Start Chatting with Chetna AI bot and tell her your problems"
         "Your scores suggest severe symptoms that require immediate professional attention.",
         "Please contact a mental health professional as soon as possible.",
         "Consider calling a crisis helpline if you're having thoughts of self-harm.",
