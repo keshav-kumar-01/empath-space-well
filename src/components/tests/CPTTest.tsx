@@ -187,10 +187,10 @@ const CPTTest = () => {
           user_id: user.id,
           test_type: 'CPT',
           test_name: 'Continuous Performance Test',
-          responses: results,
+          responses: results as any, // Cast to any to satisfy Json type
           total_score: Math.round(metrics.hitRate),
           severity_level: performanceLevel,
-          additional_data: metrics
+          additional_data: metrics as any // Cast to any to satisfy Json type
         });
 
       if (error) throw error;
