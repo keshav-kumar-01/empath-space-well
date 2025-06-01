@@ -76,7 +76,7 @@ const TestResults = () => {
       ];
     } else {
       return [
-        "Start Chatting with Chetna AI bot and tell her your problems"
+        "Start Chatting with Chetna AI bot and tell her your problems",
         "Your scores suggest severe symptoms that require immediate professional attention.",
         "Please contact a mental health professional as soon as possible.",
         "Consider calling a crisis helpline if you're having thoughts of self-harm.",
