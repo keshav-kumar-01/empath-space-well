@@ -53,7 +53,7 @@ const testCategories = [
         id: 'bdi2',
         name: 'BDI-II',
         fullName: 'Beck Depression Inventory II',
-        duration: '10 mins',
+        duration: '15 mins',
         questions: 21,
         description: 'Assesses severity of depression'
       }
@@ -70,7 +70,7 @@ const testCategories = [
         id: 'cpt',
         name: 'CPT',
         fullName: 'Continuous Performance Test',
-        duration: '15 mins',
+        duration: '5 mins',
         questions: 'Interactive',
         description: 'Tests attention and focus abilities'
       }
@@ -87,9 +87,9 @@ const testCategories = [
         id: 'mmpi2',
         name: 'MMPI-2',
         fullName: 'Minnesota Multiphasic Personality Inventory',
-        duration: '45 mins',
-        questions: 567,
-        description: 'Comprehensive personality assessment'
+        duration: '20 mins',
+        questions: 50,
+        description: 'Comprehensive personality assessment (shortened version)'
       }
     ]
   },
@@ -104,8 +104,8 @@ const testCategories = [
         id: 'sis',
         name: 'SIS',
         fullName: 'Supports Intensity Scale',
-        duration: '20 mins',
-        questions: 'Variable',
+        duration: '25 mins',
+        questions: 49,
         description: 'Assesses support needs for daily living'
       }
     ]

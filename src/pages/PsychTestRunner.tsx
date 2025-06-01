@@ -6,6 +6,10 @@ import Footer from '@/components/Footer';
 import GAD7Test from '@/components/tests/GAD7Test';
 import BAITest from '@/components/tests/BAITest';
 import PHQ9Test from '@/components/tests/PHQ9Test';
+import BDI2Test from '@/components/tests/BDI2Test';
+import CPTTest from '@/components/tests/CPTTest';
+import MMPI2Test from '@/components/tests/MMPI2Test';
+import SISTest from '@/components/tests/SISTest';
 
 const PsychTestRunner = () => {
   const { testId } = useParams<{ testId: string }>();
@@ -19,33 +23,13 @@ const PsychTestRunner = () => {
       case 'phq9':
         return <PHQ9Test />;
       case 'bdi2':
-        return (
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-4">BDI-II Test</h2>
-            <p className="text-gray-600">This test is coming soon!</p>
-          </div>
-        );
+        return <BDI2Test />;
       case 'cpt':
-        return (
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-4">Continuous Performance Test</h2>
-            <p className="text-gray-600">This interactive test is coming soon!</p>
-          </div>
-        );
+        return <CPTTest />;
       case 'mmpi2':
-        return (
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-4">MMPI-2 Test</h2>
-            <p className="text-gray-600">This comprehensive test is coming soon!</p>
-          </div>
-        );
+        return <MMPI2Test />;
       case 'sis':
-        return (
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-4">Supports Intensity Scale</h2>
-            <p className="text-gray-600">This assessment is coming soon!</p>
-          </div>
-        );
+        return <SISTest />;
       default:
         return (
           <div className="max-w-2xl mx-auto text-center">
