@@ -75,7 +75,11 @@ const CPTTest = () => {
   }, [showStimulus, stimulusStartTime, isTarget]);
 
   const nextTrial = useCallback(() => {
-    if (trialCount >= TOTAL_TRIALS) {
+    // Increment trial count first and check if we've reached the limit
+    const currentTrial = trialCount + 1;
+    setTrialCount(currentTrial);
+    
+    if (currentTrial > TOTAL_TRIALS) {
       setPhase('completed');
       return;
     }
@@ -112,7 +116,6 @@ const CPTTest = () => {
       setTimeout(() => {
         clearTimeout(missTimeout);
         setShowStimulus(false);
-        setTrialCount(prev => prev + 1);
         
         setTimeout(() => {
           nextTrial();
