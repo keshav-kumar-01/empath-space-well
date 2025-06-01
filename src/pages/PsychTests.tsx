@@ -190,7 +190,9 @@ const PsychTests = () => {
                 <p className="text-gray-600 dark:text-gray-300">
                   These tests are for educational and self-assessment purposes only. 
                   They are not a substitute for professional mental health evaluation or diagnosis. 
-                  If you're experiencing mental health concerns, please consult with a qualified healthcare provider.
+                  If you're experiencing mental health concerns, please consult with a qualified healthcare provider form our own website.
+                  Or can have a chat with Chetna AI .
+                  Thank You !
                 </p>
               </CardContent>
             </Card>
