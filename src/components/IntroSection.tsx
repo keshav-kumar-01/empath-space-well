@@ -46,7 +46,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onStartChat }) => {
             variant="outline" 
             className="rounded-full px-8 py-6 text-lg border-chetna-primary text-chetna-primary hover:bg-chetna-primary/10 transform hover:scale-105 transition-all duration-300"
           >
-            Chetna Quest <Star className="ml-2" />
+            Chetna Quest <Brain className="ml-2" />
           </Button>
         </Link>
       </div>
