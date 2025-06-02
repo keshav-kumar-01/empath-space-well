@@ -16,8 +16,47 @@ export const initModel = async (): Promise<void> => {
   }
 };
 
-// Prepare a mental health focused system prompt
-const createMentalHealthPrompt = (userMessage: string): string => {
+// Prepare a mental health focused system prompt with user's test results
+const createPersonalizedMentalHealthPrompt = (userMessage: string, testResults?: any[]): string => {
+  let personalizedContext = "";
+  
+  if (testResults && testResults.length > 0) {
+    personalizedContext = `\n\nIMPORTANT CONTEXT ABOUT THE USER:
+Based on their recent psychological assessments, here is what you should know about this user:
+
+`;
+    
+    testResults.forEach(test => {
+      const testName = test.test_type || test.test_name;
+      const score = test.total_score;
+      const severity = test.severity_level;
+      
+      personalizedContext += `• ${testName}: Score ${score}, Severity Level: ${severity}\n`;
+      
+      // Add specific guidance based on test type and severity
+      if (testName?.toLowerCase().includes('gad') || testName?.toLowerCase().includes('anxiety')) {
+        if (severity?.toLowerCase().includes('moderate') || severity?.toLowerCase().includes('severe')) {
+          personalizedContext += "  - Focus on anxiety management techniques, breathing exercises, and grounding strategies\n";
+          personalizedContext += "  - Be extra gentle and reassuring in your responses\n";
+        }
+      }
+      
+      if (testName?.toLowerCase().includes('phq') || testName?.toLowerCase().includes('depression')) {
+        if (severity?.toLowerCase().includes('moderate') || severity?.toLowerCase().includes('severe')) {
+          personalizedContext += "  - Pay attention to mood patterns and provide uplifting support\n";
+          personalizedContext += "  - Encourage positive activities and social connections\n";
+        }
+      }
+      
+      if (testName?.toLowerCase().includes('cpt') || testName?.toLowerCase().includes('attention')) {
+        personalizedContext += "  - Consider attention and focus challenges in your responses\n";
+        personalizedContext += "  - Provide clear, structured guidance\n";
+      }
+    });
+    
+    personalizedContext += `\nAdjust your responses based on this psychological profile. Be more supportive and specific to their current mental health status.`;
+  }
+
   return `You are Chetna AI, a compassionate mental health companion designed to provide emotional 
 support and psychological insights. Your primary goals are:
 
@@ -36,14 +75,17 @@ Always analyze the emotional content of messages before responding. When users e
 
 If the user appears to be in crisis, gently suggest professional resources while maintaining a supportive tone.
 Your responses should be conversational, personalized, and emotionally intelligent.
+
+${personalizedContext}
   
 User message: ${userMessage}`;
 };
 
-// Get AI response from Mistral API
+// Get AI response from Mistral API with personalized context
 export const getAIResponse = async (
   userMessage: string,
-  fallbackFn: (message: string) => string
+  fallbackFn: (message: string) => string,
+  testResults?: any[]
 ): Promise<string> => {
   // Check if we should use the API
   if (!modelInitialized) {
@@ -51,8 +93,8 @@ export const getAIResponse = async (
   }
 
   try {
-    // Create the prompt for mental health
-    const prompt = createMentalHealthPrompt(userMessage);
+    // Create the personalized prompt for mental health
+    const prompt = createPersonalizedMentalHealthPrompt(userMessage, testResults);
     
     // Always use the hardcoded API key
     const apiKey = MISTRAL_API_KEY;
@@ -65,7 +107,7 @@ export const getAIResponse = async (
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'mistral-small-latest', // Using their smaller model - adjust as needed
+        model: 'mistral-small-latest',
         messages: [
           {role: 'system', content: 'You are Chetna AI, a mental health and wellness assistant. You are Chetna AI, a compassionate mental health companion designed to provide emotional support and psychological insights. Your primary goals are:1. Show deep empathy and understanding for the users emotions2. Recognize and validate emotional states (sadness, anxiety, joy, anger, etc.)3. Provide thoughtful, personalized responses that address the emotional content4. Offer gentle guidance and support without being prescriptive5. Use a warm, caring tone throughout all interactionsAlways analyze the emotional content of messages before responding. When users express:- Sadness: Validate their feelings and offer comfort- Anxiety: Help ground them with supportive reassurance- Anger: Acknowledge frustration without judgment- Joy: Celebrate their positive experiences- Confusion: Provide clarity and structured supportIf the user appears to be in crisis, gently suggest professional resources while maintaining a supportive tone.Your responses should be conversational, personalized, and emotionally intelligent.'},
           {role: 'user', content: prompt}

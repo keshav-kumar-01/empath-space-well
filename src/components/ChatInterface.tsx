@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import speechRecognition from "@/utils/speechRecognition";
+import { useQuery } from "@tanstack/react-query";
 
 interface Message {
   text: string;
@@ -39,6 +40,29 @@ const ChatInterface: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Fetch user's psychological test results for personalization
+  const { data: userTestResults } = useQuery({
+    queryKey: ["user-test-results", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      
+      const { data, error } = await supabase
+        .from("psychological_test_results")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(5); // Get latest 5 test results for context
+        
+      if (error) {
+        console.error("Error fetching test results:", error);
+        return [];
+      }
+      
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
   useEffect(() => {
     setSpeechSupported(speechRecognition.isSupported());
   }, []);
@@ -67,6 +91,20 @@ const ChatInterface: React.FC = () => {
     
     loadModel();
   }, [toast]);
+
+  // Update welcome message when user test results are loaded
+  useEffect(() => {
+    if (user && userTestResults && userTestResults.length > 0) {
+      const hasTestResults = userTestResults.length > 0;
+      if (hasTestResults) {
+        setMessages([{
+          text: `Hi ${user.name}! I'm Chetna, your mental wellness companion. I've reviewed your recent assessment results and I'm here to provide personalized support based on your mental health profile. How are you feeling today?`,
+          isUser: false,
+          timestamp: new Date()
+        }]);
+      }
+    }
+  }, [user, userTestResults]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -142,7 +180,12 @@ const ChatInterface: React.FC = () => {
     await saveMessageToDatabase(userMessage.text, true);
     
     try {
-      const aiResponseText = await getAIResponse(userMessage.text, getResponse);
+      // Pass user's test results to AI for personalized responses
+      const aiResponseText = await getAIResponse(
+        userMessage.text, 
+        getResponse, 
+        userTestResults || []
+      );
       
       const responseTime = Math.max(800, Math.min(2000, aiResponseText.length * 20));
       
@@ -242,6 +285,17 @@ const ChatInterface: React.FC = () => {
         {!modelLoaded && !loadingModel && (
           <div className="bg-orange-100 dark:bg-orange-900/50 rounded-lg p-2 mb-2 text-sm text-center text-orange-800 dark:text-orange-100">
             Using basic response mode. Some features may be limited.
+          </div>
+        )}
+
+        {user && userTestResults && userTestResults.length > 0 && (
+          <div className="bg-gradient-to-r from-chetna-primary/10 to-chetna-peach/20 dark:bg-chetna-primary/20 rounded-lg p-3 mb-2 text-sm text-center border border-chetna-primary/20">
+            <p className="font-medium text-chetna-primary dark:text-chetna-primary">
+              ✨ Personalized Support Active
+            </p>
+            <p className="text-xs text-chetna-primary/80 dark:text-chetna-primary/80 mt-1">
+              Chetna is tailoring responses based on your {userTestResults.length} recent assessment{userTestResults.length !== 1 ? 's' : ''}
+            </p>
           </div>
         )}
         
