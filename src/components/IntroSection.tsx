@@ -14,17 +14,17 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onStartChat }) => {
   
   return (
     <div className="text-center space-y-12 py-12 animate-fade-in-up relative">
-      {/* Main heart icon with enhanced styling */}
+      {/* Main heart icon with enhanced styling - removed bounce animation */}
       <div className="flex justify-center">
-        <div className="w-24 h-24 bg-gradient-to-br from-chetna-primary/20 via-chetna-peach/30 to-chetna-primary/10 dark:from-chetna-primary/30 dark:to-chetna-primary/15 rounded-full flex items-center justify-center transform hover:scale-110 transition-all duration-700 shadow-soft hover:shadow-glow animate-bounce-gentle">
+        <div className="w-24 h-24 bg-gradient-to-br from-chetna-primary/20 via-chetna-peach/30 to-chetna-primary/10 dark:from-chetna-primary/30 dark:to-chetna-primary/15 rounded-full flex items-center justify-center transform hover:scale-110 transition-all duration-700 shadow-soft hover:shadow-glow">
           <Heart className="w-12 h-12 text-chetna-primary drop-shadow-lg" fill="#7C65E1" />
           <Sparkles className="w-4 h-4 text-chetna-accent absolute top-2 right-2 animate-pulse" />
         </div>
       </div>
       
-      {/* Main heading with enhanced gradient */}
+      {/* Main heading with gradient - removed shimmer animation */}
       <div className="space-y-4">
-        <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-chetna-primary via-chetna-accent to-chetna-primary bg-clip-text text-transparent animate-shimmer bg-[length:200%_100%]">
+        <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-chetna-primary via-chetna-accent to-chetna-primary bg-clip-text text-transparent">
           {user ? `Welcome back, ${user.name}!` : "Your Mental Wellness Companion"}
         </h1>
         
