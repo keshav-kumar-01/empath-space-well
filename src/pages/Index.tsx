@@ -19,13 +19,14 @@ const Index: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-rose-50 via-white to-purple-50 dark:from-chetna-dark dark:to-chetna-darker relative overflow-hidden">
-      {/* Floating background elements */}
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-lavender via-white to-chetna-mint dark:from-chetna-dark dark:to-chetna-darker relative overflow-hidden">
+      {/* Softer floating background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-chetna-primary/10 to-chetna-accent/10 rounded-full blur-xl floating" style={{ animationDelay: '0s' }}></div>
-        <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-br from-chetna-secondary/10 to-chetna-primary/10 rounded-full blur-xl floating" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute bottom-40 left-1/4 w-40 h-40 bg-gradient-to-br from-chetna-accent/10 to-chetna-peach/20 rounded-full blur-xl floating" style={{ animationDelay: '4s' }}></div>
-        <div className="absolute bottom-20 right-10 w-28 h-28 bg-gradient-to-br from-chetna-primary/10 to-chetna-secondary/10 rounded-full blur-xl floating" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-chetna-primary/8 to-chetna-accent/8 rounded-full blur-2xl floating" style={{ animationDelay: '0s' }}></div>
+        <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-br from-chetna-secondary/8 to-chetna-primary/8 rounded-full blur-2xl floating" style={{ animationDelay: '3s' }}></div>
+        <div className="absolute bottom-40 left-1/4 w-48 h-48 bg-gradient-to-br from-chetna-accent/6 to-chetna-peach/12 rounded-full blur-3xl floating" style={{ animationDelay: '6s' }}></div>
+        <div className="absolute bottom-20 right-10 w-36 h-36 bg-gradient-to-br from-chetna-primary/8 to-chetna-secondary/8 rounded-full blur-2xl floating" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-chetna-mint/10 to-chetna-lavender/10 rounded-full blur-3xl floating" style={{ animationDelay: '4s' }}></div>
       </div>
 
       <Helmet>
@@ -57,19 +58,19 @@ const Index: React.FC = () => {
       
       <Header />
       
-      <main className="flex-grow container mx-auto px-4 py-8 flex items-center justify-center relative z-10">
-        <div className="w-full max-w-6xl">
+      <main className="flex-grow container mx-auto px-4 py-6 flex items-center justify-center relative z-10 max-w-7xl">
+        <div className="w-full">
           {showIntro ? (
             <IntroSection onStartChat={startChat} />
           ) : (
-            <div className="flex flex-col animate-fade-in">
-              <div className="flex justify-center mb-8 bg-white/80 dark:bg-chetna-darker/80 backdrop-blur-xl rounded-full p-2 shadow-soft self-center border border-white/20 dark:border-chetna-primary/20">
+            <div className="flex flex-col animate-fade-in max-w-6xl mx-auto">
+              <div className="flex justify-center mb-6 bg-gradient-to-r from-white/70 via-chetna-lavender/30 to-white/70 dark:from-chetna-darker/70 dark:via-chetna-primary/15 dark:to-chetna-darker/70 backdrop-blur-xl rounded-full p-2 shadow-soft self-center border border-white/40 dark:border-chetna-primary/25">
                 <Button
                   variant={activeTab === 'chat' ? 'default' : 'ghost'}
                   className={`rounded-full px-6 py-3 transition-all duration-300 ${
                     activeTab === 'chat' 
                       ? 'bg-gradient-to-r from-chetna-primary to-chetna-primary/90 shadow-glow transform scale-105' 
-                      : 'hover:bg-chetna-primary/10 dark:hover:bg-chetna-primary/20'
+                      : 'hover:bg-gradient-to-r hover:from-chetna-primary/10 hover:to-chetna-accent/10 dark:hover:bg-chetna-primary/20'
                   }`}
                   onClick={() => setActiveTab('chat')}
                 >
@@ -80,7 +81,7 @@ const Index: React.FC = () => {
                 <Link to="/community">
                   <Button
                     variant="ghost"
-                    className="rounded-full px-6 py-3 hover:bg-chetna-secondary/10 dark:hover:bg-chetna-secondary/20 transition-all duration-300"
+                    className="rounded-full px-6 py-3 hover:bg-gradient-to-r hover:from-chetna-secondary/10 hover:to-chetna-secondary/20 dark:hover:bg-chetna-secondary/20 transition-all duration-300"
                   >
                     <Users className="mr-2 h-4 w-4" />
                     Community
@@ -89,7 +90,7 @@ const Index: React.FC = () => {
                 <Link to="/quiz">
                   <Button
                     variant="ghost"
-                    className="rounded-full px-6 py-3 hover:bg-chetna-accent/10 dark:hover:bg-chetna-accent/20 transition-all duration-300"
+                    className="rounded-full px-6 py-3 hover:bg-gradient-to-r hover:from-chetna-accent/10 hover:to-chetna-accent/20 dark:hover:bg-chetna-accent/20 transition-all duration-300"
                   >
                     <Star className="mr-2 h-4 w-4" />
                     Chetna Quest
