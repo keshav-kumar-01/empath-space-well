@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import IntroSection from "@/components/IntroSection";
 import ChatInterface from "@/components/ChatInterface";
+import ReviewsSection from "@/components/ReviewsSection";
 import { MessageSquare, Users, Star, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -41,7 +42,10 @@ const Index: React.FC = () => {
       <main className="flex-grow container mx-auto px-4 py-6 flex items-center justify-center relative z-10 max-w-7xl">
         <div className="w-full">
           {showIntro ? (
-            <IntroSection onStartChat={startChat} />
+            <>
+              <IntroSection onStartChat={startChat} />
+              <ReviewsSection />
+            </>
           ) : (
             <div className="flex flex-col animate-fade-in max-w-6xl mx-auto">
               <div className="flex justify-center mb-6 bg-gradient-to-r from-white/70 via-chetna-lavender/30 to-white/70 dark:from-chetna-darker/70 dark:via-chetna-primary/15 dark:to-chetna-darker/70 backdrop-blur-xl rounded-full p-2 shadow-soft self-center border border-white/40 dark:border-chetna-primary/25">
