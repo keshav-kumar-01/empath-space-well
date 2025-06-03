@@ -8,7 +8,7 @@ const ReviewsSection: React.FC = () => {
     {
       id: 1,
       text: "A really good chatbot. I feel better a small talk and the features like journal writing and blogs posting are mind blowing. Overall it's a really good experience with your service.",
-      author: "Kaushalesh",
+      author: "Kaushlesh",
       rating: 5
     },
     {
