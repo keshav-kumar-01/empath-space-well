@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Filter, Heart, MessageSquare, Search, RefreshCcw } from "lucide-react";
+import { Plus, Filter, Heart, MessageSquare, Search, RefreshCcw, Users, Sparkles } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
@@ -10,6 +10,7 @@ import Header from "@/components/Header";
 import PostCard from "@/components/PostCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +30,6 @@ type Post = {
   category: string | null;
   user_id: string;
   mood?: MoodType;
-  // For UI purposes
   author_name?: string;
   comment_count?: number;
 };
@@ -71,7 +71,6 @@ const Community: React.FC = () => {
       throw error;
     }
     
-    // Get comment counts for each post
     const postsWithComments = await Promise.all(
       (data as Post[]).map(async (post) => {
         const { count, error: countError } = await supabase
@@ -79,8 +78,6 @@ const Community: React.FC = () => {
           .select("*", { count: "exact" })
           .eq("post_id", post.id);
           
-        // We're not using profiles table anymore since it doesn't exist
-        // Simply use "Anonymous" as the author name
         const authorName = "Anonymous";
         
         return {
@@ -114,7 +111,6 @@ const Community: React.FC = () => {
   };
   
   useEffect(() => {
-    // Enable realtime subscription for posts
     const channel = supabase
       .channel('schema-db-changes')
       .on(
@@ -136,23 +132,70 @@ const Community: React.FC = () => {
   }, [refetch]);
   
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-chetna-light to-white dark:from-chetna-dark dark:to-chetna-darker">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-lavender via-white to-chetna-mint dark:from-chetna-dark dark:to-chetna-darker relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-chetna-secondary/8 to-chetna-primary/8 rounded-full blur-2xl floating" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-60 right-20 w-32 h-32 bg-gradient-to-br from-chetna-accent/8 to-chetna-secondary/8 rounded-full blur-2xl floating" style={{ animationDelay: '4s' }}></div>
+        <div className="absolute bottom-40 left-1/3 w-48 h-48 bg-gradient-to-br from-chetna-primary/6 to-chetna-mint/12 rounded-full blur-3xl floating" style={{ animationDelay: '7s' }}></div>
+      </div>
+
       <Header />
       
-      <main className="flex-grow container mx-auto px-4 py-6 space-y-6">
-        <div className="bg-white dark:bg-card/80 backdrop-blur-sm rounded-xl p-6 shadow-md border border-border/30 dark:border-border/20">
+      <main className="flex-grow container mx-auto px-4 py-6 space-y-8 relative z-10">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-chetna-secondary/10 to-chetna-primary/10 rounded-full px-4 py-2 mb-4">
+            <Users className="w-4 h-4 text-chetna-secondary" />
+            <span className="text-sm font-medium text-chetna-secondary">Safe Space</span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-chetna-secondary via-chetna-primary to-chetna-accent bg-clip-text text-transparent mb-4">
+            Community Support
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+            Connect with others, share your experiences, and find support in our caring community
+          </p>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="feature-card text-center p-6 border-chetna-secondary/20">
+            <div className="w-12 h-12 bg-gradient-to-br from-chetna-secondary/20 to-chetna-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Heart className="w-6 h-6 text-chetna-secondary" />
+            </div>
+            <h3 className="text-2xl font-bold text-chetna-secondary mb-2">{posts?.length || 0}</h3>
+            <p className="text-muted-foreground">Community Posts</p>
+          </div>
+          <div className="feature-card text-center p-6 border-chetna-primary/20">
+            <div className="w-12 h-12 bg-gradient-to-br from-chetna-primary/20 to-chetna-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <MessageSquare className="w-6 h-6 text-chetna-primary" />
+            </div>
+            <h3 className="text-2xl font-bold text-chetna-primary mb-2">24/7</h3>
+            <p className="text-muted-foreground">Support Available</p>
+          </div>
+          <div className="feature-card text-center p-6 border-chetna-accent/20">
+            <div className="w-12 h-12 bg-gradient-to-br from-chetna-accent/20 to-chetna-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Sparkles className="w-6 h-6 text-chetna-accent" />
+            </div>
+            <h3 className="text-2xl font-bold text-chetna-accent mb-2">Safe</h3>
+            <p className="text-muted-foreground">Judgment-Free Zone</p>
+          </div>
+        </div>
+
+        {/* Controls Section */}
+        <div className="feature-card p-6 border-chetna-primary/10">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-br from-chetna-primary to-purple-400 bg-clip-text text-transparent">
-                Community Support
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                Share your thoughts and connect with others
+              <h2 className="text-2xl font-semibold text-chetna-dark dark:text-white mb-2">
+                Share & Connect
+              </h2>
+              <p className="text-muted-foreground">
+                Your voice matters. Share your thoughts and connect with others
               </p>
             </div>
             
             <div className="flex gap-2 w-full md:w-auto">
-              <Button onClick={handleCreatePost} className="chetna-button">
+              <Button onClick={handleCreatePost} className="chetna-button bg-gradient-to-r from-chetna-secondary to-chetna-primary hover:from-chetna-primary hover:to-chetna-accent transform hover:scale-105 transition-all duration-300">
                 <Plus className="mr-2 h-4 w-4" />
                 Create Post
               </Button>
@@ -160,19 +203,19 @@ const Community: React.FC = () => {
                 variant="outline" 
                 size="icon"
                 onClick={() => refetch()}
-                className="shrink-0"
+                className="shrink-0 border-chetna-primary/30 hover:bg-chetna-primary/10"
               >
                 <RefreshCcw className="h-4 w-4" />
               </Button>
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search posts..."
-                className="pl-10"
+                className="pl-10 border-chetna-primary/20 focus:border-chetna-primary/50"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -180,18 +223,17 @@ const Community: React.FC = () => {
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-full sm:w-auto justify-between">
+                <Button variant="outline" className="w-full sm:w-auto justify-between border-chetna-primary/30 hover:bg-chetna-primary/10">
                   <Filter className="mr-2 h-4 w-4" />
                   {selectedCategory}
-                  <span className="sr-only">Open menu</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align="end" className="w-56 bg-white/95 dark:bg-chetna-darker/95 backdrop-blur-xl border-chetna-primary/20">
                 {categories.map((category) => (
                   <DropdownMenuItem 
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={selectedCategory === category ? "bg-muted font-medium" : ""}
+                    className={selectedCategory === category ? "bg-chetna-primary/10 text-chetna-primary font-medium" : "hover:bg-chetna-primary/5"}
                   >
                     {category}
                   </DropdownMenuItem>
@@ -201,10 +243,11 @@ const Community: React.FC = () => {
           </div>
         </div>
         
+        {/* Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading && (
             Array(6).fill(0).map((_, i) => (
-              <div key={i} className="bg-white dark:bg-card rounded-lg p-6 shadow-md">
+              <div key={i} className="feature-card p-6 border-chetna-primary/10">
                 <div className="flex justify-between mb-4">
                   <Skeleton className="h-6 w-3/4" />
                   <Skeleton className="h-6 w-16" />
@@ -212,7 +255,7 @@ const Community: React.FC = () => {
                 <Skeleton className="h-4 w-full mb-2" />
                 <Skeleton className="h-4 w-full mb-2" />
                 <Skeleton className="h-4 w-2/3 mb-4" />
-                <div className="p-3 mb-3">
+                <div className="p-3 mb-3 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-lg">
                   <Skeleton className="h-16 w-full" />
                 </div>
                 <div className="flex justify-between">
@@ -224,24 +267,36 @@ const Community: React.FC = () => {
           )}
           
           {error && (
-            <div className="col-span-full bg-red-100 dark:bg-red-900/20 p-6 rounded-lg text-center">
-              <p className="text-red-700 dark:text-red-300">Failed to load posts. Please try again later.</p>
-              <Button onClick={() => refetch()} variant="outline" className="mt-2">
+            <div className="col-span-full feature-card p-8 text-center border-red-200 dark:border-red-800">
+              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageSquare className="w-8 h-8 text-red-500" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-red-700 dark:text-red-300">Oops! Something went wrong</h3>
+              <p className="text-red-600 dark:text-red-400 mb-6">Failed to load posts. Please try again later.</p>
+              <Button onClick={() => refetch()} variant="outline" className="border-red-300 text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20">
                 <RefreshCcw className="mr-2 h-4 w-4" />
-                Retry
+                Try Again
               </Button>
             </div>
           )}
           
           {posts && posts.length === 0 && (
-            <div className="col-span-full bg-white dark:bg-card rounded-xl p-8 text-center shadow-md border border-border/30 dark:border-border/20">
-              <h3 className="text-xl font-medium mb-2">No posts found</h3>
-              <p className="text-muted-foreground mb-6">
-                {searchTerm ? "No results match your search" : "Be the first to share in this category"}
+            <div className="col-span-full feature-card p-12 text-center border-chetna-primary/10">
+              <div className="w-20 h-20 bg-gradient-to-br from-chetna-primary/20 to-chetna-accent/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Users className="w-10 h-10 text-chetna-primary" />
+              </div>
+              <h3 className="text-2xl font-semibold mb-3 text-chetna-dark dark:text-white">
+                {searchTerm ? "No posts found" : "Start the conversation"}
+              </h3>
+              <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                {searchTerm 
+                  ? "No results match your search. Try different keywords or browse all posts." 
+                  : "Be the first to share your thoughts and connect with our supportive community"
+                }
               </p>
-              <Button onClick={handleCreatePost} className="chetna-button">
-                <Plus className="mr-2 h-4 w-4" />
-                Create the first post
+              <Button onClick={handleCreatePost} className="chetna-button bg-gradient-to-r from-chetna-secondary to-chetna-primary hover:from-chetna-primary hover:to-chetna-accent" size="lg">
+                <Plus className="mr-2 h-5 w-5" />
+                {searchTerm ? "Create a Post" : "Share Your First Post"}
               </Button>
             </div>
           )}
@@ -257,8 +312,8 @@ const Community: React.FC = () => {
         </div>
       </main>
       
-      <footer className="py-6 text-center text-sm text-muted-foreground">
-        <p>© {new Date().getFullYear()} Chetna_Ai - Your Mental Wellness Companion</p>
+      <footer className="py-8 text-center text-sm text-muted-foreground border-t border-chetna-primary/10 bg-white/50 dark:bg-chetna-darker/50 backdrop-blur-sm">
+        <p>© {new Date().getFullYear()} Chetna_AI - Your Mental Wellness Companion</p>
       </footer>
     </div>
   );
