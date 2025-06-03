@@ -69,7 +69,6 @@
   }
 }
 
-/* Essential animations only */
 .breathing-dot {
   @apply w-2.5 h-2.5 rounded-full bg-gradient-to-r from-white/90 to-white/70 dark:from-white/70 dark:to-white/50;
   animation: breathe 1.8s infinite ease-in-out;
@@ -103,7 +102,6 @@
   animation: float 8s ease-in-out infinite;
 }
 
-/* Essential chat styles */
 .chat-container {
   @apply flex flex-col rounded-2xl overflow-hidden backdrop-blur-xl;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(248, 247, 255, 0.9), rgba(253, 225, 211, 0.3));
@@ -147,7 +145,7 @@
 }
 
 .chetna-button {
-  @apply rounded-full transition-all duration-400;
+  @apply rounded-full transition-all duration-300;
   background: linear-gradient(135deg, #7C65E1, #9b87f5, #a855f7);
   box-shadow: 0 6px 20px rgba(124, 101, 225, 0.25);
 }
@@ -179,7 +177,6 @@
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 30px rgba(124, 101, 225, 0.25);
 }
 
-/* Custom scrollbar */
 .message-container::-webkit-scrollbar {
   width: 6px;
 }
