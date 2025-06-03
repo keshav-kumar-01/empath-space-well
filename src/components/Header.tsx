@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -24,10 +25,10 @@ const NavLink = ({ href, children, active = false }) => {
   return (
     <Link
       to={href}
-      className={`px-4 py-2.5 text-sm font-medium rounded-full transition-all duration-300 ${
+      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
         active
-          ? "bg-gradient-to-r from-chetna-primary/20 to-chetna-accent/20 text-chetna-primary shadow-soft backdrop-blur-sm"
-          : "text-chetna-dark/80 dark:text-white/80 hover:text-chetna-primary hover:bg-gradient-to-r hover:from-chetna-primary/10 hover:to-chetna-accent/10 hover:backdrop-blur-sm hover:shadow-soft"
+          ? "bg-chetna-primary/10 text-chetna-primary"
+          : "text-chetna-dark/80 dark:text-white/80 hover:text-chetna-primary hover:bg-chetna-primary/5"
       }`}
     >
       {children}
@@ -42,8 +43,8 @@ const MobileNavLink = ({ href, children, onClick, active = false }) => {
       onClick={onClick}
       className={`px-4 py-3 text-base font-medium rounded-xl block transition-all duration-300 ${
         active
-          ? "bg-gradient-to-r from-chetna-primary/15 to-chetna-accent/15 text-chetna-primary shadow-soft"
-          : "text-chetna-dark dark:text-white hover:text-chetna-primary hover:bg-gradient-to-r hover:from-chetna-primary/10 hover:to-chetna-accent/10"
+          ? "bg-chetna-primary/10 text-chetna-primary"
+          : "text-chetna-dark dark:text-white hover:text-chetna-primary hover:bg-chetna-primary/5"
       }`}
     >
       {children}
@@ -82,14 +83,14 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-gradient-to-r from-white/85 via-chetna-lavender/30 to-white/85 dark:from-chetna-darker/85 dark:via-chetna-primary/10 dark:to-chetna-darker/85 backdrop-blur-xl border-b border-gradient-to-r from-chetna-primary/15 via-chetna-accent/10 to-chetna-primary/15 shadow-soft">
+    <header className="sticky top-0 z-50 w-full bg-white/90 dark:bg-chetna-darker/90 backdrop-blur-xl border-b border-chetna-primary/10 shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-chetna-primary/20 to-chetna-accent/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-soft">
+            <div className="w-8 h-8 bg-chetna-primary/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300">
               <Heart className="w-4 h-4 text-chetna-primary" fill="currentColor" />
             </div>
-            <h2 className="text-lg md:text-xl font-bold bg-gradient-to-r from-chetna-primary via-chetna-accent to-chetna-primary bg-clip-text text-transparent">
+            <h2 className="text-lg md:text-xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-accent bg-clip-text text-transparent">
               Chetna
               <span className="text-chetna-dark dark:text-white">_AI</span>
             </h2>
@@ -103,7 +104,7 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="md:hidden text-chetna-dark dark:text-white hover:bg-gradient-to-r hover:from-chetna-primary/10 hover:to-chetna-accent/10 rounded-full transition-all duration-300"
+                  className="md:hidden text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
                   aria-label="Menu"
                 >
                   {showMobileMenu ? (
@@ -113,7 +114,7 @@ const Header = () => {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[300px] sm:w-[350px] bg-gradient-to-br from-white/95 via-chetna-lavender/40 to-white/95 dark:from-chetna-darker/95 dark:via-chetna-primary/10 dark:to-chetna-darker/95 backdrop-blur-xl border-chetna-primary/20 shadow-glow">
+              <SheetContent className="w-[300px] sm:w-[350px] bg-white/95 dark:bg-chetna-darker/95 backdrop-blur-xl border-chetna-primary/20">
                 <SheetHeader className="mb-6">
                   <SheetTitle className="text-chetna-primary text-xl font-semibold">Menu</SheetTitle>
                 </SheetHeader>
@@ -168,7 +169,7 @@ const Header = () => {
                     About
                   </MobileNavLink>
                   
-                  <div className="border-t border-gradient-to-r from-chetna-primary/20 to-chetna-accent/20 my-4 pt-4">
+                  <div className="border-t border-chetna-primary/20 my-4 pt-4">
                     {user ? (
                       <>
                         <MobileNavLink
@@ -187,7 +188,7 @@ const Header = () => {
                             handleSignOut();
                             setShowMobileMenu(false);
                           }}
-                          className="w-full justify-start px-4 py-3 h-auto font-medium hover:bg-gradient-to-r hover:from-red-500/10 hover:to-red-400/10 hover:text-red-500 rounded-xl transition-all duration-300"
+                          className="w-full justify-start px-4 py-3 h-auto font-medium hover:bg-red-500/10 hover:text-red-500 rounded-xl transition-all duration-300"
                         >
                           <LogOut size={16} className="mr-2" />
                           Sign out
@@ -210,7 +211,7 @@ const Header = () => {
                         toggleTheme();
                         setShowMobileMenu(false);
                       }}
-                      className="w-full justify-start px-4 py-3 h-auto font-medium mt-2 hover:bg-gradient-to-r hover:from-chetna-primary/10 hover:to-chetna-accent/10 rounded-xl transition-all duration-300"
+                      className="w-full justify-start px-4 py-3 h-auto font-medium mt-2 hover:bg-chetna-primary/10 rounded-xl transition-all duration-300"
                     >
                       {theme === "dark" ? (
                         <>
@@ -231,7 +232,7 @@ const Header = () => {
           </>
         ) : (
           <NavigationMenu className="mx-auto">
-            <NavigationMenuList className="gap-1 px-6 py-2 bg-gradient-to-r from-white/40 via-chetna-lavender/30 to-white/40 dark:from-chetna-darker/40 dark:via-chetna-primary/15 dark:to-chetna-darker/40 backdrop-blur-xl rounded-full shadow-soft border border-white/30 dark:border-chetna-primary/20">
+            <NavigationMenuList className="gap-1">
               <NavigationMenuItem>
                 <NavLink href="/" active={isActive("/")}>
                   Home
@@ -277,7 +278,7 @@ const Header = () => {
             size="icon"
             aria-label="Toggle theme"
             onClick={toggleTheme}
-            className="text-chetna-dark dark:text-white hover:bg-gradient-to-r hover:from-chetna-primary/10 hover:to-chetna-accent/10 rounded-full transition-all duration-300 shadow-soft"
+            className="text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
           >
             {theme === "dark" ? (
               <Sun className="h-5 w-5" />
@@ -292,7 +293,7 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="gap-2 text-chetna-dark dark:text-white hover:bg-gradient-to-r hover:from-chetna-primary/10 hover:to-chetna-accent/10 rounded-full transition-all duration-300 shadow-soft"
+                  className="gap-2 text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
                 >
                   <User size={16} />
                   Profile
@@ -301,7 +302,7 @@ const Header = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="gap-2 text-chetna-dark dark:text-white hover:bg-gradient-to-r hover:from-red-500/10 hover:to-red-400/10 hover:text-red-500 rounded-full transition-all duration-300"
+                className="gap-2 text-chetna-dark dark:text-white hover:bg-red-500/10 hover:text-red-500 rounded-full transition-all duration-300"
                 onClick={handleSignOut}
               >
                 <LogOut size={16} />
@@ -313,7 +314,7 @@ const Header = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="gap-2 border-2 border-chetna-primary/30 bg-gradient-to-r from-white/30 to-chetna-lavender/20 text-chetna-dark dark:text-white hover:bg-gradient-to-r hover:from-chetna-primary/10 hover:to-chetna-accent/10 rounded-full transition-all duration-300 shadow-soft backdrop-blur-sm"
+                className="gap-2 border-chetna-primary/30 bg-white/50 dark:bg-chetna-darker/50 text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
               >
                 <LogIn size={16} />
                 Sign in
