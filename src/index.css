@@ -5,7 +5,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
-/* Base styles with proper scaling */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -53,14 +52,13 @@
   
   html {
     font-family: 'Quicksand', sans-serif;
-    font-size: 16px; /* Fixed base font size */
+    font-size: 16px;
     line-height: 1.5;
   }
   
   body {
     @apply bg-gradient-to-br from-chetna-lavender via-white to-chetna-mint dark:from-chetna-dark dark:to-chetna-darker;
     background-attachment: fixed;
-    font-size: 1rem; /* Ensure consistent body font size */
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -71,7 +69,7 @@
   }
 }
 
-/* Enhanced breathing dots animation for chat typing indicator */
+/* Essential animations only */
 .breathing-dot {
   @apply w-2.5 h-2.5 rounded-full bg-gradient-to-r from-white/90 to-white/70 dark:from-white/70 dark:to-white/50;
   animation: breathe 1.8s infinite ease-in-out;
@@ -89,7 +87,6 @@
   }
 }
 
-/* Softer floating animation for background elements */
 @keyframes float {
   0%, 100% {
     transform: translateY(0px) rotate(0deg);
@@ -106,59 +103,83 @@
   animation: float 8s ease-in-out infinite;
 }
 
-/* Improved chat container styles with proper scaling */
+/* Essential chat styles */
 .chat-container {
-  display: flex;
-  flex-direction: column;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  border-radius: 2rem;
-  overflow: hidden;
-  box-shadow: 
-    0 20px 60px rgba(124, 101, 225, 0.12),
-    0 8px 25px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 247, 255, 0.9) 50%, rgba(253, 225, 211, 0.3) 100%);
+  @apply flex flex-col rounded-2xl overflow-hidden backdrop-blur-xl;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(248, 247, 255, 0.9), rgba(253, 225, 211, 0.3));
   border: 1px solid rgba(124, 101, 225, 0.15);
-  backdrop-filter: blur(20px);
-  max-width: 100%;
-  width: 100%;
+  box-shadow: 0 20px 60px rgba(124, 101, 225, 0.12), 0 8px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .dark .chat-container {
-  background: linear-gradient(145deg, rgba(26, 20, 33, 0.95) 0%, rgba(34, 31, 38, 0.9) 50%, rgba(124, 101, 225, 0.08) 100%);
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.3),
-    0 8px 25px rgba(124, 101, 225, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: linear-gradient(145deg, rgba(26, 20, 33, 0.95), rgba(34, 31, 38, 0.9), rgba(124, 101, 225, 0.08));
   border: 1px solid rgba(124, 101, 225, 0.25);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 8px 25px rgba(124, 101, 225, 0.15);
 }
 
 .message-container {
+  @apply rounded-xl backdrop-blur-md p-6 min-h-96 max-h-96 overflow-y-auto;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(248, 247, 255, 0.7), rgba(253, 225, 211, 0.3));
   scrollbar-width: thin;
   scrollbar-color: rgba(124, 101, 225, 0.4) transparent;
-  border-radius: 1.5rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 247, 255, 0.7) 50%, rgba(253, 225, 211, 0.3) 100%);
-  backdrop-filter: blur(15px);
-  box-shadow: 
-    inset 0 2px 10px rgba(124, 101, 225, 0.08),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.4);
-  padding: 1.5rem;
-  min-height: 400px;
-  max-height: 65vh;
-  position: relative;
-  font-size: 0.95rem; /* Slightly smaller text in messages */
 }
 
 .dark .message-container {
-  background: linear-gradient(135deg, rgba(26, 20, 33, 0.9) 0%, rgba(34, 31, 38, 0.8) 50%, rgba(124, 101, 225, 0.1) 100%);
-  backdrop-filter: blur(15px);
-  box-shadow: 
-    inset 0 2px 10px rgba(0, 0, 0, 0.2),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+  background: linear-gradient(135deg, rgba(26, 20, 33, 0.9), rgba(34, 31, 38, 0.8), rgba(124, 101, 225, 0.1));
   scrollbar-color: rgba(124, 101, 225, 0.6) rgba(26, 20, 33, 0.5);
 }
 
-/* Custom scrollbar styling with proper sizing */
+.message-input {
+  @apply rounded-xl backdrop-blur-md border transition-all duration-300;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 247, 255, 0.9));
+  border: 1px solid rgba(124, 101, 225, 0.2);
+}
+
+.dark .message-input {
+  background: linear-gradient(135deg, rgba(26, 20, 33, 0.85), rgba(34, 31, 38, 0.85));
+  border: 1px solid rgba(124, 101, 225, 0.3);
+}
+
+.message-input:focus-within {
+  border-color: rgba(124, 101, 225, 0.5);
+  box-shadow: 0 0 0 3px rgba(124, 101, 225, 0.1);
+}
+
+.chetna-button {
+  @apply rounded-full transition-all duration-400;
+  background: linear-gradient(135deg, #7C65E1, #9b87f5, #a855f7);
+  box-shadow: 0 6px 20px rgba(124, 101, 225, 0.25);
+}
+
+.chetna-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 35px rgba(124, 101, 225, 0.4);
+  background: linear-gradient(135deg, #9b87f5, #7C65E1, #6d28d9);
+}
+
+.feature-card {
+  @apply rounded-2xl border border-white/30 backdrop-blur-md transition-all duration-500;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(248, 247, 255, 0.7), rgba(253, 225, 211, 0.4));
+  box-shadow: 0 8px 32px rgba(124, 101, 225, 0.08);
+}
+
+.feature-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(124, 101, 225, 0.15);
+}
+
+.dark .feature-card {
+  background: linear-gradient(135deg, rgba(26, 20, 33, 0.85), rgba(34, 31, 38, 0.8), rgba(124, 101, 225, 0.1));
+  border: 1px solid rgba(124, 101, 225, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.dark .feature-card:hover {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 30px rgba(124, 101, 225, 0.25);
+}
+
+/* Custom scrollbar */
 .message-container::-webkit-scrollbar {
   width: 6px;
 }
@@ -171,8 +192,6 @@
 .message-container::-webkit-scrollbar-thumb {
   background: linear-gradient(45deg, rgba(124, 101, 225, 0.4), rgba(159, 135, 245, 0.6));
   border-radius: 10px;
-  border: 1px solid transparent;
-  background-clip: content-box;
 }
 
 .dark .message-container::-webkit-scrollbar-track {
@@ -181,186 +200,4 @@
 
 .dark .message-container::-webkit-scrollbar-thumb {
   background: linear-gradient(45deg, rgba(124, 101, 225, 0.6), rgba(159, 135, 245, 0.8));
-}
-
-.message-input {
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  border-radius: 1.5rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 247, 255, 0.9) 100%);
-  border: 1px solid rgba(124, 101, 225, 0.2);
-  backdrop-filter: blur(10px);
-  box-shadow: 
-    0 4px 20px rgba(124, 101, 225, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  font-size: 0.95rem; /* Consistent input text size */
-}
-
-.dark .message-input {
-  background: linear-gradient(135deg, rgba(26, 20, 33, 0.85) 0%, rgba(34, 31, 38, 0.85) 100%);
-  border: 1px solid rgba(124, 101, 225, 0.3);
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-.message-input:focus-within {
-  border-color: rgba(124, 101, 225, 0.5);
-  box-shadow: 
-    0 8px 30px rgba(124, 101, 225, 0.15),
-    0 0 0 3px rgba(124, 101, 225, 0.1);
-  transform: translateY(-1px);
-}
-
-.dark .message-input:focus-within {
-  border-color: rgba(124, 101, 225, 0.6);
-  box-shadow: 
-    0 8px 30px rgba(124, 101, 225, 0.25),
-    0 0 0 3px rgba(124, 101, 225, 0.15);
-}
-
-/* Enhanced button styling with consistent sizing */
-.chetna-button {
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 
-    0 6px 20px rgba(124, 101, 225, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  border-radius: 2rem !important;
-  overflow: hidden;
-  background: linear-gradient(135deg, #7C65E1 0%, #9b87f5 50%, #a855f7 100%);
-  position: relative;
-  font-size: 1rem; /* Consistent button text size */
-}
-
-.chetna-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.6s;
-}
-
-.chetna-button:hover::before {
-  left: 100%;
-}
-
-.chetna-button:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 
-    0 10px 35px rgba(124, 101, 225, 0.4),
-    0 0 20px rgba(124, 101, 225, 0.25);
-  background: linear-gradient(135deg, #9b87f5 0%, #7C65E1 50%, #6d28d9 100%);
-}
-
-/* Enhanced microphone pulse animation */
-.mic-pulse {
-  animation: micPulse 1.5s ease-in-out infinite;
-}
-
-@keyframes micPulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-  }
-  50% {
-    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
-  }
-}
-
-/* Feature card enhancements with proper scaling */
-.feature-card {
-  @apply rounded-2xl border border-white/30 backdrop-blur-md transition-all duration-500;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 247, 255, 0.7) 50%, rgba(253, 225, 211, 0.4) 100%);
-  box-shadow: 
-    0 8px 32px rgba(124, 101, 225, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  font-size: 0.95rem; /* Consistent card text size */
-}
-
-.feature-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 
-    0 20px 50px rgba(124, 101, 225, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-
-.dark .feature-card {
-  background: linear-gradient(135deg, rgba(26, 20, 33, 0.85) 0%, rgba(34, 31, 38, 0.8) 50%, rgba(124, 101, 225, 0.1) 100%);
-  border: 1px solid rgba(124, 101, 225, 0.25);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.dark .feature-card:hover {
-  box-shadow: 
-    0 20px 50px rgba(0, 0, 0, 0.3),
-    0 0 30px rgba(124, 101, 225, 0.25);
-}
-
-/* Responsive font sizes */
-@media (max-width: 768px) {
-  html {
-    font-size: 15px; /* Slightly smaller on mobile */
-  }
-  
-  .message-container {
-    padding: 1rem;
-    min-height: 350px;
-    max-height: 60vh;
-    font-size: 0.9rem;
-  }
-  
-  .message-input {
-    font-size: 0.9rem;
-  }
-  
-  .chetna-button {
-    font-size: 0.95rem;
-  }
-  
-  .feature-card {
-    font-size: 0.9rem;
-  }
-}
-
-@media (min-width: 1200px) {
-  html {
-    font-size: 17px; /* Slightly larger on large screens */
-  }
-}
-
-/* Improved text and link styling */
-.dark .text-muted-foreground {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.dark a.text-muted-foreground:hover {
-  color: #9b87f5;
-}
-
-/* Form styling improvements */
-.form-input {
-  @apply transition-all duration-300 ease-in-out;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 247, 255, 0.9) 100%);
-  border: 2px solid rgba(124, 101, 225, 0.2);
-  backdrop-filter: blur(10px);
-  font-size: 0.95rem;
-}
-
-.form-input:focus {
-  border-color: rgba(124, 101, 225, 0.5);
-  box-shadow: 0 0 0 3px rgba(124, 101, 225, 0.1);
-  transform: translateY(-1px);
-}
-
-.dark .form-input {
-  background: linear-gradient(135deg, rgba(26, 20, 33, 0.85) 0%, rgba(34, 31, 38, 0.85) 100%);
-  border: 2px solid rgba(124, 101, 225, 0.3);
-}
-
-.dark .form-input:focus {
-  border-color: rgba(124, 101, 225, 0.6);
-  box-shadow: 0 0 0 3px rgba(124, 101, 225, 0.15);
 }

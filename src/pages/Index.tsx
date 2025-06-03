@@ -20,7 +20,7 @@ const Index: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-lavender via-white to-chetna-mint dark:from-chetna-dark dark:to-chetna-darker relative overflow-hidden">
-      {/* Softer floating background elements */}
+      {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-chetna-primary/8 to-chetna-accent/8 rounded-full blur-2xl floating" style={{ animationDelay: '0s' }}></div>
         <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-br from-chetna-secondary/8 to-chetna-primary/8 rounded-full blur-2xl floating" style={{ animationDelay: '3s' }}></div>
@@ -34,26 +34,6 @@ const Index: React.FC = () => {
         <meta name="description" content="Experience compassionate AI support for anxiety, depression, stress, and other mental health challenges with Chetna_AI - your mental wellness companion." />
         <meta name="keywords" content="mental health AI, anxiety help, depression support, stress management, emotional wellness, mental health chat" />
         <link rel="canonical" href="https://empath-space-well.vercel.app/" />
-        <script type="application/ld+json">
-          {`
-            {
-              "@context": "https://schema.org",
-              "@type": "HealthAndBeautyBusiness",
-              "name": "Chetna_AI",
-              "description": "Your AI Mental Wellness Companion",
-              "url": "https://empath-space-well.vercel.app",
-              "sameAs": [
-                "https://www.instagram.com/_chetna_ai_?utm_source=qr&igsh=YzU4eThnZzMxMXMw"
-              ],
-              "openingHours": "Mo-Su 00:00-24:00",
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "contactType": "customer support",
-                "email": "support@chetna-ai.com"
-              }
-            }
-          `}
-        </script>
       </Helmet>
       
       <Header />
@@ -79,28 +59,20 @@ const Index: React.FC = () => {
                   {activeTab === 'chat' && <Sparkles className="ml-2 h-4 w-4 animate-pulse" />}
                 </Button>
                 <Link to="/community">
-                  <Button
-                    variant="ghost"
-                    className="rounded-full px-6 py-3 hover:bg-gradient-to-r hover:from-chetna-secondary/10 hover:to-chetna-secondary/20 dark:hover:bg-chetna-secondary/20 transition-all duration-300"
-                  >
+                  <Button variant="ghost" className="rounded-full px-6 py-3 hover:bg-gradient-to-r hover:from-chetna-secondary/10 hover:to-chetna-secondary/20 dark:hover:bg-chetna-secondary/20 transition-all duration-300">
                     <Users className="mr-2 h-4 w-4" />
                     Community
                   </Button>
                 </Link>
                 <Link to="/quiz">
-                  <Button
-                    variant="ghost"
-                    className="rounded-full px-6 py-3 hover:bg-gradient-to-r hover:from-chetna-accent/10 hover:to-chetna-accent/20 dark:hover:bg-chetna-accent/20 transition-all duration-300"
-                  >
+                  <Button variant="ghost" className="rounded-full px-6 py-3 hover:bg-gradient-to-r hover:from-chetna-accent/10 hover:to-chetna-accent/20 dark:hover:bg-chetna-accent/20 transition-all duration-300">
                     <Star className="mr-2 h-4 w-4" />
                     Chetna Quest
                   </Button>
                 </Link>
               </div>
               
-              <div className="w-full">
-                {activeTab === 'chat' && <ChatInterface />}
-              </div>
+              {activeTab === 'chat' && <ChatInterface />}
             </div>
           )}
         </div>
