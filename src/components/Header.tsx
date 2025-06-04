@@ -1,215 +1,328 @@
 
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { Brain, Menu, X, Sun, Moon } from "lucide-react";
-import { useTheme } from "next-themes";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger,
-  DropdownMenuSeparator
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import LanguageSelector from "./LanguageSelector";
+import { useMediaQuery } from "@/hooks/use-mobile";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Menu, X, Sun, Moon, LogOut, LogIn, User, Heart } from "lucide-react";
 
-const Header: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const NavLink = ({ href, children, active = false }) => {
+  return (
+    <Link
+      to={href}
+      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+        active
+          ? "bg-chetna-primary/10 text-chetna-primary"
+          : "text-chetna-dark/80 dark:text-white/80 hover:text-chetna-primary hover:bg-chetna-primary/5"
+      }`}
+    >
+      {children}
+    </Link>
+  );
+};
+
+const MobileNavLink = ({ href, children, onClick, active = false }) => {
+  return (
+    <Link
+      to={href}
+      onClick={onClick}
+      className={`px-4 py-3 text-base font-medium rounded-xl block transition-all duration-300 ${
+        active
+          ? "bg-chetna-primary/10 text-chetna-primary"
+          : "text-chetna-dark dark:text-white hover:text-chetna-primary hover:bg-chetna-primary/5"
+      }`}
+    >
+      {children}
+    </Link>
+  );
+};
+
+const Header = () => {
   const { user, logout } = useAuth();
-  const { theme, setTheme } = useTheme();
-  const { t } = useTranslation();
+  const location = useLocation();
+  const [theme, setTheme] = useState(
+    localStorage.getItem("theme") || "light"
+  );
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
-  const handleLogout = async () => {
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  const handleSignOut = async () => {
     await logout();
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
+  const isActive = (path) => {
+    return location.pathname === path;
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center space-x-2" onClick={closeMenu}>
-          <Brain className="h-8 w-8 text-chetna-primary" />
-          <span className="text-xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-accent bg-clip-text text-transparent">
-            Chetna_AI
-          </span>
-        </Link>
+    <header className="sticky top-0 z-50 w-full bg-white/90 dark:bg-chetna-darker/90 backdrop-blur-xl border-b border-chetna-primary/10 shadow-sm">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="w-8 h-8 bg-chetna-primary/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+              <Heart className="w-4 h-4 text-chetna-primary" fill="currentColor" />
+            </div>
+            <h2 className="text-lg md:text-xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-accent bg-clip-text text-transparent">
+              Chetna
+              <span className="text-chetna-dark dark:text-white">_AI</span>
+            </h2>
+          </Link>
+        </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-sm font-medium hover:text-chetna-primary transition-colors">
-            {t('navigation.home')}
-          </Link>
-          <Link to="/blog" className="text-sm font-medium hover:text-chetna-primary transition-colors">
-            {t('navigation.blog')}
-          </Link>
-          <Link to="/community" className="text-sm font-medium hover:text-chetna-primary transition-colors">
-            {t('navigation.community')}
-          </Link>
-          <Link to="/journal" className="text-sm font-medium hover:text-chetna-primary transition-colors">
-            {t('navigation.journal')}
-          </Link>
-          <Link to="/psych-tests" className="text-sm font-medium hover:text-chetna-primary transition-colors">
-            {t('navigation.tests')}
-          </Link>
-          <Link to="/about" className="text-sm font-medium hover:text-chetna-primary transition-colors">
-            {t('navigation.about')}
-          </Link>
-        </nav>
+        {isMobile ? (
+          <>
+            <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
+                  aria-label="Menu"
+                >
+                  {showMobileMenu ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <Menu className="h-5 w-5" />
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-[300px] sm:w-[350px] bg-white/95 dark:bg-chetna-darker/95 backdrop-blur-xl border-chetna-primary/20">
+                <SheetHeader className="mb-6">
+                  <SheetTitle className="text-chetna-primary text-xl font-semibold">Menu</SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col gap-2">
+                  <MobileNavLink
+                    href="/"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/")}
+                  >
+                    Home
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/journal"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/journal")}
+                  >
+                    Journal
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/psych-tests"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/psych-tests")}
+                  >
+                    Psych Tests
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/community"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/community")}
+                  >
+                    Community
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/blog"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/blog")}
+                  >
+                    Blog
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/feedback"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/feedback")}
+                  >
+                    Feedback
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href="/about"
+                    onClick={() => setShowMobileMenu(false)}
+                    active={isActive("/about")}
+                  >
+                    About
+                  </MobileNavLink>
+                  
+                  <div className="border-t border-chetna-primary/20 my-4 pt-4">
+                    {user ? (
+                      <>
+                        <MobileNavLink
+                          href="/profile"
+                          onClick={() => setShowMobileMenu(false)}
+                          active={isActive("/profile")}
+                        >
+                          <div className="flex items-center gap-2">
+                            <User size={16} />
+                            Profile
+                          </div>
+                        </MobileNavLink>
+                        <Button
+                          variant="ghost"
+                          onClick={() => {
+                            handleSignOut();
+                            setShowMobileMenu(false);
+                          }}
+                          className="w-full justify-start px-4 py-3 h-auto font-medium hover:bg-red-500/10 hover:text-red-500 rounded-xl transition-all duration-300"
+                        >
+                          <LogOut size={16} className="mr-2" />
+                          Sign out
+                        </Button>
+                      </>
+                    ) : (
+                      <MobileNavLink
+                        href="/login"
+                        onClick={() => setShowMobileMenu(false)}
+                      >
+                        <div className="flex items-center gap-2">
+                          <LogIn size={16} />
+                          Sign In
+                        </div>
+                      </MobileNavLink>
+                    )}
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        toggleTheme();
+                        setShowMobileMenu(false);
+                      }}
+                      className="w-full justify-start px-4 py-3 h-auto font-medium mt-2 hover:bg-chetna-primary/10 rounded-xl transition-all duration-300"
+                    >
+                      {theme === "dark" ? (
+                        <>
+                          <Sun size={16} className="mr-2" />
+                          Light Mode
+                        </>
+                      ) : (
+                        <>
+                          <Moon size={16} className="mr-2" />
+                          Dark Mode
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </>
+        ) : (
+          <NavigationMenu className="mx-auto">
+            <NavigationMenuList className="gap-1">
+              <NavigationMenuItem>
+                <NavLink href="/" active={isActive("/")}>
+                  Home
+                </NavLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavLink href="/journal" active={isActive("/journal")}>
+                  Journal
+                </NavLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavLink href="/psych-tests" active={isActive("/psych-tests")}>
+                  Psych Tests
+                </NavLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavLink href="/community" active={isActive("/community")}>
+                  Community
+                </NavLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavLink href="/blog" active={isActive("/blog")}>
+                  Blog
+                </NavLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavLink href="/feedback" active={isActive("/feedback")}>
+                  Feedback
+                </NavLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavLink href="/about" active={isActive("/about")}>
+                  About
+                </NavLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        )}
 
-        {/* Desktop Actions */}
-        <div className="hidden md:flex items-center space-x-4">
-          <LanguageSelector />
+        <div className="hidden md:flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            aria-label="Toggle theme"
+            onClick={toggleTheme}
+            className="text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
           >
-            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            <span className="sr-only">Toggle theme</span>
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
           </Button>
-          
+
           {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-chetna-primary text-white">
-                      {user.email?.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+            <>
+              <Link to="/profile">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-2 text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
+                >
+                  <User size={16} />
+                  Profile
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuItem asChild>
-                  <Link to="/profile">{t('navigation.profile')}</Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
-                  {t('navigation.logout')}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-2 text-chetna-dark dark:text-white hover:bg-red-500/10 hover:text-red-500 rounded-full transition-all duration-300"
+                onClick={handleSignOut}
+              >
+                <LogOut size={16} />
+                Sign out
+              </Button>
+            </>
           ) : (
-            <div className="flex items-center space-x-2">
-              <Button asChild variant="ghost" size="sm">
-                <Link to="/login">{t('navigation.login')}</Link>
+            <Link to="/login">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 border-chetna-primary/30 bg-white/50 dark:bg-chetna-darker/50 text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
+              >
+                <LogIn size={16} />
+                Sign in
               </Button>
-              <Button asChild size="sm" className="chetna-button">
-                <Link to="/signup">{t('navigation.signup')}</Link>
-              </Button>
-            </div>
+            </Link>
           )}
         </div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center space-x-2">
-          <LanguageSelector />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          >
-            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={toggleMenu}>
-            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </Button>
-        </div>
       </div>
-
-      {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background border-t">
-            <Link
-              to="/"
-              className="block px-3 py-2 text-base font-medium hover:text-chetna-primary transition-colors"
-              onClick={closeMenu}
-            >
-              {t('navigation.home')}
-            </Link>
-            <Link
-              to="/blog"
-              className="block px-3 py-2 text-base font-medium hover:text-chetna-primary transition-colors"
-              onClick={closeMenu}
-            >
-              {t('navigation.blog')}
-            </Link>
-            <Link
-              to="/community"
-              className="block px-3 py-2 text-base font-medium hover:text-chetna-primary transition-colors"
-              onClick={closeMenu}
-            >
-              {t('navigation.community')}
-            </Link>
-            <Link
-              to="/journal"
-              className="block px-3 py-2 text-base font-medium hover:text-chetna-primary transition-colors"
-              onClick={closeMenu}
-            >
-              {t('navigation.journal')}
-            </Link>
-            <Link
-              to="/psych-tests"
-              className="block px-3 py-2 text-base font-medium hover:text-chetna-primary transition-colors"
-              onClick={closeMenu}
-            >
-              {t('navigation.tests')}
-            </Link>
-            <Link
-              to="/about"
-              className="block px-3 py-2 text-base font-medium hover:text-chetna-primary transition-colors"
-              onClick={closeMenu}
-            >
-              {t('navigation.about')}
-            </Link>
-            
-            <div className="border-t pt-4">
-              {user ? (
-                <>
-                  <Link
-                    to="/profile"
-                    className="block px-3 py-2 text-base font-medium hover:text-chetna-primary transition-colors"
-                    onClick={closeMenu}
-                  >
-                    {t('navigation.profile')}
-                  </Link>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      closeMenu();
-                    }}
-                    className="block w-full text-left px-3 py-2 text-base font-medium hover:text-chetna-primary transition-colors"
-                  >
-                    {t('navigation.logout')}
-                  </button>
-                </>
-              ) : (
-                <div className="space-y-2 px-3">
-                  <Button asChild variant="ghost" size="sm" className="w-full justify-start">
-                    <Link to="/login" onClick={closeMenu}>{t('navigation.login')}</Link>
-                  </Button>
-                  <Button asChild size="sm" className="w-full chetna-button">
-                    <Link to="/signup" onClick={closeMenu}>{t('navigation.signup')}</Link>
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </header>
   );
 };

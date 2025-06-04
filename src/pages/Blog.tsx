@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { useTranslation } from 'react-i18next';
 
 type BlogPost = {
   id: string;
@@ -28,7 +28,6 @@ const Blog: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t } = useTranslation();
 
   useEffect(() => {
     fetchPosts();
@@ -87,7 +86,7 @@ const Blog: React.FC = () => {
       </div>
 
       <Helmet>
-        <title>{t('navigation.blog')} | Chetna_AI</title>
+        <title>Blog | Chetna_AI</title>
         <meta name="description" content="Read and share thoughts on mental wellness in the Chetna_AI community blog." />
       </Helmet>
 
@@ -101,10 +100,10 @@ const Blog: React.FC = () => {
             <span className="text-sm font-medium text-chetna-primary">Community Stories</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-chetna-primary via-chetna-accent to-chetna-primary bg-clip-text text-transparent mb-4">
-            {t('blog.title')}
+            Share Your Journey
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            {t('blog.subtitle')}
+            Discover inspiring stories, share your experiences, and connect with others on their mental wellness journey
           </p>
           {user && (
             <Button 
@@ -113,7 +112,7 @@ const Blog: React.FC = () => {
               size="lg"
             >
               <PlusCircle className="mr-2 h-5 w-5" />
-              {t('blog.shareStory')}
+              Share Your Story
             </Button>
           )}
         </div>
@@ -144,9 +143,9 @@ const Blog: React.FC = () => {
             <div className="w-24 h-24 bg-gradient-to-br from-chetna-primary/20 to-chetna-accent/20 rounded-full flex items-center justify-center mx-auto mb-6">
               <BookOpen className="h-12 w-12 text-chetna-primary" />
             </div>
-            <h3 className="text-2xl font-semibold mb-3 text-chetna-dark dark:text-white">{t('blog.noStories')}</h3>
+            <h3 className="text-2xl font-semibold mb-3 text-chetna-dark dark:text-white">No stories yet</h3>
             <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              {t('blog.beFirst')}
+              Be the first to share your mental wellness journey and inspire others in our community
             </p>
             {user ? (
               <Button
@@ -155,7 +154,7 @@ const Blog: React.FC = () => {
                 size="lg"
               >
                 <PlusCircle className="mr-2 h-5 w-5" />
-                {t('blog.writeFirst')}
+                Write Your First Story
               </Button>
             ) : (
               <Button
@@ -163,7 +162,7 @@ const Blog: React.FC = () => {
                 className="chetna-button bg-gradient-to-r from-chetna-primary to-chetna-accent hover:from-chetna-accent hover:to-chetna-primary"
                 size="lg"
               >
-                {t('blog.joinCommunity')}
+                Join Our Community
               </Button>
             )}
           </div>
@@ -179,7 +178,7 @@ const Blog: React.FC = () => {
                   <div className="flex items-start justify-between">
                     <Badge variant="secondary" className="bg-chetna-primary/10 text-chetna-primary border-chetna-primary/20 mb-2">
                       <Heart className="w-3 h-3 mr-1" />
-                      {t('blog.wellnessStory')}
+                      Wellness Story
                     </Badge>
                     {user && user.id === post.user_id && (
                       <Button
@@ -219,7 +218,7 @@ const Blog: React.FC = () => {
                     variant="ghost"
                     className="text-chetna-primary hover:text-chetna-primary/80 hover:bg-chetna-primary/10 px-0 group-hover:translate-x-1 transition-transform"
                   >
-                    {t('blog.continueReading')}
+                    Continue reading →
                   </Button>
                 </CardFooter>
               </Card>
