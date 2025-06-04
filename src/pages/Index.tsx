@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { useTranslation } from "react-i18next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import IntroSection from "@/components/IntroSection";
@@ -11,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const Index: React.FC = () => {
+  const { t } = useTranslation();
   const [showIntro, setShowIntro] = useState(true);
   const [activeTab, setActiveTab] = useState<'chat' | 'community'>('chat');
 
@@ -59,19 +61,19 @@ const Index: React.FC = () => {
                   onClick={() => setActiveTab('chat')}
                 >
                   <MessageSquare className="mr-2 h-4 w-4" />
-                  Chat with Chetna
+                  {t('intro.chatWithChetna')}
                   {activeTab === 'chat' && <Sparkles className="ml-2 h-4 w-4 animate-pulse" />}
                 </Button>
                 <Link to="/community">
                   <Button variant="ghost" className="rounded-full px-6 py-3 hover:bg-gradient-to-r hover:from-chetna-secondary/10 hover:to-chetna-secondary/20 dark:hover:bg-chetna-secondary/20 transition-all duration-300">
                     <Users className="mr-2 h-4 w-4" />
-                    Community
+                    {t('intro.community')}
                   </Button>
                 </Link>
                 <Link to="/quiz">
                   <Button variant="ghost" className="rounded-full px-6 py-3 hover:bg-gradient-to-r hover:from-chetna-accent/10 hover:to-chetna-accent/20 dark:hover:bg-chetna-accent/20 transition-all duration-300">
                     <Star className="mr-2 h-4 w-4" />
-                    Chetna Quest
+                    {t('intro.chetnaQuest')}
                   </Button>
                 </Link>
               </div>

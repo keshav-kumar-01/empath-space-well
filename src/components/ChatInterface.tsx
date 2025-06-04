@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Send, LogIn, Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import speechRecognition from "@/utils/speechRecognition";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 interface Message {
   text: string;
@@ -21,30 +21,32 @@ interface Message {
 
 const CHAT_STORAGE_KEY = 'chetna_chat_messages';
 
-const getInitialMessages = (): Message[] => {
-  try {
-    const savedMessages = localStorage.getItem(CHAT_STORAGE_KEY);
-    if (savedMessages) {
-      const parsed = JSON.parse(savedMessages);
-      // Convert timestamp strings back to Date objects
-      return parsed.map((msg: any) => ({
-        ...msg,
-        timestamp: new Date(msg.timestamp)
-      }));
-    }
-  } catch (error) {
-    console.error('Error loading saved messages:', error);
-  }
-  
-  // Default welcome message
-  return [{
-    text: "Hi there! I'm Chetna, your mental wellness companion. How are you feeling today?",
-    isUser: false,
-    timestamp: new Date()
-  }];
-};
-
 const ChatInterface: React.FC = () => {
+  const { t, i18n } = useTranslation();
+  
+  const getInitialMessages = (): Message[] => {
+    try {
+      const savedMessages = localStorage.getItem(CHAT_STORAGE_KEY);
+      if (savedMessages) {
+        const parsed = JSON.parse(savedMessages);
+        // Convert timestamp strings back to Date objects
+        return parsed.map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading saved messages:', error);
+    }
+    
+    // Default welcome message
+    return [{
+      text: t('chat.welcomeMessage'),
+      isUser: false,
+      timestamp: new Date()
+    }];
+  };
+
   const [messages, setMessages] = useState<Message[]>(getInitialMessages);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -121,21 +123,29 @@ const ChatInterface: React.FC = () => {
     loadModel();
   }, [toast]);
 
-  // Update welcome message when user test results are loaded
+  // Update welcome message when user test results are loaded or language changes
   useEffect(() => {
     if (user && userTestResults && userTestResults.length > 0) {
       const hasTestResults = userTestResults.length > 0;
       if (hasTestResults && messages.length === 1) {
         // Only update if we still have the default welcome message
         const newWelcomeMessage = {
-          text: `Hi ${user.name}! I'm Chetna, your mental wellness companion. I've reviewed your recent assessment results and I'm here to provide personalized support based on your mental health profile. How are you feeling today?`,
+          text: t('chat.personalizedWelcome', { name: user.name }),
           isUser: false,
           timestamp: new Date()
         };
         setMessages([newWelcomeMessage]);
       }
+    } else if (messages.length === 1) {
+      // Update default message when language changes
+      const updatedWelcomeMessage = {
+        text: t('chat.welcomeMessage'),
+        isUser: false,
+        timestamp: new Date()
+      };
+      setMessages([updatedWelcomeMessage]);
     }
-  }, [user, userTestResults]);
+  }, [user, userTestResults, i18n.language, t]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -181,7 +191,7 @@ const ChatInterface: React.FC = () => {
 
   const clearChat = () => {
     const defaultMessage = {
-      text: "Hi there! I'm Chetna, your mental wellness companion. How are you feeling today?",
+      text: t('chat.welcomeMessage'),
       isUser: false,
       timestamp: new Date()
     };
@@ -287,8 +297,8 @@ const ChatInterface: React.FC = () => {
         onStart: () => {
           setIsListening(true);
           toast({
-            title: "Listening...",
-            description: "Speak clearly into your microphone",
+            title: t('chat.listening'),
+            description: t('chat.speakClearly'),
           });
         },
         onResult: (text) => {
@@ -306,7 +316,7 @@ const ChatInterface: React.FC = () => {
           console.error("Speech recognition error:", error);
           setIsListening(false);
           toast({
-            title: "Speech recognition error",
+            title: t('chat.speechError'),
             description: error,
             variant: "destructive",
           });
@@ -319,54 +329,54 @@ const ChatInterface: React.FC = () => {
     <div className="chat-container flex flex-col h-[70vh] md:h-[75vh] bg-white dark:bg-chetna-dark/50 rounded-xl shadow-lg overflow-hidden border border-chetna-primary/10 dark:border-chetna-primary/30">
       {/* Chat header with clear button */}
       <div className="flex justify-between items-center p-3 border-b border-chetna-primary/10 dark:border-chetna-primary/30 bg-gradient-to-r from-chetna-primary/5 to-chetna-accent/5">
-        <h3 className="font-semibold text-chetna-primary dark:text-chetna-primary">Chat with Chetna</h3>
+        <h3 className="font-semibold text-chetna-primary dark:text-chetna-primary">{t('chat.title')}</h3>
         <Button
           variant="ghost"
           size="sm"
           onClick={clearChat}
           className="text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10"
         >
-          Clear Chat
+          {t('chat.clearChat')}
         </Button>
       </div>
 
       <div className="message-container flex-grow p-4 md:p-6 overflow-y-auto space-y-4 bg-white/80 dark:bg-chetna-darker/80">
         {loadingModel && (
           <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-2 mb-2 text-sm text-center">
-            Connecting to Mistral AI...
+            {t('chat.connecting')}
           </div>
         )}
         
         {!modelLoaded && !loadingModel && (
           <div className="bg-orange-100 dark:bg-orange-900/50 rounded-lg p-2 mb-2 text-sm text-center text-orange-800 dark:text-orange-100">
-            Using basic response mode. Some features may be limited.
+            {t('chat.basicMode')}
           </div>
         )}
 
         {user && userTestResults && userTestResults.length > 0 && (
           <div className="bg-gradient-to-r from-chetna-primary/10 to-chetna-peach/20 dark:bg-chetna-primary/20 rounded-lg p-3 mb-2 text-sm text-center border border-chetna-primary/20">
             <p className="font-medium text-chetna-primary dark:text-chetna-primary">
-              ✨ Personalized Support Active
+              {t('chat.personalizedActive')}
             </p>
             <p className="text-xs text-chetna-primary/80 dark:text-chetna-primary/80 mt-1">
-              Chetna is tailoring responses based on your {userTestResults.length} recent assessment{userTestResults.length !== 1 ? 's' : ''}
+              {t(userTestResults.length === 1 ? 'chat.personalizedDescription' : 'chat.personalizedDescriptionPlural', { count: userTestResults.length })}
             </p>
           </div>
         )}
         
         {!user && !showLoginPrompt && messageCount > 0 && (
           <div className="bg-blue-100 dark:bg-blue-900/50 rounded-lg p-2 mb-2 text-sm text-center text-blue-800 dark:text-blue-100">
-            Message {messageCount}/5 - Sign up to continue chatting after limit is reached
+            {t('chat.messageLimit', { current: messageCount, max: 5 })}
           </div>
         )}
         
         {showLoginPrompt && !user && (
           <div className="bg-red-100 dark:bg-red-900/50 rounded-lg p-4 mb-2 text-center flex flex-col items-center gap-3 text-red-800 dark:text-red-100">
-            <p className="font-medium">You've reached the message limit</p>
-            <p className="text-sm">Please sign up to continue chatting with Chetna</p>
+            <p className="font-medium">{t('chat.limitReached')}</p>
+            <p className="text-sm">{t('chat.signupPrompt')}</p>
             <Button onClick={goToSignup} className="bg-chetna-primary hover:bg-chetna-primary/90">
               <LogIn className="h-4 w-4 mr-2" />
-              Sign up now
+              {t('chat.signupNow')}
             </Button>
           </div>
         )}
@@ -403,7 +413,7 @@ const ChatInterface: React.FC = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={showLoginPrompt && !user ? "Sign up to continue chatting..." : isTyping ? "Chetna is typing..." : "Type your message here..."}
+            placeholder={showLoginPrompt && !user ? t('chat.placeholderSignup') : isTyping ? t('chat.placeholderTyping') : t('chat.placeholder')}
             className="rounded-full bg-white dark:bg-chetna-darker/80 border-none focus-visible:ring-chetna-primary text-foreground dark:text-white/90 shadow-sm"
             disabled={isTyping || (showLoginPrompt && !user)}
           />

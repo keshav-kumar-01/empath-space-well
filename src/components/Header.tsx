@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { useTranslation } from "react-i18next";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -20,6 +21,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Menu, X, Sun, Moon, LogOut, LogIn, User, Heart } from "lucide-react";
+import LanguageSelector from "./LanguageSelector";
 
 const NavLink = ({ href, children, active = false }) => {
   return (
@@ -54,6 +56,7 @@ const MobileNavLink = ({ href, children, onClick, active = false }) => {
 
 const Header = () => {
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
   const location = useLocation();
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") || "light"
@@ -99,173 +102,176 @@ const Header = () => {
 
         {isMobile ? (
           <>
-            <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="md:hidden text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
-                  aria-label="Menu"
-                >
-                  {showMobileMenu ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5" />
-                  )}
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="w-[300px] sm:w-[350px] bg-white/95 dark:bg-chetna-darker/95 backdrop-blur-xl border-chetna-primary/20">
-                <SheetHeader className="mb-6">
-                  <SheetTitle className="text-chetna-primary text-xl font-semibold">Menu</SheetTitle>
-                </SheetHeader>
-                <nav className="flex flex-col gap-2">
-                  <MobileNavLink
-                    href="/"
-                    onClick={() => setShowMobileMenu(false)}
-                    active={isActive("/")}
+            <div className="flex items-center gap-2">
+              <LanguageSelector />
+              <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="md:hidden text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
+                    aria-label={t('header.menu')}
                   >
-                    Home
-                  </MobileNavLink>
-                  <MobileNavLink
-                    href="/journal"
-                    onClick={() => setShowMobileMenu(false)}
-                    active={isActive("/journal")}
-                  >
-                    Journal
-                  </MobileNavLink>
-                  <MobileNavLink
-                    href="/psych-tests"
-                    onClick={() => setShowMobileMenu(false)}
-                    active={isActive("/psych-tests")}
-                  >
-                    Psych Tests
-                  </MobileNavLink>
-                  <MobileNavLink
-                    href="/community"
-                    onClick={() => setShowMobileMenu(false)}
-                    active={isActive("/community")}
-                  >
-                    Community
-                  </MobileNavLink>
-                  <MobileNavLink
-                    href="/blog"
-                    onClick={() => setShowMobileMenu(false)}
-                    active={isActive("/blog")}
-                  >
-                    Blog
-                  </MobileNavLink>
-                  <MobileNavLink
-                    href="/feedback"
-                    onClick={() => setShowMobileMenu(false)}
-                    active={isActive("/feedback")}
-                  >
-                    Feedback
-                  </MobileNavLink>
-                  <MobileNavLink
-                    href="/about"
-                    onClick={() => setShowMobileMenu(false)}
-                    active={isActive("/about")}
-                  >
-                    About
-                  </MobileNavLink>
-                  
-                  <div className="border-t border-chetna-primary/20 my-4 pt-4">
-                    {user ? (
-                      <>
-                        <MobileNavLink
-                          href="/profile"
-                          onClick={() => setShowMobileMenu(false)}
-                          active={isActive("/profile")}
-                        >
-                          <div className="flex items-center gap-2">
-                            <User size={16} />
-                            Profile
-                          </div>
-                        </MobileNavLink>
-                        <Button
-                          variant="ghost"
-                          onClick={() => {
-                            handleSignOut();
-                            setShowMobileMenu(false);
-                          }}
-                          className="w-full justify-start px-4 py-3 h-auto font-medium hover:bg-red-500/10 hover:text-red-500 rounded-xl transition-all duration-300"
-                        >
-                          <LogOut size={16} className="mr-2" />
-                          Sign out
-                        </Button>
-                      </>
+                    {showMobileMenu ? (
+                      <X className="h-5 w-5" />
                     ) : (
-                      <MobileNavLink
-                        href="/login"
-                        onClick={() => setShowMobileMenu(false)}
-                      >
-                        <div className="flex items-center gap-2">
-                          <LogIn size={16} />
-                          Sign In
-                        </div>
-                      </MobileNavLink>
+                      <Menu className="h-5 w-5" />
                     )}
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        toggleTheme();
-                        setShowMobileMenu(false);
-                      }}
-                      className="w-full justify-start px-4 py-3 h-auto font-medium mt-2 hover:bg-chetna-primary/10 rounded-xl transition-all duration-300"
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="w-[300px] sm:w-[350px] bg-white/95 dark:bg-chetna-darker/95 backdrop-blur-xl border-chetna-primary/20">
+                  <SheetHeader className="mb-6">
+                    <SheetTitle className="text-chetna-primary text-xl font-semibold">{t('header.menu')}</SheetTitle>
+                  </SheetHeader>
+                  <nav className="flex flex-col gap-2">
+                    <MobileNavLink
+                      href="/"
+                      onClick={() => setShowMobileMenu(false)}
+                      active={isActive("/")}
                     >
-                      {theme === "dark" ? (
+                      {t('header.home')}
+                    </MobileNavLink>
+                    <MobileNavLink
+                      href="/journal"
+                      onClick={() => setShowMobileMenu(false)}
+                      active={isActive("/journal")}
+                    >
+                      {t('header.journal')}
+                    </MobileNavLink>
+                    <MobileNavLink
+                      href="/psych-tests"
+                      onClick={() => setShowMobileMenu(false)}
+                      active={isActive("/psych-tests")}
+                    >
+                      {t('header.psychTests')}
+                    </MobileNavLink>
+                    <MobileNavLink
+                      href="/community"
+                      onClick={() => setShowMobileMenu(false)}
+                      active={isActive("/community")}
+                    >
+                      {t('header.community')}
+                    </MobileNavLink>
+                    <MobileNavLink
+                      href="/blog"
+                      onClick={() => setShowMobileMenu(false)}
+                      active={isActive("/blog")}
+                    >
+                      {t('header.blog')}
+                    </MobileNavLink>
+                    <MobileNavLink
+                      href="/feedback"
+                      onClick={() => setShowMobileMenu(false)}
+                      active={isActive("/feedback")}
+                    >
+                      {t('header.feedback')}
+                    </MobileNavLink>
+                    <MobileNavLink
+                      href="/about"
+                      onClick={() => setShowMobileMenu(false)}
+                      active={isActive("/about")}
+                    >
+                      {t('header.about')}
+                    </MobileNavLink>
+                    
+                    <div className="border-t border-chetna-primary/20 my-4 pt-4">
+                      {user ? (
                         <>
-                          <Sun size={16} className="mr-2" />
-                          Light Mode
+                          <MobileNavLink
+                            href="/profile"
+                            onClick={() => setShowMobileMenu(false)}
+                            active={isActive("/profile")}
+                          >
+                            <div className="flex items-center gap-2">
+                              <User size={16} />
+                              {t('header.profile')}
+                            </div>
+                          </MobileNavLink>
+                          <Button
+                            variant="ghost"
+                            onClick={() => {
+                              handleSignOut();
+                              setShowMobileMenu(false);
+                            }}
+                            className="w-full justify-start px-4 py-3 h-auto font-medium hover:bg-red-500/10 hover:text-red-500 rounded-xl transition-all duration-300"
+                          >
+                            <LogOut size={16} className="mr-2" />
+                            {t('header.signOut')}
+                          </Button>
                         </>
                       ) : (
-                        <>
-                          <Moon size={16} className="mr-2" />
-                          Dark Mode
-                        </>
+                        <MobileNavLink
+                          href="/login"
+                          onClick={() => setShowMobileMenu(false)}
+                        >
+                          <div className="flex items-center gap-2">
+                            <LogIn size={16} />
+                            {t('header.signIn')}
+                          </div>
+                        </MobileNavLink>
                       )}
-                    </Button>
-                  </div>
-                </nav>
-              </SheetContent>
-            </Sheet>
+                      <Button
+                        variant="ghost"
+                        onClick={() => {
+                          toggleTheme();
+                          setShowMobileMenu(false);
+                        }}
+                        className="w-full justify-start px-4 py-3 h-auto font-medium mt-2 hover:bg-chetna-primary/10 rounded-xl transition-all duration-300"
+                      >
+                        {theme === "dark" ? (
+                          <>
+                            <Sun size={16} className="mr-2" />
+                            {t('header.lightMode')}
+                          </>
+                        ) : (
+                          <>
+                            <Moon size={16} className="mr-2" />
+                            {t('header.darkMode')}
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </nav>
+                </SheetContent>
+              </Sheet>
+            </div>
           </>
         ) : (
           <NavigationMenu className="mx-auto">
             <NavigationMenuList className="gap-1">
               <NavigationMenuItem>
                 <NavLink href="/" active={isActive("/")}>
-                  Home
+                  {t('header.home')}
                 </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavLink href="/journal" active={isActive("/journal")}>
-                  Journal
+                  {t('header.journal')}
                 </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavLink href="/psych-tests" active={isActive("/psych-tests")}>
-                  Psych Tests
+                  {t('header.psychTests')}
                 </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavLink href="/community" active={isActive("/community")}>
-                  Community
+                  {t('header.community')}
                 </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavLink href="/blog" active={isActive("/blog")}>
-                  Blog
+                  {t('header.blog')}
                 </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavLink href="/feedback" active={isActive("/feedback")}>
-                  Feedback
+                  {t('header.feedback')}
                 </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavLink href="/about" active={isActive("/about")}>
-                  About
+                  {t('header.about')}
                 </NavLink>
               </NavigationMenuItem>
             </NavigationMenuList>
@@ -273,6 +279,7 @@ const Header = () => {
         )}
 
         <div className="hidden md:flex items-center gap-3">
+          <LanguageSelector />
           <Button
             variant="ghost"
             size="icon"
@@ -296,7 +303,7 @@ const Header = () => {
                   className="gap-2 text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
                 >
                   <User size={16} />
-                  Profile
+                  {t('header.profile')}
                 </Button>
               </Link>
               <Button
@@ -306,7 +313,7 @@ const Header = () => {
                 onClick={handleSignOut}
               >
                 <LogOut size={16} />
-                Sign out
+                {t('header.signOut')}
               </Button>
             </>
           ) : (
@@ -317,7 +324,7 @@ const Header = () => {
                 className="gap-2 border-chetna-primary/30 bg-white/50 dark:bg-chetna-darker/50 text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
               >
                 <LogIn size={16} />
-                Sign in
+                {t('header.signIn')}
               </Button>
             </Link>
           )}
