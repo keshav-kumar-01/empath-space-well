@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Send, LogIn, Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,14 +19,33 @@ interface Message {
   timestamp: Date;
 }
 
-const ChatInterface: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      text: "Hi there! I'm Chetna, your mental wellness companion. How are you feeling today?",
-      isUser: false,
-      timestamp: new Date()
+const CHAT_STORAGE_KEY = 'chetna_chat_messages';
+
+const getInitialMessages = (): Message[] => {
+  try {
+    const savedMessages = localStorage.getItem(CHAT_STORAGE_KEY);
+    if (savedMessages) {
+      const parsed = JSON.parse(savedMessages);
+      // Convert timestamp strings back to Date objects
+      return parsed.map((msg: any) => ({
+        ...msg,
+        timestamp: new Date(msg.timestamp)
+      }));
     }
-  ]);
+  } catch (error) {
+    console.error('Error loading saved messages:', error);
+  }
+  
+  // Default welcome message
+  return [{
+    text: "Hi there! I'm Chetna, your mental wellness companion. How are you feeling today?",
+    isUser: false,
+    timestamp: new Date()
+  }];
+};
+
+const ChatInterface: React.FC = () => {
+  const [messages, setMessages] = useState<Message[]>(getInitialMessages);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [modelLoaded, setModelLoaded] = useState(false);
@@ -39,6 +59,15 @@ const ChatInterface: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Save messages to localStorage whenever messages change
+  useEffect(() => {
+    try {
+      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+    } catch (error) {
+      console.error('Error saving messages to localStorage:', error);
+    }
+  }, [messages]);
 
   // Fetch user's psychological test results for personalization
   const { data: userTestResults } = useQuery({
@@ -96,12 +125,14 @@ const ChatInterface: React.FC = () => {
   useEffect(() => {
     if (user && userTestResults && userTestResults.length > 0) {
       const hasTestResults = userTestResults.length > 0;
-      if (hasTestResults) {
-        setMessages([{
+      if (hasTestResults && messages.length === 1) {
+        // Only update if we still have the default welcome message
+        const newWelcomeMessage = {
           text: `Hi ${user.name}! I'm Chetna, your mental wellness companion. I've reviewed your recent assessment results and I'm here to provide personalized support based on your mental health profile. How are you feeling today?`,
           isUser: false,
           timestamp: new Date()
-        }]);
+        };
+        setMessages([newWelcomeMessage]);
       }
     }
   }, [user, userTestResults]);
@@ -146,6 +177,17 @@ const ChatInterface: React.FC = () => {
       console.error("Error saving message to database:", error);
       // Silent fail - don't interrupt user experience
     }
+  };
+
+  const clearChat = () => {
+    const defaultMessage = {
+      text: "Hi there! I'm Chetna, your mental wellness companion. How are you feeling today?",
+      isUser: false,
+      timestamp: new Date()
+    };
+    setMessages([defaultMessage]);
+    setMessageCount(0);
+    setShowLoginPrompt(false);
   };
 
   const handleSendMessage = async (e?: React.FormEvent) => {
@@ -275,6 +317,19 @@ const ChatInterface: React.FC = () => {
 
   return (
     <div className="chat-container flex flex-col h-[70vh] md:h-[75vh] bg-white dark:bg-chetna-dark/50 rounded-xl shadow-lg overflow-hidden border border-chetna-primary/10 dark:border-chetna-primary/30">
+      {/* Chat header with clear button */}
+      <div className="flex justify-between items-center p-3 border-b border-chetna-primary/10 dark:border-chetna-primary/30 bg-gradient-to-r from-chetna-primary/5 to-chetna-accent/5">
+        <h3 className="font-semibold text-chetna-primary dark:text-chetna-primary">Chat with Chetna</h3>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={clearChat}
+          className="text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10"
+        >
+          Clear Chat
+        </Button>
+      </div>
+
       <div className="message-container flex-grow p-4 md:p-6 overflow-y-auto space-y-4 bg-white/80 dark:bg-chetna-darker/80">
         {loadingModel && (
           <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-2 mb-2 text-sm text-center">
