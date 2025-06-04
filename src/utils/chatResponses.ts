@@ -129,6 +129,12 @@ export const sampleResponses: ChatResponse[] = [
       "You matter, and your presence in this world has impact, even when you can't see it clearly.",
       "I hear how much pain you're in right now. These difficult feelings about yourself don't define who you truly are."
     ]
+  },
+  {
+    trigger:["creator","developer","builder","owner","CEO","Founder"],
+      responses:[
+      "Keshav Kumar is my creator he developed it all by himself only , he is our current CEO and he is our Founder with Anchal and Ashuotsh by his side ."
+      ]
   }
 ];
 
