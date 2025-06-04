@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
@@ -8,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { LogIn, Mail, AlertCircle } from 'lucide-react';
 import Header from '@/components/Header';
+import { useTranslation } from 'react-i18next';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -16,6 +16,7 @@ const Login: React.FC = () => {
   const { toast } = useToast();
   const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,13 +80,13 @@ const Login: React.FC = () => {
       <main className="flex-grow container mx-auto px-4 py-12 flex items-center justify-center">
         <div className="w-full max-w-md bg-white dark:bg-card p-8 rounded-xl shadow-lg animate-fade-in">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold">Welcome Back</h1>
-            <p className="text-muted-foreground mt-2">Sign in to continue to Chetna_Ai</p>
+            <h1 className="text-2xl font-bold">{t('auth.welcomeBack')}</h1>
+            <p className="text-muted-foreground mt-2">{t('auth.signInToContinue')}</p>
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('auth.email')}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -101,9 +102,9 @@ const Login: React.FC = () => {
             
             <div className="space-y-2">
               <div className="flex justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t('auth.password')}</Label>
                 <Link to="/forgot-password" className="text-xs text-chetna-primary hover:underline">
-                  Forgot password?
+                  {t('auth.forgotPassword')}
                 </Link>
               </div>
               <Input
@@ -120,7 +121,7 @@ const Login: React.FC = () => {
               className="w-full" 
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Signing in...' : 'Sign in'}
+              {isSubmitting ? 'Signing in...' : t('auth.signIn')}
               <LogIn className="ml-2 h-4 w-4" />
             </Button>
           </form>
@@ -160,13 +161,13 @@ const Login: React.FC = () => {
               />
               <path d="M1 1h22v22H1z" fill="none" />
             </svg>
-            Sign in with Google
+            {t('auth.signInWithGoogle')}
           </Button>
           
           <p className="text-center mt-8 text-sm text-muted-foreground">
-            Don't have an account?{' '}
+            {t('auth.dontHaveAccount')}{' '}
             <Link to="/signup" className="text-chetna-primary hover:underline">
-              Sign up
+              {t('auth.signUp')}
             </Link>
           </p>
         </div>

@@ -1,0 +1,73 @@
+
+{
+  "navigation": {
+    "home": "Home",
+    "blog": "Blog",
+    "community": "Community",
+    "journal": "Journal",
+    "tests": "Psych Tests",
+    "about": "About",
+    "login": "Login",
+    "signup": "Sign Up",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "hero": {
+    "title": "Your Mental Wellness Companion",
+    "subtitle": "Experience compassionate AI support for anxiety, depression, stress, and emotional wellness with Chetna_AI",
+    "startChat": "Start Chat",
+    "learnMore": "Learn More"
+  },
+  "chat": {
+    "placeholder": "Type your message here...",
+    "send": "Send",
+    "thinking": "Chetna is thinking...",
+    "error": "Sorry, I'm having trouble responding right now. Please try again."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "close": "Close"
+  },
+  "auth": {
+    "welcomeBack": "Welcome Back",
+    "signInToContinue": "Sign in to continue to Chetna_AI",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign in",
+    "signInWithGoogle": "Sign in with Google",
+    "dontHaveAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "createAccount": "Create Account",
+    "joinCommunity": "Join our community",
+    "name": "Name",
+    "confirmPassword": "Confirm Password",
+    "alreadyHaveAccount": "Already have an account?"
+  },
+  "blog": {
+    "title": "Share Your Journey",
+    "subtitle": "Discover inspiring stories, share your experiences, and connect with others on their mental wellness journey",
+    "shareStory": "Share Your Story",
+    "noStories": "No stories yet",
+    "beFirst": "Be the first to share your mental wellness journey and inspire others in our community",
+    "writeFirst": "Write Your First Story",
+    "joinCommunity": "Join Our Community",
+    "continueReading": "Continue reading →",
+    "createPost": "Create Blog Post",
+    "wellnessStory": "Wellness Story"
+  },
+  "footer": {
+    "copyright": "© {{year}} Chetna_AI - Your Mental Wellness Companion"
+  }
+}
