@@ -1,333 +1,187 @@
 
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
-import { useTranslation } from "react-i18next";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useMediaQuery } from "@/hooks/use-mobile";
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { Menu, X, Sun, Moon, LogOut, LogIn, User, Heart } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu, User, LogOut, Calendar, MessageCircle, Brain, Users, FileText, UserCheck, BookOpen, TestTube } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import LanguageSelector from "./LanguageSelector";
-
-const NavLink = ({ href, children, active = false }) => {
-  return (
-    <Link
-      to={href}
-      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
-        active
-          ? "bg-chetna-primary/10 text-chetna-primary"
-          : "text-chetna-dark/80 dark:text-white/80 hover:text-chetna-primary hover:bg-chetna-primary/5"
-      }`}
-    >
-      {children}
-    </Link>
-  );
-};
-
-const MobileNavLink = ({ href, children, onClick, active = false }) => {
-  return (
-    <Link
-      to={href}
-      onClick={onClick}
-      className={`px-4 py-3 text-base font-medium rounded-xl block transition-all duration-300 ${
-        active
-          ? "bg-chetna-primary/10 text-chetna-primary"
-          : "text-chetna-dark dark:text-white hover:text-chetna-primary hover:bg-chetna-primary/5"
-      }`}
-    >
-      {children}
-    </Link>
-  );
-};
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
-  const { user, logout } = useAuth();
+  const { user, loading } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const { t } = useTranslation();
-  const location = useLocation();
-  const [theme, setTheme] = useState(
-    localStorage.getItem("theme") || "light"
-  );
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 768px)");
 
-  useEffect(() => {
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: t('auth.logoutSuccess'),
+        description: t('auth.logoutSuccessDesc'),
+      });
+      navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast({
+        title: t('auth.logoutError'),
+        description: t('auth.logoutErrorDesc'),
+        variant: "destructive",
+      });
     }
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  const handleSignOut = async () => {
-    await logout();
-  };
+  const navItems = [
+    { href: "/", label: t('nav.home'), icon: null },
+    { href: "/psychologists", label: t('nav.psychologists'), icon: <UserCheck className="h-4 w-4" /> },
+    { href: "/journal", label: t('nav.journal'), icon: <FileText className="h-4 w-4" /> },
+    { href: "/community", label: t('nav.community'), icon: <Users className="h-4 w-4" /> },
+    { href: "/blog", label: t('nav.blog'), icon: <BookOpen className="h-4 w-4" /> },
+    { href: "/psych-tests", label: t('nav.psychTests'), icon: <TestTube className="h-4 w-4" /> },
+    { href: "/quiz", label: t('nav.quiz'), icon: <Brain className="h-4 w-4" /> },
+    { href: "/about", label: t('nav.about'), icon: null },
+  ];
 
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
+  const userMenuItems = user ? [
+    { href: "/profile", label: t('nav.profile'), icon: <User className="h-4 w-4" /> },
+    { href: "/my-sessions", label: t('nav.mySessions'), icon: <Calendar className="h-4 w-4" /> },
+  ] : [];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/90 dark:bg-chetna-darker/90 backdrop-blur-xl border-b border-chetna-primary/10 shadow-sm">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-3">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-chetna-primary/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300">
-              <Heart className="w-4 h-4 text-chetna-primary" fill="currentColor" />
+    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-gray-950/95 dark:supports-[backdrop-filter]:bg-gray-950/60">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <Link to="/" className="flex items-center space-x-2">
+          <MessageCircle className="h-8 w-8 text-chetna-primary" />
+          <span className="text-xl font-bold text-chetna-primary">Chetna_AI</span>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-6">
+          {navItems.slice(0, 6).map((item) => (
+            <Link 
+              key={item.href} 
+              to={item.href} 
+              className="text-sm font-medium text-gray-700 hover:text-chetna-primary transition-colors flex items-center gap-1"
+            >
+              {item.icon}
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Desktop Auth & Language */}
+        <div className="hidden md:flex items-center space-x-4">
+          <LanguageSelector />
+          
+          {loading ? (
+            <div className="w-8 h-8 animate-spin rounded-full border-2 border-chetna-primary border-t-transparent" />
+          ) : user ? (
+            <div className="flex items-center space-x-2">
+              {userMenuItems.map((item) => (
+                <Link key={item.href} to={item.href}>
+                  <Button variant="ghost" size="sm" className="flex items-center gap-1">
+                    {item.icon}
+                    {item.label}
+                  </Button>
+                </Link>
+              ))}
+              <Button 
+                onClick={handleLogout} 
+                variant="ghost" 
+                size="sm"
+                className="flex items-center gap-1"
+              >
+                <LogOut className="h-4 w-4" />
+                {t('auth.logout')}
+              </Button>
             </div>
-            <h2 className="text-lg md:text-xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-accent bg-clip-text text-transparent">
-              Chetna
-              <span className="text-chetna-dark dark:text-white">_AI</span>
-            </h2>
-          </Link>
+          ) : (
+            <div className="space-x-2">
+              <Link to="/login">
+                <Button variant="ghost" size="sm">{t('auth.login')}</Button>
+              </Link>
+              <Link to="/signup">
+                <Button size="sm">{t('auth.signup')}</Button>
+              </Link>
+            </div>
+          )}
         </div>
 
-        {isMobile ? (
-          <>
-            <div className="flex items-center gap-2">
-              <LanguageSelector />
-              <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
-                <SheetTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="md:hidden text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
-                    aria-label={t('header.menu')}
+        {/* Mobile Navigation */}
+        <div className="md:hidden flex items-center space-x-2">
+          <LanguageSelector />
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-80">
+              <div className="flex flex-col space-y-4 mt-8">
+                {navItems.map((item) => (
+                  <Link 
+                    key={item.href}
+                    to={item.href} 
+                    className="flex items-center gap-2 text-lg font-medium text-gray-700 hover:text-chetna-primary transition-colors p-2 rounded-lg hover:bg-gray-100"
+                    onClick={() => setIsOpen(false)}
                   >
-                    {showMobileMenu ? (
-                      <X className="h-5 w-5" />
-                    ) : (
-                      <Menu className="h-5 w-5" />
-                    )}
-                  </Button>
-                </SheetTrigger>
-                <SheetContent className="w-[300px] sm:w-[350px] bg-white/95 dark:bg-chetna-darker/95 backdrop-blur-xl border-chetna-primary/20">
-                  <SheetHeader className="mb-6">
-                    <SheetTitle className="text-chetna-primary text-xl font-semibold">{t('header.menu')}</SheetTitle>
-                  </SheetHeader>
-                  <nav className="flex flex-col gap-2">
-                    <MobileNavLink
-                      href="/"
-                      onClick={() => setShowMobileMenu(false)}
-                      active={isActive("/")}
-                    >
-                      {t('header.home')}
-                    </MobileNavLink>
-                    <MobileNavLink
-                      href="/journal"
-                      onClick={() => setShowMobileMenu(false)}
-                      active={isActive("/journal")}
-                    >
-                      {t('header.journal')}
-                    </MobileNavLink>
-                    <MobileNavLink
-                      href="/psych-tests"
-                      onClick={() => setShowMobileMenu(false)}
-                      active={isActive("/psych-tests")}
-                    >
-                      {t('header.psychTests')}
-                    </MobileNavLink>
-                    <MobileNavLink
-                      href="/community"
-                      onClick={() => setShowMobileMenu(false)}
-                      active={isActive("/community")}
-                    >
-                      {t('header.community')}
-                    </MobileNavLink>
-                    <MobileNavLink
-                      href="/blog"
-                      onClick={() => setShowMobileMenu(false)}
-                      active={isActive("/blog")}
-                    >
-                      {t('header.blog')}
-                    </MobileNavLink>
-                    <MobileNavLink
-                      href="/feedback"
-                      onClick={() => setShowMobileMenu(false)}
-                      active={isActive("/feedback")}
-                    >
-                      {t('header.feedback')}
-                    </MobileNavLink>
-                    <MobileNavLink
-                      href="/about"
-                      onClick={() => setShowMobileMenu(false)}
-                      active={isActive("/about")}
-                    >
-                      {t('header.about')}
-                    </MobileNavLink>
-                    
-                    <div className="border-t border-chetna-primary/20 my-4 pt-4">
-                      {user ? (
-                        <>
-                          <MobileNavLink
-                            href="/profile"
-                            onClick={() => setShowMobileMenu(false)}
-                            active={isActive("/profile")}
-                          >
-                            <div className="flex items-center gap-2">
-                              <User size={16} />
-                              {t('header.profile')}
-                            </div>
-                          </MobileNavLink>
-                          <Button
-                            variant="ghost"
-                            onClick={() => {
-                              handleSignOut();
-                              setShowMobileMenu(false);
-                            }}
-                            className="w-full justify-start px-4 py-3 h-auto font-medium hover:bg-red-500/10 hover:text-red-500 rounded-xl transition-all duration-300"
-                          >
-                            <LogOut size={16} className="mr-2" />
-                            {t('header.signOut')}
-                          </Button>
-                        </>
-                      ) : (
-                        <MobileNavLink
-                          href="/login"
-                          onClick={() => setShowMobileMenu(false)}
+                    {item.icon}
+                    {item.label}
+                  </Link>
+                ))}
+                
+                <div className="border-t pt-4">
+                  {loading ? (
+                    <div className="flex justify-center">
+                      <div className="w-8 h-8 animate-spin rounded-full border-2 border-chetna-primary border-t-transparent" />
+                    </div>
+                  ) : user ? (
+                    <div className="space-y-2">
+                      {userMenuItems.map((item) => (
+                        <Link 
+                          key={item.href}
+                          to={item.href}
+                          className="flex items-center gap-2 text-lg font-medium text-gray-700 hover:text-chetna-primary transition-colors p-2 rounded-lg hover:bg-gray-100"
+                          onClick={() => setIsOpen(false)}
                         >
-                          <div className="flex items-center gap-2">
-                            <LogIn size={16} />
-                            {t('header.signIn')}
-                          </div>
-                        </MobileNavLink>
-                      )}
-                      <Button
-                        variant="ghost"
+                          {item.icon}
+                          {item.label}
+                        </Link>
+                      ))}
+                      <Button 
                         onClick={() => {
-                          toggleTheme();
-                          setShowMobileMenu(false);
+                          handleLogout();
+                          setIsOpen(false);
                         }}
-                        className="w-full justify-start px-4 py-3 h-auto font-medium mt-2 hover:bg-chetna-primary/10 rounded-xl transition-all duration-300"
+                        variant="ghost"
+                        className="w-full justify-start flex items-center gap-2 text-lg font-medium"
                       >
-                        {theme === "dark" ? (
-                          <>
-                            <Sun size={16} className="mr-2" />
-                            {t('header.lightMode')}
-                          </>
-                        ) : (
-                          <>
-                            <Moon size={16} className="mr-2" />
-                            {t('header.darkMode')}
-                          </>
-                        )}
+                        <LogOut className="h-4 w-4" />
+                        {t('auth.logout')}
                       </Button>
                     </div>
-                  </nav>
-                </SheetContent>
-              </Sheet>
-            </div>
-          </>
-        ) : (
-          <NavigationMenu className="mx-auto">
-            <NavigationMenuList className="gap-1">
-              <NavigationMenuItem>
-                <NavLink href="/" active={isActive("/")}>
-                  {t('header.home')}
-                </NavLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavLink href="/journal" active={isActive("/journal")}>
-                  {t('header.journal')}
-                </NavLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavLink href="/psych-tests" active={isActive("/psych-tests")}>
-                  {t('header.psychTests')}
-                </NavLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavLink href="/community" active={isActive("/community")}>
-                  {t('header.community')}
-                </NavLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavLink href="/blog" active={isActive("/blog")}>
-                  {t('header.blog')}
-                </NavLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavLink href="/feedback" active={isActive("/feedback")}>
-                  {t('header.feedback')}
-                </NavLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavLink href="/about" active={isActive("/about")}>
-                  {t('header.about')}
-                </NavLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        )}
-
-        <div className="hidden md:flex items-center gap-3">
-          <LanguageSelector />
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Toggle theme"
-            onClick={toggleTheme}
-            className="text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
-          >
-            {theme === "dark" ? (
-              <Sun className="h-5 w-5" />
-            ) : (
-              <Moon className="h-5 w-5" />
-            )}
-          </Button>
-
-          {user ? (
-            <>
-              <Link to="/profile">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="gap-2 text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
-                >
-                  <User size={16} />
-                  {t('header.profile')}
-                </Button>
-              </Link>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2 text-chetna-dark dark:text-white hover:bg-red-500/10 hover:text-red-500 rounded-full transition-all duration-300"
-                onClick={handleSignOut}
-              >
-                <LogOut size={16} />
-                {t('header.signOut')}
-              </Button>
-            </>
-          ) : (
-            <Link to="/login">
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-2 border-chetna-primary/30 bg-white/50 dark:bg-chetna-darker/50 text-chetna-dark dark:text-white hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
-              >
-                <LogIn size={16} />
-                {t('header.signIn')}
-              </Button>
-            </Link>
-          )}
+                  ) : (
+                    <div className="space-y-2">
+                      <Link to="/login" onClick={() => setIsOpen(false)}>
+                        <Button variant="ghost" className="w-full">
+                          {t('auth.login')}
+                        </Button>
+                      </Link>
+                      <Link to="/signup" onClick={() => setIsOpen(false)}>
+                        <Button className="w-full">
+                          {t('auth.signup')}
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>

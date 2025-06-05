@@ -230,6 +230,110 @@ export type Database = {
         }
         Relationships: []
       }
+      psychologist_availability: {
+        Row: {
+          created_at: string
+          day_of_week: number
+          end_time: string
+          id: string
+          is_active: boolean | null
+          psychologist_id: string
+          start_time: string
+        }
+        Insert: {
+          created_at?: string
+          day_of_week: number
+          end_time: string
+          id?: string
+          is_active?: boolean | null
+          psychologist_id: string
+          start_time: string
+        }
+        Update: {
+          created_at?: string
+          day_of_week?: number
+          end_time?: string
+          id?: string
+          is_active?: boolean | null
+          psychologist_id?: string
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "psychologist_availability_psychologist_id_fkey"
+            columns: ["psychologist_id"]
+            isOneToOne: false
+            referencedRelation: "psychologists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      psychologists: {
+        Row: {
+          bio: string | null
+          consultation_modes: string[] | null
+          created_at: string
+          email: string
+          experience_years: number | null
+          hourly_rate: number
+          id: string
+          is_available: boolean | null
+          is_verified: boolean | null
+          languages: string[] | null
+          name: string
+          phone: string | null
+          profile_image_url: string | null
+          qualifications: string[] | null
+          rating: number | null
+          specializations: string[]
+          total_reviews: number | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          bio?: string | null
+          consultation_modes?: string[] | null
+          created_at?: string
+          email: string
+          experience_years?: number | null
+          hourly_rate: number
+          id?: string
+          is_available?: boolean | null
+          is_verified?: boolean | null
+          languages?: string[] | null
+          name: string
+          phone?: string | null
+          profile_image_url?: string | null
+          qualifications?: string[] | null
+          rating?: number | null
+          specializations?: string[]
+          total_reviews?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          bio?: string | null
+          consultation_modes?: string[] | null
+          created_at?: string
+          email?: string
+          experience_years?: number | null
+          hourly_rate?: number
+          id?: string
+          is_available?: boolean | null
+          is_verified?: boolean | null
+          languages?: string[] | null
+          name?: string
+          phone?: string | null
+          profile_image_url?: string | null
+          qualifications?: string[] | null
+          rating?: number | null
+          specializations?: string[]
+          total_reviews?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       quiz_results: {
         Row: {
           analytical: number
@@ -265,6 +369,110 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      session_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          psychologist_id: string
+          rating: number
+          review_text: string | null
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          psychologist_id: string
+          rating: number
+          review_text?: string | null
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          psychologist_id?: string
+          rating?: number
+          review_text?: string | null
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_reviews_psychologist_id_fkey"
+            columns: ["psychologist_id"]
+            isOneToOne: false
+            referencedRelation: "psychologists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_reviews_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "therapy_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      therapy_sessions: {
+        Row: {
+          consultation_mode: string
+          created_at: string
+          end_time: string
+          id: string
+          notes: string | null
+          payment_status: string | null
+          psychologist_id: string
+          session_date: string
+          session_url: string | null
+          start_time: string
+          status: string
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          consultation_mode: string
+          created_at?: string
+          end_time: string
+          id?: string
+          notes?: string | null
+          payment_status?: string | null
+          psychologist_id: string
+          session_date: string
+          session_url?: string | null
+          start_time: string
+          status?: string
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          consultation_mode?: string
+          created_at?: string
+          end_time?: string
+          id?: string
+          notes?: string | null
+          payment_status?: string | null
+          psychologist_id?: string
+          session_date?: string
+          session_url?: string | null
+          start_time?: string
+          status?: string
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapy_sessions_psychologist_id_fkey"
+            columns: ["psychologist_id"]
+            isOneToOne: false
+            referencedRelation: "psychologists"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,6 +28,9 @@ import EditBlogPost from "./pages/EditBlogPost";
 import PsychTests from "./pages/PsychTests";
 import PsychTestRunner from "./pages/PsychTestRunner";
 import TestResults from "./pages/TestResults";
+import Psychologists from "./pages/Psychologists";
+import BookSession from "./pages/BookSession";
+import MySessions from "./pages/MySessions";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +63,9 @@ const App = () => (
               <Route path="/psych-tests" element={<PsychTests />} />
               <Route path="/psych-tests/:testId" element={<PsychTestRunner />} />
               <Route path="/psych-tests/results" element={<TestResults />} />
+              <Route path="/psychologists" element={<Psychologists />} />
+              <Route path="/psychologists/:psychologistId/book" element={<BookSession />} />
+              <Route path="/my-sessions" element={<MySessions />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
