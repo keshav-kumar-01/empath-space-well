@@ -20,6 +20,7 @@ interface Message {
 }
 
 const CHAT_STORAGE_KEY = 'chetna_chat_messages';
+const AUTO_CLEAR_INTERVAL = 20 * 60 * 1000; // 20 minutes in milliseconds
 
 const ChatInterface: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -58,9 +59,37 @@ const ChatInterface: React.FC = () => {
   const [speechSupported, setSpeechSupported] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const autoClearTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Auto-clear chat every 20 minutes
+  useEffect(() => {
+    const startAutoClearTimer = () => {
+      if (autoClearTimerRef.current) {
+        clearInterval(autoClearTimerRef.current);
+      }
+      
+      autoClearTimerRef.current = setInterval(() => {
+        console.log('Auto-clearing chat after 20 minutes');
+        clearChat();
+        toast({
+          title: "Chat cleared",
+          description: "Your chat session has been automatically cleared for privacy",
+        });
+      }, AUTO_CLEAR_INTERVAL);
+    };
+
+    startAutoClearTimer();
+
+    // Cleanup on unmount
+    return () => {
+      if (autoClearTimerRef.current) {
+        clearInterval(autoClearTimerRef.current);
+      }
+    };
+  }, [toast, t]);
 
   // Save messages to localStorage whenever messages change
   useEffect(() => {
@@ -198,6 +227,13 @@ const ChatInterface: React.FC = () => {
     setMessages([defaultMessage]);
     setMessageCount(0);
     setShowLoginPrompt(false);
+    
+    // Clear from localStorage
+    try {
+      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify([defaultMessage]));
+    } catch (error) {
+      console.error('Error clearing chat from localStorage:', error);
+    }
   };
 
   const handleSendMessage = async (e?: React.FormEvent) => {
@@ -375,7 +411,7 @@ const ChatInterface: React.FC = () => {
             <p className="font-medium">{t('chat.limitReached')}</p>
             <p className="text-sm">{t('chat.signupPrompt')}</p>
             <Button onClick={goToSignup} className="bg-chetna-primary hover:bg-chetna-primary/90">
-              <LogIn className="h-4 w-4 mr-2" />
+              <LogIn className="h-4 w-4" />
               {t('chat.signupNow')}
             </Button>
           </div>
