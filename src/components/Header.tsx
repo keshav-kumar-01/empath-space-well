@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, User, LogOut, Calendar, MessageCircle, Brain, Users, FileText, UserCheck, BookOpen, TestTube } from "lucide-react";
+import { Menu, User, LogOut, Calendar, Heart, Brain, Users, FileText, UserCheck, BookOpen, TestTube } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -55,7 +55,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-gray-950/95 dark:supports-[backdrop-filter]:bg-gray-950/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <MessageCircle className="h-8 w-8 text-chetna-primary" />
+          <Heart className="h-8 w-8 text-chetna-primary fill-current" />
           <span className="text-xl font-bold text-chetna-primary">Chetna_AI</span>
         </Link>
 

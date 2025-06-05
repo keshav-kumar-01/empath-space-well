@@ -6,6 +6,27 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 const resources = {
   en: {
     translation: {
+      // Navigation
+      "nav.home": "Home",
+      "nav.psychologists": "Psychologists",
+      "nav.journal": "Journal", 
+      "nav.community": "Community",
+      "nav.blog": "Blog",
+      "nav.psychTests": "Psych Tests",
+      "nav.quiz": "Quiz",
+      "nav.about": "About",
+      "nav.profile": "Profile",
+      "nav.mySessions": "My Sessions",
+      
+      // Auth
+      "auth.login": "Login",
+      "auth.signup": "Sign Up",
+      "auth.logout": "Logout",
+      "auth.logoutSuccess": "Logged out successfully",
+      "auth.logoutSuccessDesc": "You have been logged out",
+      "auth.logoutError": "Logout failed",
+      "auth.logoutErrorDesc": "There was an error logging out",
+      
       // Header
       "header.home": "Home",
       "header.journal": "Journal", 
@@ -54,6 +75,27 @@ const resources = {
   },
   hi: {
     translation: {
+      // Navigation
+      "nav.home": "होम",
+      "nav.psychologists": "मनोवैज्ञानिक",
+      "nav.journal": "जर्नल",
+      "nav.community": "समुदाय",
+      "nav.blog": "ब्लॉग",
+      "nav.psychTests": "मानसिक परीक्षण",
+      "nav.quiz": "प्रश्नोत्तरी",
+      "nav.about": "हमारे बारे में",
+      "nav.profile": "प्रोफाइल",
+      "nav.mySessions": "मेरे सत्र",
+      
+      // Auth
+      "auth.login": "लॉगिन",
+      "auth.signup": "साइन अप",
+      "auth.logout": "लॉग आउट",
+      "auth.logoutSuccess": "सफलतापूर्वक लॉग आउट",
+      "auth.logoutSuccessDesc": "आप लॉग आउट हो गए हैं",
+      "auth.logoutError": "लॉग आउट असफल",
+      "auth.logoutErrorDesc": "लॉग आउट करने में त्रुटि हुई",
+      
       // Header
       "header.home": "होम",
       "header.journal": "जर्नल",
@@ -102,6 +144,27 @@ const resources = {
   },
   gu: {
     translation: {
+      // Navigation
+      "nav.home": "ઘર",
+      "nav.psychologists": "મનોવૈજ્ઞાનિકો",
+      "nav.journal": "જર્નલ",
+      "nav.community": "સમુદાય",
+      "nav.blog": "બ્લોગ",
+      "nav.psychTests": "માનસિક પરીક્ષાઓ",
+      "nav.quiz": "ક્વિઝ",
+      "nav.about": "અમારા વિશે",
+      "nav.profile": "પ્રોફાઇલ",
+      "nav.mySessions": "મારા સત્રો",
+      
+      // Auth
+      "auth.login": "લોગિન",
+      "auth.signup": "સાઇન અપ",
+      "auth.logout": "લોગ આઉટ",
+      "auth.logoutSuccess": "સફળતાપૂર્વક લોગ આઉટ",
+      "auth.logoutSuccessDesc": "તમે લોગ આઉટ થઈ ગયા છો",
+      "auth.logoutError": "લોગ આઉટ નિષ્ફળ",
+      "auth.logoutErrorDesc": "લોગ આઉટ કરવામાં ભૂલ",
+      
       // Header
       "header.home": "ઘર",
       "header.journal": "જર્નલ",
