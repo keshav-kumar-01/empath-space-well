@@ -11,7 +11,7 @@ import LanguageSelector from "./LanguageSelector";
 import { useTranslation } from "react-i18next";
 
 const Header = () => {
-  const { user, loading } = useAuth();
+  const { user, isLoading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -77,7 +77,7 @@ const Header = () => {
         <div className="hidden md:flex items-center space-x-4">
           <LanguageSelector />
           
-          {loading ? (
+          {isLoading ? (
             <div className="w-8 h-8 animate-spin rounded-full border-2 border-chetna-primary border-t-transparent" />
           ) : user ? (
             <div className="flex items-center space-x-2">
@@ -135,7 +135,7 @@ const Header = () => {
                 ))}
                 
                 <div className="border-t pt-4">
-                  {loading ? (
+                  {isLoading ? (
                     <div className="flex justify-center">
                       <div className="w-8 h-8 animate-spin rounded-full border-2 border-chetna-primary border-t-transparent" />
                     </div>
