@@ -3,15 +3,18 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, User, LogOut, Calendar, Heart, Brain, Users, FileText, UserCheck, BookOpen, TestTube } from "lucide-react";
+import { Menu, User, LogOut, Calendar, Heart, Brain, Users, FileText, UserCheck, BookOpen, TestTube, Settings } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import LanguageSelector from "./LanguageSelector";
+import AdminBadge from "./AdminBadge";
 import { useTranslation } from "react-i18next";
+import { useUserRole } from "@/hooks/useUserRole";
 
 const Header = () => {
   const { user, isLoading } = useAuth();
+  const { role, isAdmin } = useUserRole();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -51,6 +54,15 @@ const Header = () => {
     { href: "/my-sessions", label: t('nav.mySessions'), icon: <Calendar className="h-4 w-4" /> },
   ] : [];
 
+  // Add admin menu item if user is admin
+  if (isAdmin) {
+    userMenuItems.push({
+      href: "/admin",
+      label: "Admin Panel",
+      icon: <Settings className="h-4 w-4" />
+    });
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-gray-950/95 dark:supports-[backdrop-filter]:bg-gray-950/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -81,6 +93,10 @@ const Header = () => {
             <div className="w-8 h-8 animate-spin rounded-full border-2 border-chetna-primary border-t-transparent" />
           ) : user ? (
             <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">{user.name}</span>
+                <AdminBadge role={role} />
+              </div>
               {userMenuItems.map((item) => (
                 <Link key={item.href} to={item.href}>
                   <Button variant="ghost" size="sm" className="flex items-center gap-1">
@@ -141,6 +157,10 @@ const Header = () => {
                     </div>
                   ) : user ? (
                     <div className="space-y-2">
+                      <div className="flex items-center gap-2 p-2">
+                        <span className="text-lg font-medium">{user.name}</span>
+                        <AdminBadge role={role} />
+                      </div>
                       {userMenuItems.map((item) => (
                         <Link 
                           key={item.href}
