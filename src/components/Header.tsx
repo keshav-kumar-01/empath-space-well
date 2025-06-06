@@ -17,12 +17,14 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
+  SheetClose,
 } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import LanguageSelector from "./LanguageSelector";
 import { useAuth } from "@/context/AuthContext";
 
+// ✅ Define MobileLink component once only
 interface MobileLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   to: string;
   onOpenChange: (open: boolean) => void;
@@ -38,8 +40,6 @@ const MobileLink: React.FC<MobileLinkProps> = ({ to, onOpenChange, children, ...
     </SheetClose>
   );
 };
-
-import { SheetClose } from "@/components/ui/sheet"
 
 const Header: React.FC = () => {
   const { user, signOut } = useAuth();
@@ -61,38 +61,25 @@ const Header: React.FC = () => {
             </span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
-            <Link
-              to="/community"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
+            <Link to="/community" className="transition-colors hover:text-foreground/80 text-foreground/60">
               {t('nav.community')}
             </Link>
-            <Link
-              to="/blog"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
+            <Link to="/blog" className="transition-colors hover:text-foreground/80 text-foreground/60">
               {t('nav.blog')}
             </Link>
-            <Link
-              to="/therapy"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
+            <Link to="/therapy" className="transition-colors hover:text-foreground/80 text-foreground/60">
               Therapy
             </Link>
-            <Link
-              to="/psych-tests"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
+            <Link to="/psych-tests" className="transition-colors hover:text-foreground/80 text-foreground/60">
               Tests
             </Link>
-            <Link
-              to="/about"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
+            <Link to="/about" className="transition-colors hover:text-foreground/80 text-foreground/60">
               {t('nav.about')}
             </Link>
           </nav>
         </div>
+
+        {/* Mobile menu */}
         <Sheet>
           <SheetTrigger asChild>
             <Button
@@ -104,11 +91,7 @@ const Header: React.FC = () => {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="pr-0">
-            <MobileLink
-              to="/"
-              className="flex items-center"
-              onOpenChange={() => {}}
-            >
+            <MobileLink to="/" className="flex items-center" onOpenChange={() => {}}>
               <span className="font-bold">Chetna_AI</span>
             </MobileLink>
             <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
@@ -132,6 +115,8 @@ const Header: React.FC = () => {
             </ScrollArea>
           </SheetContent>
         </Sheet>
+
+        {/* Right section */}
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
           <div className="w-full flex-1 md:w-auto md:flex-none">
             <LanguageSelector />
@@ -152,9 +137,7 @@ const Header: React.FC = () => {
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        {user.email}
-                      </p>
+                      <p className="text-sm font-medium leading-none">{user.email}</p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -203,22 +186,6 @@ const Header: React.FC = () => {
         </div>
       </div>
     </header>
-  );
-};
-
-interface MobileLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  to: string;
-  onOpenChange: (open: boolean) => void;
-  children: React.ReactNode;
-}
-
-const MobileLink: React.FC<MobileLinkProps> = ({ to, onOpenChange, children, ...props }) => {
-  return (
-    <SheetClose asChild>
-      <Link to={to} onClick={() => onOpenChange(false)} {...props}>
-        {children}
-      </Link>
-    </SheetClose>
   );
 };
 
