@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
-import { useUserRole } from "@/hooks/useUserRole";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -43,7 +42,6 @@ const PostCard: React.FC<PostCardProps> = ({
   showActions = true 
 }) => {
   const { user } = useAuth();
-  const { isAdmin } = useUserRole();
   const { toast } = useToast();
   
   const truncateContent = (content: string, maxLength: number = 150) => {
@@ -52,12 +50,11 @@ const PostCard: React.FC<PostCardProps> = ({
   };
   
   const isAuthor = user && user.id === post.user_id;
-  const canDelete = isAuthor || isAdmin;
   
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
     
-    if (!canDelete) {
+    if (!isAuthor) {
       toast({
         title: "Permission denied",
         description: "You can only delete your own posts",
@@ -76,9 +73,7 @@ const PostCard: React.FC<PostCardProps> = ({
       
       toast({
         title: "Post deleted",
-        description: isAdmin && !isAuthor 
-          ? "Post has been removed by admin" 
-          : "Your post has been removed successfully",
+        description: "Your post has been removed successfully",
       });
       
       if (onDelete) onDelete();
@@ -132,7 +127,7 @@ const PostCard: React.FC<PostCardProps> = ({
             </Badge>
           )}
           
-          {showActions && canDelete && (
+          {showActions && isAuthor && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => e.stopPropagation()}>
@@ -143,7 +138,7 @@ const PostCard: React.FC<PostCardProps> = ({
               <DropdownMenuContent align="end">
                 <DropdownMenuItem className="text-destructive" onClick={handleDelete}>
                   <Trash2 className="h-4 w-4 mr-2" />
-                  {isAdmin && !isAuthor ? "Delete post (Admin)" : "Delete post"}
+                  Delete post
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
