@@ -27,9 +27,6 @@ import EditBlogPost from "./pages/EditBlogPost";
 import PsychTests from "./pages/PsychTests";
 import PsychTestRunner from "./pages/PsychTestRunner";
 import TestResults from "./pages/TestResults";
-import Therapy from "./pages/Therapy";
-import MyTherapySessions from "./pages/MyTherapySessions";
-import PsychologistDashboard from "./pages/PsychologistDashboard";
 
 const queryClient = new QueryClient();
 
@@ -62,9 +59,6 @@ const App = () => (
               <Route path="/psych-tests" element={<PsychTests />} />
               <Route path="/psych-tests/:testId" element={<PsychTestRunner />} />
               <Route path="/psych-tests/results" element={<TestResults />} />
-              <Route path="/therapy" element={<Therapy />} />
-              <Route path="/my-sessions" element={<MyTherapySessions />} />
-              <Route path="/psychologist-dashboard" element={<PsychologistDashboard />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

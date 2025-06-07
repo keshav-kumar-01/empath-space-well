@@ -230,110 +230,6 @@ export type Database = {
         }
         Relationships: []
       }
-      psychologist_availability: {
-        Row: {
-          created_at: string | null
-          day_of_week: number
-          end_time: string
-          id: string
-          is_active: boolean | null
-          psychologist_id: string | null
-          start_time: string
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          day_of_week: number
-          end_time: string
-          id?: string
-          is_active?: boolean | null
-          psychologist_id?: string | null
-          start_time: string
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          day_of_week?: number
-          end_time?: string
-          id?: string
-          is_active?: boolean | null
-          psychologist_id?: string | null
-          start_time?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "psychologist_availability_psychologist_id_fkey"
-            columns: ["psychologist_id"]
-            isOneToOne: false
-            referencedRelation: "psychologists"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      psychologists: {
-        Row: {
-          bio: string | null
-          created_at: string | null
-          education: string | null
-          email: string
-          experience_years: number | null
-          hourly_rate: number | null
-          id: string
-          is_active: boolean | null
-          is_verified: boolean | null
-          license_number: string | null
-          name: string
-          phone: string | null
-          profile_image_url: string | null
-          rating: number | null
-          specialization: string[] | null
-          total_reviews: number | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          bio?: string | null
-          created_at?: string | null
-          education?: string | null
-          email: string
-          experience_years?: number | null
-          hourly_rate?: number | null
-          id?: string
-          is_active?: boolean | null
-          is_verified?: boolean | null
-          license_number?: string | null
-          name: string
-          phone?: string | null
-          profile_image_url?: string | null
-          rating?: number | null
-          specialization?: string[] | null
-          total_reviews?: number | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          bio?: string | null
-          created_at?: string | null
-          education?: string | null
-          email?: string
-          experience_years?: number | null
-          hourly_rate?: number | null
-          id?: string
-          is_active?: boolean | null
-          is_verified?: boolean | null
-          license_number?: string | null
-          name?: string
-          phone?: string | null
-          profile_image_url?: string | null
-          rating?: number | null
-          specialization?: string[] | null
-          total_reviews?: number | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       quiz_results: {
         Row: {
           analytical: number
@@ -370,132 +266,15 @@ export type Database = {
         }
         Relationships: []
       }
-      session_reviews: {
-        Row: {
-          client_id: string | null
-          created_at: string | null
-          id: string
-          psychologist_id: string | null
-          rating: number | null
-          review_text: string | null
-          session_id: string | null
-        }
-        Insert: {
-          client_id?: string | null
-          created_at?: string | null
-          id?: string
-          psychologist_id?: string | null
-          rating?: number | null
-          review_text?: string | null
-          session_id?: string | null
-        }
-        Update: {
-          client_id?: string | null
-          created_at?: string | null
-          id?: string
-          psychologist_id?: string | null
-          rating?: number | null
-          review_text?: string | null
-          session_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "session_reviews_psychologist_id_fkey"
-            columns: ["psychologist_id"]
-            isOneToOne: false
-            referencedRelation: "psychologists"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "session_reviews_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "therapy_sessions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      therapy_sessions: {
-        Row: {
-          client_id: string | null
-          client_notes: string | null
-          created_at: string | null
-          end_time: string
-          id: string
-          meeting_link: string | null
-          notes: string | null
-          psychologist_id: string | null
-          psychologist_notes: string | null
-          session_date: string
-          session_type: string | null
-          start_time: string
-          status: string | null
-          total_amount: number | null
-          updated_at: string | null
-        }
-        Insert: {
-          client_id?: string | null
-          client_notes?: string | null
-          created_at?: string | null
-          end_time: string
-          id?: string
-          meeting_link?: string | null
-          notes?: string | null
-          psychologist_id?: string | null
-          psychologist_notes?: string | null
-          session_date: string
-          session_type?: string | null
-          start_time: string
-          status?: string | null
-          total_amount?: number | null
-          updated_at?: string | null
-        }
-        Update: {
-          client_id?: string | null
-          client_notes?: string | null
-          created_at?: string | null
-          end_time?: string
-          id?: string
-          meeting_link?: string | null
-          notes?: string | null
-          psychologist_id?: string | null
-          psychologist_notes?: string | null
-          session_date?: string
-          session_type?: string | null
-          start_time?: string
-          status?: string | null
-          total_amount?: number | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "therapy_sessions_psychologist_id_fkey"
-            columns: ["psychologist_id"]
-            isOneToOne: false
-            referencedRelation: "psychologists"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      get_user_role: {
-        Args: { _user_id: string }
-        Returns: Database["public"]["Enums"]["app_role"]
-      }
-      has_role: {
-        Args: {
-          _user_id: string
-          _role: Database["public"]["Enums"]["app_role"]
-        }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -610,8 +389,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "moderator", "user"],
-    },
+    Enums: {},
   },
 } as const
