@@ -134,11 +134,11 @@ const ChatInterface: React.FC = () => {
         await initModel();
         setModelLoaded(true);
         toast({
-          title: "Mistral AI connected",
+          title: "Chetna_AI connected",
           description: "Advanced mental health AI assistant is now active",
         });
       } catch (error) {
-        console.error("Failed to connect to Mistral AI:", error);
+        console.error("Failed to connect to Chetna_AI:", error);
         toast({
           title: "Using basic responses",
           description: "AI model couldn't be loaded, using fallback mode",
@@ -245,7 +245,7 @@ const ChatInterface: React.FC = () => {
       setShowLoginPrompt(true);
       toast({
         title: "Message limit reached",
-        description: "Please sign up to continue chatting with Chetna",
+        description: "Please sign up to continue chatting with Chetna_AI",
         variant: "destructive",
       });
       return;
