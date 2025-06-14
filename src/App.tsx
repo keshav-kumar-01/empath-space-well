@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -28,6 +27,12 @@ import Terms from '@/pages/Terms';
 import NotFound from '@/pages/NotFound';
 import { AuthProvider } from '@/context/AuthContext';
 import Settings from "@/pages/Settings";
+import Dashboard from "@/pages/Dashboard";
+import MoodTracker from "@/pages/MoodTracker";
+import CrisisSupport from "@/pages/CrisisSupport";
+import ResourceLibrary from "@/pages/ResourceLibrary";
+import AppointmentBooking from "@/pages/AppointmentBooking";
+import Navigation from "@/components/Navigation";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +49,11 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/profile" element={<UserProfile />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/mood-tracker" element={<MoodTracker />} />
+              <Route path="/crisis-support" element={<CrisisSupport />} />
+              <Route path="/resources" element={<ResourceLibrary />} />
+              <Route path="/appointments" element={<AppointmentBooking />} />
               <Route path="/journal" element={<Journal />} />
               <Route path="/community" element={<Community />} />
               <Route path="/community/create" element={<CreatePost />} />
@@ -62,6 +72,7 @@ function App() {
               <Route path="/terms" element={<Terms />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <Navigation />
           </Router>
         </AuthProvider>
       </QueryClientProvider>

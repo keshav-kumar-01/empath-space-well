@@ -1,8 +1,7 @@
-
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Menu, LogOut, User, BookOpen, Calendar, Stethoscope, Heart, MessageCircle } from "lucide-react";
+import { Menu, LogOut, User, BookOpen, Calendar, Stethoscope, Heart, MessageCircle, BarChart3, Shield } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -63,6 +62,12 @@ const Header: React.FC = () => {
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             <Link
+              to="/dashboard"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              Dashboard
+            </Link>
+            <Link
               to="/community"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
@@ -81,10 +86,10 @@ const Header: React.FC = () => {
               {t('nav.tests')}
             </Link>
             <Link
-              to="/feedback"
+              to="/resources"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
-              {t('nav.feedback')}
+              Resources
             </Link>
             <Link
               to="/about"
@@ -115,6 +120,21 @@ const Header: React.FC = () => {
             </MobileLink>
             <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
               <div className="flex flex-col space-y-3">
+                <MobileLink to="/dashboard" onOpenChange={() => {}}>
+                  Dashboard
+                </MobileLink>
+                <MobileLink to="/mood-tracker" onOpenChange={() => {}}>
+                  Mood Tracker
+                </MobileLink>
+                <MobileLink to="/appointments" onOpenChange={() => {}}>
+                  Appointments
+                </MobileLink>
+                <MobileLink to="/resources" onOpenChange={() => {}}>
+                  Resources
+                </MobileLink>
+                <MobileLink to="/crisis-support" onOpenChange={() => {}}>
+                  Crisis Support
+                </MobileLink>
                 <MobileLink to="/community" onOpenChange={() => {}}>
                   {t('nav.community')}
                 </MobileLink>
@@ -162,6 +182,12 @@ const Header: React.FC = () => {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
+                    <Link to="/dashboard">
+                      <BarChart3 className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link to="/profile">
                       <User className="mr-2 h-4 w-4" />
                       {t('nav.profile')}
@@ -174,21 +200,27 @@ const Header: React.FC = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
+                    <Link to="/mood-tracker">
+                      <Heart className="mr-2 h-4 w-4" />
+                      Mood Tracker
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/appointments">
+                      <Calendar className="mr-2 h-4 w-4" />
+                      Appointments
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/crisis-support">
+                      <Shield className="mr-2 h-4 w-4" />
+                      Crisis Support
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link to="/journal">
                       <BookOpen className="mr-2 h-4 w-4" />
                       {t('nav.journal')}
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/my-sessions">
-                      <Calendar className="mr-2 h-4 w-4" />
-                      {t('nav.mySessions')}
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/psychologist-dashboard">
-                      <Stethoscope className="mr-2 h-4 w-4" />
-                      {t('nav.psychologistDashboard')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
