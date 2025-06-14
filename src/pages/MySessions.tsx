@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
@@ -57,7 +56,14 @@ const MySessions: React.FC = () => {
         .order('session_date', { ascending: false });
 
       if (error) throw error;
-      setSessions(data || []);
+      
+      // Transform the data to match our interface
+      const transformedSessions = data?.map(session => ({
+        ...session,
+        therapist: session.therapists
+      })) || [];
+      
+      setSessions(transformedSessions);
     } catch (err) {
       console.error('Error fetching sessions:', err);
       setError('Failed to load sessions. Please try again.');

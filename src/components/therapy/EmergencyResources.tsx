@@ -14,7 +14,7 @@ interface EmergencyResource {
   phone_number: string | null;
   website_url: string | null;
   country: string;
-  resource_type: 'hotline' | 'website' | 'app' | 'text_service';
+  resource_type: string; // Changed to string to match Supabase response
   is_24_7: boolean;
 }
 
