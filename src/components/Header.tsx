@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import LanguageSelector from "./LanguageSelector";
+import ThemeToggle from "./ThemeToggle";
 import { useAuth } from "@/context/AuthContext";
 
 interface MobileLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -138,6 +139,7 @@ const Header: React.FC = () => {
             <LanguageSelector />
           </div>
           <nav className="flex items-center space-x-2">
+            <ThemeToggle />
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -163,6 +165,12 @@ const Header: React.FC = () => {
                     <Link to="/profile">
                       <User className="mr-2 h-4 w-4" />
                       {t('nav.profile')}
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/settings">
+                      <User className="mr-2 h-4 w-4" />
+                      Settings
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
