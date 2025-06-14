@@ -1,3 +1,4 @@
+
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
@@ -9,7 +10,13 @@ const resources = {
       "nav.home": "Home",
       "nav.community": "Community",
       "nav.blog": "Blog",
+      "nav.tests": "Tests",
+      "nav.feedback": "Feedback",
       "nav.about": "About",
+      "nav.profile": "Profile",
+      "nav.journal": "Journal",
+      "nav.mySessions": "My Sessions",
+      "nav.psychologistDashboard": "Psychologist Dashboard",
       
       // Auth
       "auth.signIn": "Sign In",
@@ -68,7 +75,13 @@ const resources = {
       "nav.home": "होम",
       "nav.community": "समुदाय",
       "nav.blog": "ब्लॉग",
+      "nav.tests": "परीक्षण",
+      "nav.feedback": "फीडबैक",
       "nav.about": "हमारे बारे में",
+      "nav.profile": "प्रोफाइल",
+      "nav.journal": "जर्नल",
+      "nav.mySessions": "मेरे सत्र",
+      "nav.psychologistDashboard": "मनोवैज्ञानिक डैशबोर्ड",
       
       // Auth
       "auth.signIn": "साइन इन",
@@ -127,7 +140,13 @@ const resources = {
       "nav.home": "ઘર",
       "nav.community": "સમુદાય",
       "nav.blog": "બ્લોગ",
+      "nav.tests": "પરીક્ષાઓ",
+      "nav.feedback": "પ્રતિસાદ",
       "nav.about": "અમારા વિશે",
+      "nav.profile": "પ્રોફાઇલ",
+      "nav.journal": "જર્નલ",
+      "nav.mySessions": "મારા સત્રો",
+      "nav.psychologistDashboard": "મનોવૈજ્ઞાનિક ડેશબોર્ડ",
       
       // Auth
       "auth.signIn": "સાઇન ઇન",
