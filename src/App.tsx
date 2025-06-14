@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -27,7 +28,6 @@ import Terms from '@/pages/Terms';
 import NotFound from '@/pages/NotFound';
 import { AuthProvider } from '@/context/AuthContext';
 import Settings from "@/pages/Settings";
-import Dashboard from "@/pages/Dashboard";
 import MoodTracker from "@/pages/MoodTracker";
 import CrisisSupport from "@/pages/CrisisSupport";
 import ResourceLibrary from "@/pages/ResourceLibrary";
@@ -49,7 +49,6 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/profile" element={<UserProfile />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/mood-tracker" element={<MoodTracker />} />
               <Route path="/crisis-support" element={<CrisisSupport />} />
               <Route path="/resources" element={<ResourceLibrary />} />
