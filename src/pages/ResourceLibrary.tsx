@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, BookOpen, Play, Download, Heart, Brain, Meditation, Users, Shield, Clock } from 'lucide-react';
+import { Search, BookOpen, Play, Download, Heart, Brain, Users, Shield, Clock } from 'lucide-react';
 
 const ResourceLibrary: React.FC = () => {
   const { t } = useTranslation();
