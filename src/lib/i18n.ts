@@ -6,6 +6,17 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 const resources = {
   en: {
     translation: {
+      // Navigation
+      "nav.home": "Home",
+      "nav.community": "Community",
+      "nav.blog": "Blog",
+      "nav.about": "About",
+      
+      // Auth
+      "auth.signIn": "Sign In",
+      "auth.signUp": "Sign Up",
+      "auth.signOut": "Sign Out",
+      
       // Header
       "header.home": "Home",
       "header.journal": "Journal", 
@@ -54,6 +65,17 @@ const resources = {
   },
   hi: {
     translation: {
+      // Navigation
+      "nav.home": "होम",
+      "nav.community": "समुदाय",
+      "nav.blog": "ब्लॉग",
+      "nav.about": "हमारे बारे में",
+      
+      // Auth
+      "auth.signIn": "साइन इन",
+      "auth.signUp": "साइन अप",
+      "auth.signOut": "साइन आउट",
+      
       // Header
       "header.home": "होम",
       "header.journal": "जर्नल",
@@ -102,6 +124,17 @@ const resources = {
   },
   gu: {
     translation: {
+      // Navigation
+      "nav.home": "ઘર",
+      "nav.community": "સમુદાય",
+      "nav.blog": "બ્લોગ",
+      "nav.about": "અમારા વિશે",
+      
+      // Auth
+      "auth.signIn": "સાઇન ઇન",
+      "auth.signUp": "સાઇન અપ",
+      "auth.signOut": "સાઇન આઉટ",
+      
       // Header
       "header.home": "ઘર",
       "header.journal": "જર્નલ",

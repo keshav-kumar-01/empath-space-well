@@ -1,7 +1,8 @@
+
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Menu, LogOut, User, BookOpen, Calendar, Stethoscope } from "lucide-react";
+import { Menu, LogOut, User, BookOpen, Calendar, Stethoscope, Heart } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -54,6 +55,7 @@ const Header: React.FC = () => {
       <div className="container flex h-14 items-center">
         <div className="mr-4 hidden md:flex">
           <Link to="/" className="mr-6 flex items-center space-x-2">
+            <Heart className="h-6 w-6 text-chetna-primary fill-chetna-primary" />
             <span className="hidden font-bold sm:inline-block bg-gradient-to-r from-chetna-primary to-chetna-secondary bg-clip-text text-transparent">
               Chetna_AI
             </span>
@@ -70,12 +72,6 @@ const Header: React.FC = () => {
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
               {t('nav.blog')}
-            </Link>
-            <Link
-              to="/therapy"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
-              Therapy
             </Link>
             <Link
               to="/psych-tests"
@@ -104,9 +100,10 @@ const Header: React.FC = () => {
           <SheetContent side="left" className="pr-0">
             <MobileLink
               to="/"
-              className="flex items-center"
+              className="flex items-center space-x-2"
               onOpenChange={() => {}}
             >
+              <Heart className="h-6 w-6 text-chetna-primary fill-chetna-primary" />
               <span className="font-bold">Chetna_AI</span>
             </MobileLink>
             <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
@@ -116,9 +113,6 @@ const Header: React.FC = () => {
                 </MobileLink>
                 <MobileLink to="/blog" onOpenChange={() => {}}>
                   {t('nav.blog')}
-                </MobileLink>
-                <MobileLink to="/therapy" onOpenChange={() => {}}>
-                  Therapy
                 </MobileLink>
                 <MobileLink to="/psych-tests" onOpenChange={() => {}}>
                   Tests
