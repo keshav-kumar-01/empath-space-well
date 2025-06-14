@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -119,7 +118,7 @@ const CustomerServiceBot: React.FC = () => {
         <Button
           onClick={() => setIsOpen(true)}
           size="lg"
-          className="rounded-full h-14 w-14 bg-chetna-primary hover:bg-chetna-primary/90 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
+          className="rounded-full h-14 w-14 bg-chetna-primary hover:bg-chetna-primary/90 shadow-lg hover:shadow-xl transition-all duration-300"
         >
           <MessageCircle className="h-6 w-6" />
         </Button>
