@@ -102,6 +102,42 @@ export type Database = {
         }
         Relationships: []
       }
+      emergency_resources: {
+        Row: {
+          country: string | null
+          created_at: string
+          description: string
+          id: string
+          is_24_7: boolean | null
+          phone_number: string | null
+          resource_type: string
+          title: string
+          website_url: string | null
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          is_24_7?: boolean | null
+          phone_number?: string | null
+          resource_type: string
+          title: string
+          website_url?: string | null
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          is_24_7?: boolean | null
+          phone_number?: string | null
+          resource_type?: string
+          title?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       feedback: {
         Row: {
           comment: string | null
@@ -265,6 +301,170 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      session_reviews: {
+        Row: {
+          created_at: string
+          feedback: string | null
+          id: string
+          is_anonymous: boolean | null
+          rating: number
+          session_id: string
+          therapist_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          is_anonymous?: boolean | null
+          rating: number
+          session_id: string
+          therapist_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          is_anonymous?: boolean | null
+          rating?: number
+          session_id?: string
+          therapist_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_reviews_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "therapy_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_reviews_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      therapists: {
+        Row: {
+          availability: Json | null
+          bio: string | null
+          calendly_link: string | null
+          contact_email: string | null
+          created_at: string
+          experience_years: number
+          id: string
+          is_available: boolean | null
+          is_verified: boolean | null
+          jitsi_room_id: string | null
+          languages: string[]
+          license_number: string | null
+          license_type: string | null
+          name: string
+          photo_url: string | null
+          rating: number | null
+          specializations: string[]
+          total_reviews: number | null
+          updated_at: string
+        }
+        Insert: {
+          availability?: Json | null
+          bio?: string | null
+          calendly_link?: string | null
+          contact_email?: string | null
+          created_at?: string
+          experience_years?: number
+          id?: string
+          is_available?: boolean | null
+          is_verified?: boolean | null
+          jitsi_room_id?: string | null
+          languages?: string[]
+          license_number?: string | null
+          license_type?: string | null
+          name: string
+          photo_url?: string | null
+          rating?: number | null
+          specializations?: string[]
+          total_reviews?: number | null
+          updated_at?: string
+        }
+        Update: {
+          availability?: Json | null
+          bio?: string | null
+          calendly_link?: string | null
+          contact_email?: string | null
+          created_at?: string
+          experience_years?: number
+          id?: string
+          is_available?: boolean | null
+          is_verified?: boolean | null
+          jitsi_room_id?: string | null
+          languages?: string[]
+          license_number?: string | null
+          license_type?: string | null
+          name?: string
+          photo_url?: string | null
+          rating?: number | null
+          specializations?: string[]
+          total_reviews?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      therapy_sessions: {
+        Row: {
+          created_at: string
+          duration_minutes: number | null
+          id: string
+          jitsi_room_id: string | null
+          meeting_link: string | null
+          notes: string | null
+          session_date: string
+          status: string | null
+          therapist_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          jitsi_room_id?: string | null
+          meeting_link?: string | null
+          notes?: string | null
+          session_date: string
+          status?: string | null
+          therapist_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          jitsi_room_id?: string | null
+          meeting_link?: string | null
+          notes?: string | null
+          session_date?: string
+          status?: string | null
+          therapist_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapy_sessions_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

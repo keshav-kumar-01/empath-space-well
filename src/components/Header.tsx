@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -80,6 +79,12 @@ const Header: React.FC = () => {
               {t('nav.tests')}
             </Link>
             <Link
+              to="/therapy"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              {t('nav.therapy')}
+            </Link>
+            <Link
               to="/feedback"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
@@ -122,6 +127,9 @@ const Header: React.FC = () => {
                 </MobileLink>
                 <MobileLink to="/psych-tests" onOpenChange={() => {}}>
                   {t('nav.tests')}
+                </MobileLink>
+                <MobileLink to="/therapy" onOpenChange={() => {}}>
+                  {t('nav.therapy')}
                 </MobileLink>
                 <MobileLink to="/feedback" onOpenChange={() => {}}>
                   {t('nav.feedback')}

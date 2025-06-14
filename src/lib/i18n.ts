@@ -17,6 +17,7 @@ const resources = {
       "nav.journal": "Journal",
       "nav.mySessions": "My Sessions",
       "nav.psychologistDashboard": "Psychologist Dashboard",
+      "nav.therapy": "Therapy",
       
       // Auth
       "auth.signIn": "Sign In",
@@ -82,6 +83,7 @@ const resources = {
       "nav.journal": "जर्नल",
       "nav.mySessions": "मेरे सत्र",
       "nav.psychologistDashboard": "मनोवैज्ञानिक डैशबोर्ड",
+      "nav.therapy": "थेरेपी",
       
       // Auth
       "auth.signIn": "साइन इन",
@@ -147,6 +149,7 @@ const resources = {
       "nav.journal": "જર્નલ",
       "nav.mySessions": "મારા સત્રો",
       "nav.psychologistDashboard": "મનોવૈજ્ઞાનિક ડેશબોર્ડ",
+      "nav.therapy": "થેરેપી",
       
       // Auth
       "auth.signIn": "સાઇન ઇન",
