@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -41,12 +40,12 @@ const MobileLink: React.FC<MobileLinkProps> = ({ to, onOpenChange, children, ...
 };
 
 const Header: React.FC = () => {
-  const { user, signOut } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const handleSignOut = async () => {
-    await signOut();
+    await logout();
     navigate("/");
   };
 
