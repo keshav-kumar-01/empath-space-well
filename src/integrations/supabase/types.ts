@@ -9,6 +9,53 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      appointments: {
+        Row: {
+          appointment_date: string
+          appointment_time: string
+          created_at: string
+          id: string
+          notes: string | null
+          session_type: string
+          status: string | null
+          therapist_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          appointment_date: string
+          appointment_time: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          session_type: string
+          status?: string | null
+          therapist_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          appointment_date?: string
+          appointment_time?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          session_type?: string
+          status?: string | null
+          therapist_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author_name: string
@@ -263,6 +310,57 @@ export type Database = {
           personality_type?: string
           social?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      therapists: {
+        Row: {
+          available: boolean | null
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          experience: string
+          fee: string
+          id: string
+          languages: string[]
+          name: string
+          rating: number | null
+          session_types: string[] | null
+          specialties: string[]
+          total_reviews: number | null
+          updated_at: string
+        }
+        Insert: {
+          available?: boolean | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          experience: string
+          fee: string
+          id?: string
+          languages: string[]
+          name: string
+          rating?: number | null
+          session_types?: string[] | null
+          specialties: string[]
+          total_reviews?: number | null
+          updated_at?: string
+        }
+        Update: {
+          available?: boolean | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          experience?: string
+          fee?: string
+          id?: string
+          languages?: string[]
+          name?: string
+          rating?: number | null
+          session_types?: string[] | null
+          specialties?: string[]
+          total_reviews?: number | null
+          updated_at?: string
         }
         Relationships: []
       }

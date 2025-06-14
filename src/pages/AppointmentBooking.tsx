@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,53 +10,124 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { CalendarDays, Clock, MapPin, Star, Video, Phone, Users, Stethoscope, Heart, Brain } from 'lucide-react';
+import { CalendarDays, Clock, Star, Users, Stethoscope, Heart, Brain } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/context/AuthContext';
+
+interface Therapist {
+  id: string;
+  name: string;
+  specialties: string[];
+  rating: number;
+  experience: string;
+  languages: string[];
+  avatar_url?: string;
+  fee: string;
+  available: boolean;
+  bio?: string;
+  total_reviews?: number;
+}
+
+interface Appointment {
+  id: string;
+  therapist_id: string;
+  appointment_date: string;
+  appointment_time: string;
+  session_type: string;
+  status: string;
+  therapist?: Therapist;
+}
 
 const AppointmentBooking: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [selectedTherapist, setSelectedTherapist] = useState<string>('');
   const [sessionType, setSessionType] = useState<string>('');
 
-  const therapists = [
-    {
-      id: '1',
-      name: 'Dr. Priya Sharma',
-      specialties: ['Anxiety', 'Depression', 'CBT'],
-      rating: 4.9,
-      experience: '8+ years',
-      languages: ['Hindi', 'English'],
-      avatar: '/placeholder.svg',
-      fee: '₹1,500',
-      available: true
-    },
-    {
-      id: '2',
-      name: 'Dr. Rajesh Kumar',
-      specialties: ['Trauma', 'PTSD', 'Family Therapy'],
-      rating: 4.8,
-      experience: '12+ years',
-      languages: ['Hindi', 'English', 'Punjabi'],
-      avatar: '/placeholder.svg',
-      fee: '₹2,000',
-      available: true
-    },
-    {
-      id: '3',
-      name: 'Dr. Meera Patel',
-      specialties: ['Couples Therapy', 'Relationships'],
-      rating: 4.7,
-      experience: '6+ years',
-      languages: ['Hindi', 'English', 'Gujarati'],
-      avatar: '/placeholder.svg',
-      fee: '₹1,800',
-      available: false
+  // Fetch therapists from Supabase
+  const { data: therapists = [], isLoading: therapistsLoading } = useQuery({
+    queryKey: ['therapists'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('therapists')
+        .select('*')
+        .eq('available', true)
+        .order('rating', { ascending: false });
+      
+      if (error) throw error;
+      return data as Therapist[];
     }
-  ];
+  });
+
+  // Fetch user's appointments
+  const { data: appointments = [] } = useQuery({
+    queryKey: ['appointments', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      
+      const { data, error } = await supabase
+        .from('appointments')
+        .select(`
+          *,
+          therapist:therapists(*)
+        `)
+        .eq('user_id', user.id)
+        .order('appointment_date', { ascending: true });
+      
+      if (error) throw error;
+      return data as Appointment[];
+    },
+    enabled: !!user?.id
+  });
+
+  // Create appointment mutation
+  const createAppointmentMutation = useMutation({
+    mutationFn: async (appointmentData: {
+      therapist_id: string;
+      appointment_date: string;
+      appointment_time: string;
+      session_type: string;
+    }) => {
+      if (!user?.id) throw new Error('User not authenticated');
+      
+      const { data, error } = await supabase
+        .from('appointments')
+        .insert({
+          user_id: user.id,
+          ...appointmentData
+        })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      toast({
+        title: "Appointment booked! 📅",
+        description: "You'll receive a confirmation email shortly",
+      });
+      // Reset form
+      setSelectedTime('');
+      setSelectedTherapist('');
+      setSessionType('');
+    },
+    onError: (error) => {
+      console.error('Appointment booking error:', error);
+      toast({
+        title: "Booking failed",
+        description: "There was an error booking your appointment. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
 
   const timeSlots = [
     '9:00 AM', '10:00 AM', '11:00 AM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM'
@@ -69,6 +141,15 @@ const AppointmentBooking: React.FC = () => {
   ];
 
   const handleBookAppointment = () => {
+    if (!user) {
+      toast({
+        title: "Please sign in",
+        description: "You need to be signed in to book an appointment",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!selectedDate || !selectedTime || !selectedTherapist || !sessionType) {
       toast({
         title: "Please fill all fields",
@@ -78,11 +159,25 @@ const AppointmentBooking: React.FC = () => {
       return;
     }
 
-    toast({
-      title: "Appointment booked! 📅",
-      description: "You'll receive a confirmation email shortly",
+    createAppointmentMutation.mutate({
+      therapist_id: selectedTherapist,
+      appointment_date: selectedDate.toISOString().split('T')[0],
+      appointment_time: selectedTime,
+      session_type: sessionType,
     });
   };
+
+  if (therapistsLoading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
+        <Header />
+        <main className="flex-grow container mx-auto px-4 py-8 max-w-6xl">
+          <div className="text-center">Loading therapists...</div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
@@ -102,6 +197,35 @@ const AppointmentBooking: React.FC = () => {
             Connect with licensed therapists and counselors for professional support
           </p>
         </div>
+
+        {/* Show user's existing appointments */}
+        {appointments.length > 0 && (
+          <Card className="backdrop-blur-xl bg-white/80 dark:bg-slate-800/80 border border-white/50 dark:border-slate-700/50 mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CalendarDays className="h-5 w-5 text-chetna-primary" />
+                Your Appointments
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {appointments.slice(0, 3).map((appointment) => (
+                  <div key={appointment.id} className="flex items-center justify-between p-4 rounded-lg border">
+                    <div>
+                      <h4 className="font-semibold">{appointment.therapist?.name}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {appointment.appointment_date} at {appointment.appointment_time}
+                      </p>
+                      <Badge variant={appointment.status === 'confirmed' ? 'default' : 'secondary'}>
+                        {appointment.status}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Therapist Selection */}
@@ -130,7 +254,7 @@ const AppointmentBooking: React.FC = () => {
                     >
                       <div className="flex items-start gap-4">
                         <Avatar className="h-16 w-16">
-                          <AvatarImage src={therapist.avatar} alt={therapist.name} />
+                          <AvatarImage src={therapist.avatar_url} alt={therapist.name} />
                           <AvatarFallback>{therapist.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
@@ -158,6 +282,9 @@ const AppointmentBooking: React.FC = () => {
                             <p className="text-sm text-muted-foreground">
                               Languages: {therapist.languages.join(', ')}
                             </p>
+                            {therapist.bio && (
+                              <p className="text-sm text-muted-foreground mt-2">{therapist.bio}</p>
+                            )}
                           </div>
                           {!therapist.available && (
                             <Badge variant="destructive" className="mt-2">
@@ -258,10 +385,11 @@ const AppointmentBooking: React.FC = () => {
 
             <Button 
               onClick={handleBookAppointment}
+              disabled={createAppointmentMutation.isPending}
               className="w-full bg-gradient-to-r from-chetna-primary to-chetna-secondary hover:opacity-90 transition-opacity"
               size="lg"
             >
-              Book Appointment
+              {createAppointmentMutation.isPending ? 'Booking...' : 'Book Appointment'}
             </Button>
           </div>
         </div>
