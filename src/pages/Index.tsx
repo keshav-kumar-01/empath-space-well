@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
@@ -7,6 +6,7 @@ import Footer from "@/components/Footer";
 import IntroSection from "@/components/IntroSection";
 import ChatInterface from "@/components/ChatInterface";
 import ReviewsSection from "@/components/ReviewsSection";
+import CustomerServiceBot from "@/components/CustomerServiceBot";
 import { MessageSquare, Users, Star, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -85,6 +85,9 @@ const Index: React.FC = () => {
       </main>
       
       <Footer />
+      
+      {/* Customer Service Bot */}
+      <CustomerServiceBot />
     </div>
   );
 };
