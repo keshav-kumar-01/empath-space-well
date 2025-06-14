@@ -2,7 +2,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Menu, LogOut, User, BookOpen, Calendar, Stethoscope, Heart } from "lucide-react";
+import { Menu, LogOut, User, BookOpen, Calendar, Stethoscope, Heart, MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -77,7 +77,13 @@ const Header: React.FC = () => {
               to="/psych-tests"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
-              Tests
+              {t('nav.tests')}
+            </Link>
+            <Link
+              to="/feedback"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              {t('nav.feedback')}
             </Link>
             <Link
               to="/about"
@@ -115,7 +121,10 @@ const Header: React.FC = () => {
                   {t('nav.blog')}
                 </MobileLink>
                 <MobileLink to="/psych-tests" onOpenChange={() => {}}>
-                  Tests
+                  {t('nav.tests')}
+                </MobileLink>
+                <MobileLink to="/feedback" onOpenChange={() => {}}>
+                  {t('nav.feedback')}
                 </MobileLink>
                 <MobileLink to="/about" onOpenChange={() => {}}>
                   {t('nav.about')}
@@ -153,25 +162,31 @@ const Header: React.FC = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/profile">
                       <User className="mr-2 h-4 w-4" />
-                      Profile
+                      {t('nav.profile')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/journal">
                       <BookOpen className="mr-2 h-4 w-4" />
-                      Journal
+                      {t('nav.journal')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/my-sessions">
                       <Calendar className="mr-2 h-4 w-4" />
-                      My Sessions
+                      {t('nav.mySessions')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/psychologist-dashboard">
                       <Stethoscope className="mr-2 h-4 w-4" />
-                      Psychologist Dashboard
+                      {t('nav.psychologistDashboard')}
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/feedback">
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      {t('nav.feedback')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />

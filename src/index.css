@@ -57,14 +57,21 @@
   }
   
   body {
-    @apply bg-gradient-to-br from-chetna-lavender via-white to-chetna-mint dark:from-chetna-dark dark:to-chetna-darker;
-    background-attachment: fixed;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
     position: relative;
+    background: linear-gradient(135deg, 
+      #f8fafc 0%, 
+      #e2e8f0 25%, 
+      #cbd5e1 50%, 
+      #94a3b8 75%, 
+      #64748b 100%
+    );
+    min-height: 100vh;
   }
 
+  /* Enhanced animated background layers */
   body::before {
     content: '';
     position: fixed;
@@ -72,15 +79,16 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(124, 101, 225, 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, rgba(111, 191, 177, 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 50% 50%, rgba(255, 166, 158, 0.03) 0%, transparent 50%);
-    background-size: 800px 800px, 600px 600px, 400px 400px;
-    background-position: 0% 0%, 100% 100%, 50% 50%;
-    animation: backgroundShift 20s ease-in-out infinite;
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(124, 101, 225, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(111, 191, 177, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 40% 60%, rgba(255, 166, 158, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 60% 40%, rgba(124, 101, 225, 0.08) 0%, transparent 40%);
+    background-size: 600px 600px, 800px 800px, 500px 500px, 700px 700px;
+    background-position: 0% 0%, 100% 100%, 30% 70%, 70% 30%;
+    animation: backgroundShift 25s ease-in-out infinite;
     pointer-events: none;
-    z-index: -2;
+    z-index: -3;
   }
 
   body::after {
@@ -91,26 +99,41 @@
     width: 100%;
     height: 100%;
     background-image: 
-      linear-gradient(45deg, transparent 24%, rgba(124, 101, 225, 0.02) 25%, rgba(124, 101, 225, 0.02) 26%, transparent 27%, transparent 74%, rgba(124, 101, 225, 0.02) 75%, rgba(124, 101, 225, 0.02) 76%, transparent 77%),
-      linear-gradient(-45deg, transparent 24%, rgba(111, 191, 177, 0.02) 25%, rgba(111, 191, 177, 0.02) 26%, transparent 27%, transparent 74%, rgba(111, 191, 177, 0.02) 75%, rgba(111, 191, 177, 0.02) 76%, transparent 77%);
-    background-size: 100px 100px, 100px 100px;
-    background-position: 0 0, 50px 50px;
-    opacity: 0.3;
+      linear-gradient(45deg, transparent 30%, rgba(124, 101, 225, 0.05) 35%, rgba(124, 101, 225, 0.05) 40%, transparent 45%),
+      linear-gradient(-45deg, transparent 30%, rgba(111, 191, 177, 0.05) 35%, rgba(111, 191, 177, 0.05) 40%, transparent 45%),
+      linear-gradient(90deg, transparent 45%, rgba(255, 166, 158, 0.03) 50%, rgba(255, 166, 158, 0.03) 55%, transparent 60%);
+    background-size: 150px 150px, 120px 120px, 200px 200px;
+    background-position: 0 0, 75px 75px, 0 100px;
+    animation: patternShift 30s linear infinite;
+    opacity: 0.6;
     pointer-events: none;
-    z-index: -1;
+    z-index: -2;
+  }
+
+  .dark body {
+    background: linear-gradient(135deg, 
+      #1e1b26 0%, 
+      #2d2438 25%, 
+      #3c2d4a 50%, 
+      #4b365c 75%, 
+      #5a3f6e 100%
+    );
   }
 
   .dark body::before {
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(124, 101, 225, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, rgba(111, 191, 177, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 50% 50%, rgba(255, 166, 158, 0.05) 0%, transparent 50%);
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(124, 101, 225, 0.25) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(111, 191, 177, 0.25) 0%, transparent 50%),
+      radial-gradient(circle at 40% 60%, rgba(255, 166, 158, 0.18) 0%, transparent 50%),
+      radial-gradient(circle at 60% 40%, rgba(124, 101, 225, 0.15) 0%, transparent 40%);
   }
 
   .dark body::after {
     background-image: 
-      linear-gradient(45deg, transparent 24%, rgba(124, 101, 225, 0.04) 25%, rgba(124, 101, 225, 0.04) 26%, transparent 27%, transparent 74%, rgba(124, 101, 225, 0.04) 75%, rgba(124, 101, 225, 0.04) 76%, transparent 77%),
-      linear-gradient(-45deg, transparent 24%, rgba(111, 191, 177, 0.04) 25%, rgba(111, 191, 177, 0.04) 26%, transparent 27%, transparent 74%, rgba(111, 191, 177, 0.04) 75%, rgba(111, 191, 177, 0.04) 76%, transparent 77%);
+      linear-gradient(45deg, transparent 30%, rgba(124, 101, 225, 0.08) 35%, rgba(124, 101, 225, 0.08) 40%, transparent 45%),
+      linear-gradient(-45deg, transparent 30%, rgba(111, 191, 177, 0.08) 35%, rgba(111, 191, 177, 0.08) 40%, transparent 45%),
+      linear-gradient(90deg, transparent 45%, rgba(255, 166, 158, 0.05) 50%, rgba(255, 166, 158, 0.05) 55%, transparent 60%);
+    opacity: 0.8;
   }
   
   * {
@@ -120,13 +143,39 @@
 
 @keyframes backgroundShift {
   0%, 100% {
-    background-position: 0% 0%, 100% 100%, 50% 50%;
+    background-position: 0% 0%, 100% 100%, 30% 70%, 70% 30%;
+    transform: scale(1);
+  }
+  25% {
+    background-position: 20% 30%, 80% 70%, 60% 40%, 40% 60%;
+    transform: scale(1.02);
+  }
+  50% {
+    background-position: 70% 80%, 30% 20%, 80% 20%, 20% 80%;
+    transform: scale(1);
+  }
+  75% {
+    background-position: 40% 60%, 60% 40%, 20% 80%, 80% 20%;
+    transform: scale(1.01);
+  }
+}
+
+@keyframes patternShift {
+  0% {
+    background-position: 0 0, 75px 75px, 0 100px;
+    transform: rotate(0deg);
   }
   33% {
-    background-position: 30% 20%, 80% 90%, 70% 30%;
+    background-position: 50px 25px, 125px 100px, 25px 125px;
+    transform: rotate(0.5deg);
   }
   66% {
-    background-position: 70% 80%, 20% 10%, 30% 70%;
+    background-position: 100px 50px, 25px 125px, 50px 25px;
+    transform: rotate(-0.5deg);
+  }
+  100% {
+    background-position: 150px 75px, 75px 150px, 75px 50px;
+    transform: rotate(0deg);
   }
 }
 
@@ -302,4 +351,41 @@
 .dark .glass-effect {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Floating particles effect */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(124, 101, 225, 0.3);
+  border-radius: 50%;
+  animation: floatParticle 20s infinite linear;
+}
+
+@keyframes floatParticle {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
 }
