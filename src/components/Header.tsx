@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +16,9 @@ import { useAuth } from '@/context/AuthContext';
 
 const Header: React.FC = () => {
   const { t } = useTranslation();
-  const { user, signOut } = useAuth();
+  const { user, logout } = useAuth();
+
+  const isAdmin = user?.email === 'keshavkumarhf@gmail.com';
 
   return (
     <header className="bg-white py-4 shadow-md sticky top-0 z-50">
@@ -108,24 +111,26 @@ const Header: React.FC = () => {
               </NavigationMenuContent>
             </NavigationMenuItem>
 
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[600px]">
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/therapist-onboarding"
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="text-sm font-medium leading-none">Add Therapist</div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Onboard new mental health professionals
-                      </p>
-                    </Link>
-                  </NavigationMenuLink>
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
+            {isAdmin && (
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[600px]">
+                    <NavigationMenuLink asChild>
+                      <Link
+                        to="/therapist-onboarding"
+                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                      >
+                        <div className="text-sm font-medium leading-none">Add Therapist</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Onboard new mental health professionals
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            )}
 
             <NavigationMenuItem>
               <Link to="/about" className={navigationMenuTriggerStyle()}>
@@ -141,7 +146,7 @@ const Header: React.FC = () => {
               <Link to="/profile" className="text-gray-700 hover:text-chetna-primary">
                 {t('nav.profile')}
               </Link>
-              <Button variant="outline" size="sm" onClick={() => signOut()}>
+              <Button variant="outline" size="sm" onClick={() => logout()}>
                 {t('nav.signOut')}
               </Button>
             </>

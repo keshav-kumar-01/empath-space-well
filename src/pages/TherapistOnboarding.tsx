@@ -1,9 +1,9 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,16 +12,32 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { UserPlus, Upload, X, Plus } from 'lucide-react';
+import { UserPlus, Upload, X, Plus, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const TherapistOnboarding: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  // Check if user is admin
+  const isAdmin = user?.email === 'keshavkumarhf@gmail.com';
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    
+    if (!isAdmin) {
+      navigate('/');
+      return;
+    }
+  }, [user, isAdmin, navigate]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -127,6 +143,29 @@ const TherapistOnboarding: React.FC = () => {
       setLoading(false);
     }
   };
+
+  if (!user || !isAdmin) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-chetna-light via-white to-chetna-peach">
+        <Helmet>
+          <title>Access Denied | Chetna AI</title>
+        </Helmet>
+        <Header />
+        <main className="container mx-auto px-4 py-8">
+          <div className="max-w-md mx-auto text-center">
+            <div className="flex justify-center mb-4">
+              <div className="bg-red-100 p-4 rounded-full">
+                <Shield className="h-8 w-8 text-red-600" />
+              </div>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
+            <p className="text-gray-600">You don't have permission to access this page.</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-chetna-light via-white to-chetna-peach">
