@@ -1,165 +1,212 @@
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Menu, LogOut, User, BookOpen, Calendar, Stethoscope, Heart, MessageCircle } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuContent,
-  NavigationMenuTrigger,
-  NavigationMenuLink,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import { Button } from "@/components/ui/button"
-import { useAuth } from '@/context/AuthContext';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import LanguageSelector from "./LanguageSelector";
+import { useAuth } from "@/context/AuthContext";
+
+interface MobileLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  to: string;
+  onOpenChange: (open: boolean) => void;
+  children: React.ReactNode;
+}
+
+const MobileLink: React.FC<MobileLinkProps> = ({ to, onOpenChange, children, ...props }) => {
+  return (
+    <SheetClose asChild>
+      <Link to={to} onClick={() => onOpenChange(false)} {...props}>
+        {children}
+      </Link>
+    </SheetClose>
+  );
+};
 
 const Header: React.FC = () => {
-  const { t } = useTranslation();
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
-  const isAdmin = user?.email === 'keshavkumarhf@gmail.com';
+  const handleSignOut = async () => {
+    await logout();
+    navigate("/");
+  };
 
   return (
-    <header className="bg-white py-4 shadow-md sticky top-0 z-50">
-      <div className="container mx-auto px-4 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-bold text-chetna-primary">
-          Chetna AI
-        </Link>
-
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Services</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/journal"
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="text-sm font-medium leading-none">{t('nav.journal')}</div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Write and track your thoughts and moods
+    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 items-center">
+        <div className="mr-4 hidden md:flex">
+          <Link to="/" className="mr-6 flex items-center space-x-2">
+            <Heart className="h-6 w-6 text-chetna-primary fill-chetna-primary" />
+            <span className="hidden font-bold sm:inline-block bg-gradient-to-r from-chetna-primary to-chetna-secondary bg-clip-text text-transparent">
+              Chetna_AI
+            </span>
+          </Link>
+          <nav className="flex items-center space-x-6 text-sm font-medium">
+            <Link
+              to="/community"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              {t('nav.community')}
+            </Link>
+            <Link
+              to="/blog"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              {t('nav.blog')}
+            </Link>
+            <Link
+              to="/psych-tests"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              {t('nav.tests')}
+            </Link>
+            <Link
+              to="/feedback"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              {t('nav.feedback')}
+            </Link>
+            <Link
+              to="/about"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              {t('nav.about')}
+            </Link>
+          </nav>
+        </div>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="ghost"
+              className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+            >
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle Menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="pr-0">
+            <MobileLink
+              to="/"
+              className="flex items-center space-x-2"
+              onOpenChange={() => {}}
+            >
+              <Heart className="h-6 w-6 text-chetna-primary fill-chetna-primary" />
+              <span className="font-bold">Chetna_AI</span>
+            </MobileLink>
+            <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
+              <div className="flex flex-col space-y-3">
+                <MobileLink to="/community" onOpenChange={() => {}}>
+                  {t('nav.community')}
+                </MobileLink>
+                <MobileLink to="/blog" onOpenChange={() => {}}>
+                  {t('nav.blog')}
+                </MobileLink>
+                <MobileLink to="/psych-tests" onOpenChange={() => {}}>
+                  {t('nav.tests')}
+                </MobileLink>
+                <MobileLink to="/feedback" onOpenChange={() => {}}>
+                  {t('nav.feedback')}
+                </MobileLink>
+                <MobileLink to="/about" onOpenChange={() => {}}>
+                  {t('nav.about')}
+                </MobileLink>
+              </div>
+            </ScrollArea>
+          </SheetContent>
+        </Sheet>
+        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+          <div className="w-full flex-1 md:w-auto md:flex-none">
+            <LanguageSelector />
+          </div>
+          <nav className="flex items-center space-x-2">
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="" alt={user.email || ""} />
+                      <AvatarFallback>
+                        {user.email?.charAt(0).toUpperCase() || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {user.email}
                       </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">
+                      <User className="mr-2 h-4 w-4" />
+                      {t('nav.profile')}
                     </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/therapy"
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="text-sm font-medium leading-none">Therapy</div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Connect with verified mental health professionals
-                      </p>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/journal">
+                      <BookOpen className="mr-2 h-4 w-4" />
+                      {t('nav.journal')}
                     </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/psych-tests"
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="text-sm font-medium leading-none">Psychological Tests</div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Take validated psychological assessments
-                      </p>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/my-sessions">
+                      <Calendar className="mr-2 h-4 w-4" />
+                      {t('nav.mySessions')}
                     </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/quiz"
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="text-sm font-medium leading-none">{t('nav.quiz')}</div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Discover your personality type
-                      </p>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/psychologist-dashboard">
+                      <Stethoscope className="mr-2 h-4 w-4" />
+                      {t('nav.psychologistDashboard')}
                     </Link>
-                  </NavigationMenuLink>
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Community</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/community"
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="text-sm font-medium leading-none">{t('nav.community')}</div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Connect with others on similar journeys
-                      </p>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/feedback">
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      {t('nav.feedback')}
                     </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/blog"
-                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    >
-                      <div className="text-sm font-medium leading-none">Blog</div>
-                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Read articles and insights on mental health
-                      </p>
-                    </Link>
-                  </NavigationMenuLink>
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-
-            {isAdmin && (
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-1 lg:w-[600px]">
-                    <NavigationMenuLink asChild>
-                      <Link
-                        to="/therapist-onboarding"
-                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                      >
-                        <div className="text-sm font-medium leading-none">Add Therapist</div>
-                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                          Onboard new mental health professionals
-                        </p>
-                      </Link>
-                    </NavigationMenuLink>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    {t('auth.signOut')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Button variant="ghost" asChild>
+                  <Link to="/login">{t('auth.signIn')}</Link>
+                </Button>
+                <Button asChild>
+                  <Link to="/signup">{t('auth.signUp')}</Link>
+                </Button>
+              </div>
             )}
-
-            <NavigationMenuItem>
-              <Link to="/about" className={navigationMenuTriggerStyle()}>
-                {t('nav.about')}
-              </Link>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-
-        <div className="flex items-center space-x-4">
-          {user ? (
-            <>
-              <Link to="/profile" className="text-gray-700 hover:text-chetna-primary">
-                {t('nav.profile')}
-              </Link>
-              <Button variant="outline" size="sm" onClick={() => logout()}>
-                {t('nav.signOut')}
-              </Button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" className="text-gray-700 hover:text-chetna-primary">
-                {t('nav.login')}
-              </Link>
-              <Link to="/signup" className="bg-chetna-primary text-white py-2 px-4 rounded hover:bg-chetna-secondary transition-colors">
-                {t('nav.signUp')}
-              </Link>
-            </>
-          )}
+          </nav>
         </div>
       </div>
     </header>
