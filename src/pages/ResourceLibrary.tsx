@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +16,7 @@ const ResourceLibrary: React.FC = () => {
 
   const categories = [
     { id: 'articles', label: 'Articles', icon: BookOpen },
-    { id: 'exercises', label: 'Exercises', icon: Meditation },
+    { id: 'exercises', label: 'Exercises', icon: Brain },
     { id: 'videos', label: 'Videos', icon: Play },
     { id: 'worksheets', label: 'Worksheets', icon: Download },
   ];
@@ -225,7 +224,7 @@ const ResourceLibrary: React.FC = () => {
 
                         <Button className="w-full bg-gradient-to-r from-chetna-primary to-chetna-secondary hover:opacity-90 transition-opacity">
                           {categoryId === 'articles' && <BookOpen className="h-4 w-4 mr-2" />}
-                          {categoryId === 'exercises' && <Meditation className="h-4 w-4 mr-2" />}
+                          {categoryId === 'exercises' && <Brain className="h-4 w-4 mr-2" />}
                           {categoryId === 'videos' && <Play className="h-4 w-4 mr-2" />}
                           {categoryId === 'worksheets' && <Download className="h-4 w-4 mr-2" />}
                           {categoryId === 'articles' && 'Read Article'}
