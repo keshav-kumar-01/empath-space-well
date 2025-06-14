@@ -113,40 +113,49 @@ const CustomerServiceBot: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-6 right-6 z-50">
       {!isOpen ? (
         <Button
           onClick={() => setIsOpen(true)}
           size="lg"
-          className="rounded-full h-14 w-14 bg-chetna-primary hover:bg-chetna-primary/90 shadow-lg hover:shadow-xl transition-all duration-300"
+          className="rounded-full h-16 w-16 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 dark:from-violet-500 dark:to-purple-500 dark:hover:from-violet-600 dark:hover:to-purple-600 shadow-xl hover:shadow-2xl shadow-violet-500/25 dark:shadow-violet-400/25 transition-all duration-300 hover:scale-110 border-2 border-white/20 dark:border-white/10"
         >
-          <MessageCircle className="h-6 w-6" />
+          <MessageCircle className="h-7 w-7" />
         </Button>
       ) : (
-        <Card className="w-80 h-96 shadow-xl border-2 border-chetna-primary/20">
-          <CardHeader className="flex flex-row items-center justify-between p-4 bg-gradient-to-r from-chetna-primary to-chetna-primary/90 text-white">
-            <CardTitle className="text-sm font-medium">Chetna_AI Support</CardTitle>
+        <Card className="w-96 h-[32rem] shadow-2xl border-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl overflow-hidden">
+          {/* Enhanced header with gradient */}
+          <CardHeader className="flex flex-row items-center justify-between p-5 bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-500 dark:to-purple-500 text-white relative overflow-hidden">
+            {/* Subtle animated background */}
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-400/20 to-purple-400/20 animate-pulse"></div>
+            
+            <CardTitle className="text-lg font-semibold relative z-10 flex items-center">
+              <MessageCircle className="mr-2 h-5 w-5" />
+              Chetna_AI Support
+            </CardTitle>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(false)}
-              className="h-8 w-8 p-0 text-white hover:bg-white/20"
+              className="h-9 w-9 p-0 text-white hover:bg-white/20 dark:hover:bg-white/10 rounded-full transition-all duration-200 hover:scale-110 relative z-10"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             </Button>
           </CardHeader>
-          <CardContent className="p-0 flex flex-col h-80">
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50/50">
+          
+          <CardContent className="p-0 flex flex-col h-[26rem]">
+            {/* Enhanced messages area */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-gradient-to-b from-slate-50/50 to-white/50 dark:from-slate-800/50 dark:to-slate-700/50">
               {messages.map((message, index) => (
                 <div
                   key={index}
-                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} animate-fade-in`}
                 >
                   <div
-                    className={`max-w-xs p-3 rounded-lg text-sm ${
+                    className={`max-w-xs p-4 rounded-2xl text-sm font-medium shadow-lg transition-all duration-200 hover:shadow-xl ${
                       message.isUser
-                        ? 'bg-chetna-primary text-white rounded-br-none'
-                        : 'bg-white border border-gray-200 rounded-bl-none'
+                        ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white rounded-br-md shadow-violet-500/25'
+                        : 'bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-200 rounded-bl-md shadow-slate-200/50 dark:shadow-slate-900/50'
                     }`}
                   >
                     {message.text}
@@ -156,15 +165,21 @@ const CustomerServiceBot: React.FC = () => {
               <div ref={messagesEndRef} />
             </div>
             
-            <form onSubmit={handleSendMessage} className="p-4 border-t bg-white">
-              <div className="flex gap-2">
+            {/* Enhanced input area */}
+            <form onSubmit={handleSendMessage} className="p-5 border-t border-slate-200/50 dark:border-slate-600/50 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+              <div className="flex gap-3">
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask about Chetna_AI..."
-                  className="text-sm"
+                  className="text-sm bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-violet-500 dark:focus:ring-violet-400 transition-all duration-200"
                 />
-                <Button type="submit" size="sm" disabled={!input.trim()}>
+                <Button 
+                  type="submit" 
+                  size="sm" 
+                  disabled={!input.trim()}
+                  className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 dark:from-violet-500 dark:to-purple-500 dark:hover:from-violet-600 dark:hover:to-purple-600 rounded-xl px-4 transition-all duration-200 hover:scale-105 shadow-lg shadow-violet-500/25"
+                >
                   <Send className="h-4 w-4" />
                 </Button>
               </div>
