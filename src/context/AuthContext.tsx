@@ -19,6 +19,7 @@ type AuthContextType = {
   signup: (email: string, password: string, userData: {name: string}) => Promise<{error: any | null}>;
   logout: () => Promise<void>;
   loginWithGoogle: () => Promise<void>;
+  updateProfile: (userData: {name?: string; photoURL?: string}) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -150,8 +151,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateProfile = async (userData: {name?: string; photoURL?: string}) => {
+    try {
+      console.log('Updating profile:', userData);
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          name: userData.name,
+          avatar_url: userData.photoURL,
+        },
+      });
+
+      if (error) {
+        console.error('Profile update error:', error);
+        throw error;
+      }
+
+      // Update local user state
+      if (user) {
+        setUser({
+          ...user,
+          name: userData.name || user.name,
+          photoURL: userData.photoURL || user.photoURL,
+        });
+      }
+
+      console.log('Profile updated successfully');
+    } catch (error) {
+      console.error('Unexpected profile update error:', error);
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, isLoading, login, signup, logout, loginWithGoogle }}>
+    <AuthContext.Provider value={{ user, session, isLoading, login, signup, logout, loginWithGoogle, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );
