@@ -69,6 +69,12 @@ const Header: React.FC = () => {
               Profile
             </Link>
             <Link
+              to="/appointments"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              Appointments
+            </Link>
+            <Link
               to="/community"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
