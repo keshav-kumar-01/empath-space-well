@@ -1,9 +1,9 @@
 
-import React from "react";
+import React, { memo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, Quote } from "lucide-react";
 
-const ReviewsSection: React.FC = () => {
+const ReviewsSection: React.FC = memo(() => {
   const reviews = [
     {
       id: 1,
@@ -37,7 +37,7 @@ const ReviewsSection: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {reviews.map((review) => (
-            <Card key={review.id} className="feature-card group hover:scale-105 transition-all duration-500 border-chetna-primary/20">
+            <Card key={review.id} className="feature-card group hover:scale-105 transition-all duration-300 border-chetna-primary/20 will-change-transform">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <Quote className="h-8 w-8 text-chetna-primary/60" />
@@ -62,6 +62,8 @@ const ReviewsSection: React.FC = () => {
       </div>
     </section>
   );
-};
+});
+
+ReviewsSection.displayName = 'ReviewsSection';
 
 export default ReviewsSection;

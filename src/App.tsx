@@ -11,9 +11,17 @@ import Navigation from "@/components/Navigation";
 import "./App.css";
 import "./lib/i18n";
 
-const queryClient = new QueryClient();
+// Configure QueryClient for better performance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
+    },
+  },
+});
 
-// Lazy load pages
+// Lazy load pages for better initial load performance
 const Index = lazy(() => import("./pages/Index"));
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 const MoodTracker = lazy(() => import("./pages/MoodTracker"));
@@ -42,9 +50,10 @@ const Signup = lazy(() => import("./pages/Signup"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 
+// Optimized loading spinner
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-chetna-primary"></div>
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-chetna-primary"></div>
   </div>
 );
 
