@@ -156,7 +156,7 @@ const DreamAnalysis = () => {
                 <div>
                   <h5 className="font-medium mb-2 text-purple-700">Themes</h5>
                   <div className="flex flex-wrap gap-1">
-                    {dream.themes?.map((theme: string, index: number) => (
+                    {Array.isArray(dream.themes) && dream.themes.map((theme: string, index: number) => (
                       <Badge key={index} variant="secondary" className="text-xs">
                         {theme}
                       </Badge>
@@ -167,7 +167,7 @@ const DreamAnalysis = () => {
                 <div>
                   <h5 className="font-medium mb-2 text-pink-700">Emotions</h5>
                   <div className="flex flex-wrap gap-1">
-                    {dream.emotions?.map((emotion: string, index: number) => (
+                    {Array.isArray(dream.emotions) && dream.emotions.map((emotion: string, index: number) => (
                       <Badge key={index} variant="secondary" className="text-xs">
                         <Heart className="h-3 w-3 mr-1" />
                         {emotion}
@@ -179,7 +179,7 @@ const DreamAnalysis = () => {
                 <div>
                   <h5 className="font-medium mb-2 text-blue-700">Symbols</h5>
                   <div className="flex flex-wrap gap-1">
-                    {dream.symbols?.map((symbol: string, index: number) => (
+                    {Array.isArray(dream.symbols) && dream.symbols.map((symbol: string, index: number) => (
                       <Badge key={index} variant="secondary" className="text-xs">
                         {symbol}
                       </Badge>

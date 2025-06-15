@@ -180,7 +180,7 @@ const WellnessPlans = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {plan.activities?.map((activity: any, index: number) => (
+                {Array.isArray(plan.activities) && plan.activities.map((activity: any, index: number) => (
                   <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div>
                       <h4 className="font-medium">{activity.name}</h4>
