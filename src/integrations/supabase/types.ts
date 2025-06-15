@@ -158,6 +158,69 @@ export type Database = {
         }
         Relationships: []
       }
+      dream_analysis: {
+        Row: {
+          ai_interpretation: string | null
+          created_at: string
+          dream_description: string
+          emotions: Json | null
+          id: string
+          symbols: Json | null
+          themes: Json | null
+          user_id: string
+        }
+        Insert: {
+          ai_interpretation?: string | null
+          created_at?: string
+          dream_description: string
+          emotions?: Json | null
+          id?: string
+          symbols?: Json | null
+          themes?: Json | null
+          user_id: string
+        }
+        Update: {
+          ai_interpretation?: string | null
+          created_at?: string
+          dream_description?: string
+          emotions?: Json | null
+          id?: string
+          symbols?: Json | null
+          themes?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      emotion_recognition: {
+        Row: {
+          analysis_notes: string | null
+          confidence_score: number | null
+          created_at: string
+          detected_emotions: Json
+          id: string
+          image_url: string | null
+          user_id: string
+        }
+        Insert: {
+          analysis_notes?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          detected_emotions?: Json
+          id?: string
+          image_url?: string | null
+          user_id: string
+        }
+        Update: {
+          analysis_notes?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          detected_emotions?: Json
+          id?: string
+          image_url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       feedback: {
         Row: {
           comment: string | null
@@ -179,6 +242,77 @@ export type Database = {
           id?: string
           rating?: number
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      group_therapy_participants: {
+        Row: {
+          id: string
+          is_active: boolean | null
+          joined_at: string
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          is_active?: boolean | null
+          joined_at?: string
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          is_active?: boolean | null
+          joined_at?: string
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_therapy_participants_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "group_therapy_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_therapy_rooms: {
+        Row: {
+          created_at: string
+          current_participants: number | null
+          description: string | null
+          facilitator_id: string | null
+          id: string
+          is_active: boolean | null
+          max_participants: number | null
+          meeting_schedule: string | null
+          room_name: string
+          therapy_type: string
+        }
+        Insert: {
+          created_at?: string
+          current_participants?: number | null
+          description?: string | null
+          facilitator_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_participants?: number | null
+          meeting_schedule?: string | null
+          room_name: string
+          therapy_type: string
+        }
+        Update: {
+          created_at?: string
+          current_participants?: number | null
+          description?: string | null
+          facilitator_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_participants?: number | null
+          meeting_schedule?: string | null
+          room_name?: string
+          therapy_type?: string
         }
         Relationships: []
       }
@@ -209,6 +343,123 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      mental_health_goals: {
+        Row: {
+          created_at: string
+          current_value: number | null
+          description: string | null
+          goal_type: string
+          id: string
+          reward_points: number | null
+          status: string | null
+          target_date: string | null
+          target_value: number | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_value?: number | null
+          description?: string | null
+          goal_type: string
+          id?: string
+          reward_points?: number | null
+          status?: string | null
+          target_date?: string | null
+          target_value?: number | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_value?: number | null
+          description?: string | null
+          goal_type?: string
+          id?: string
+          reward_points?: number | null
+          status?: string | null
+          target_date?: string | null
+          target_value?: number | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mental_health_insights: {
+        Row: {
+          created_at: string
+          data_points: Json | null
+          description: string
+          id: string
+          insight_type: string
+          is_read: boolean | null
+          severity_level: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data_points?: Json | null
+          description: string
+          id?: string
+          insight_type: string
+          is_read?: boolean | null
+          severity_level?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data_points?: Json | null
+          description?: string
+          id?: string
+          insight_type?: string
+          is_read?: boolean | null
+          severity_level?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      peer_support_matches: {
+        Row: {
+          accepted_at: string | null
+          compatibility_factors: Json | null
+          ended_at: string | null
+          id: string
+          match_score: number
+          matched_at: string
+          status: string | null
+          user1_id: string
+          user2_id: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          compatibility_factors?: Json | null
+          ended_at?: string | null
+          id?: string
+          match_score: number
+          matched_at?: string
+          status?: string | null
+          user1_id: string
+          user2_id: string
+        }
+        Update: {
+          accepted_at?: string | null
+          compatibility_factors?: Json | null
+          ended_at?: string | null
+          id?: string
+          match_score?: number
+          matched_at?: string
+          status?: string | null
+          user1_id?: string
+          user2_id?: string
         }
         Relationships: []
       }
@@ -370,6 +621,81 @@ export type Database = {
           specialties?: string[]
           total_reviews?: number | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      voice_therapy_sessions: {
+        Row: {
+          ai_response: string | null
+          created_at: string
+          duration: number
+          id: string
+          mood_after: number | null
+          mood_before: number | null
+          session_type: string
+          transcript: string | null
+          user_id: string
+        }
+        Insert: {
+          ai_response?: string | null
+          created_at?: string
+          duration: number
+          id?: string
+          mood_after?: number | null
+          mood_before?: number | null
+          session_type: string
+          transcript?: string | null
+          user_id: string
+        }
+        Update: {
+          ai_response?: string | null
+          created_at?: string
+          duration?: number
+          id?: string
+          mood_after?: number | null
+          mood_before?: number | null
+          session_type?: string
+          transcript?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wellness_plans: {
+        Row: {
+          activities: Json
+          ai_generated: boolean | null
+          created_at: string
+          description: string | null
+          id: string
+          plan_type: string
+          status: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activities?: Json
+          ai_generated?: boolean | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          plan_type: string
+          status?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activities?: Json
+          ai_generated?: boolean | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          plan_type?: string
+          status?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

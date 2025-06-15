@@ -50,6 +50,17 @@ const Signup = lazy(() => import("./pages/Signup"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 
+// New AI-powered feature pages
+const WellnessPlans = lazy(() => import("./pages/WellnessPlans"));
+const VoiceTherapy = lazy(() => import("./pages/VoiceTherapy"));
+const DreamAnalysis = lazy(() => import("./pages/DreamAnalysis"));
+const EmotionRecognition = lazy(() => import("./pages/EmotionRecognition"));
+const MentalHealthGoals = lazy(() => import("./pages/MentalHealthGoals"));
+const GroupTherapy = lazy(() => import("./pages/GroupTherapy"));
+const MentalHealthInsights = lazy(() => import("./pages/MentalHealthInsights"));
+const PeerSupport = lazy(() => import("./pages/PeerSupport"));
+const AIFeaturesMenu = lazy(() => import("./components/AIFeaturesMenu"));
+
 // Optimized loading spinner
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -87,6 +98,20 @@ function App() {
                     <Route path="/psych-tests" element={<PsychTests />} />
                     <Route path="/psych-tests/:testType" element={<PsychTestRunner />} />
                     <Route path="/test-results" element={<TestResults />} />
+                    
+                    {/* AI Features Menu */}
+                    <Route path="/ai-features" element={<AIFeaturesMenu />} />
+                    
+                    {/* New AI-powered feature routes */}
+                    <Route path="/wellness-plans" element={<WellnessPlans />} />
+                    <Route path="/voice-therapy" element={<VoiceTherapy />} />
+                    <Route path="/dream-analysis" element={<DreamAnalysis />} />
+                    <Route path="/emotion-recognition" element={<EmotionRecognition />} />
+                    <Route path="/goals" element={<MentalHealthGoals />} />
+                    <Route path="/group-therapy" element={<GroupTherapy />} />
+                    <Route path="/insights" element={<MentalHealthInsights />} />
+                    <Route path="/peer-support" element={<PeerSupport />} />
+                    
                     <Route path="/feedback" element={<Feedback />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/terms" element={<Terms />} />
