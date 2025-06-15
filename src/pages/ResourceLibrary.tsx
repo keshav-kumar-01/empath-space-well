@@ -169,7 +169,7 @@ const ResourceLibrary: React.FC = () => {
         tags: ["meditation", "beginner", "mindfulness"],
         difficulty: "Beginner",
         rating: 4.8,
-        videoUrl: "https://example.com/meditation-intro" // Placeholder
+        videoUrl: "https://www.youtube.com/embed/ZToicYcHIOU"
       },
       {
         title: "Dealing with Depression",
@@ -179,7 +179,17 @@ const ResourceLibrary: React.FC = () => {
         tags: ["depression", "expert", "management"],
         difficulty: "Intermediate",
         rating: 4.9,
-        videoUrl: "https://example.com/depression-help" // Placeholder
+        videoUrl: "https://www.youtube.com/embed/mb85GMxNtNk"
+      },
+      {
+        title: "Anxiety Management Techniques",
+        description: "Practical strategies for managing anxiety in daily life",
+        category: "Anxiety",
+        duration: "18 minutes",
+        tags: ["anxiety", "techniques", "practical"],
+        difficulty: "Beginner",
+        rating: 4.7,
+        videoUrl: "https://www.youtube.com/embed/WWloIAQpMcQ"
       }
     ],
     worksheets: [
@@ -191,7 +201,47 @@ const ResourceLibrary: React.FC = () => {
         tags: ["mood", "tracking", "patterns"],
         difficulty: "Beginner",
         rating: 4.6,
-        downloadUrl: "/worksheets/mood-tracker.pdf"
+        content: `
+          <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+            <h1 style="text-align: center; color: #7c3aed;">Daily Mood Tracker</h1>
+            <p style="text-align: center; margin-bottom: 30px;">Track your daily moods to identify patterns and triggers</p>
+            
+            <div style="margin-bottom: 30px;">
+              <h3>Instructions:</h3>
+              <p>Rate your mood on a scale of 1-10 each day and note any significant events or triggers.</p>
+            </div>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+              <thead>
+                <tr style="background-color: #f3f4f6;">
+                  <th style="border: 1px solid #d1d5db; padding: 10px; text-align: left;">Date</th>
+                  <th style="border: 1px solid #d1d5db; padding: 10px; text-align: left;">Mood (1-10)</th>
+                  <th style="border: 1px solid #d1d5db; padding: 10px; text-align: left;">Notes/Triggers</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${Array.from({ length: 14 }, (_, i) => `
+                  <tr>
+                    <td style="border: 1px solid #d1d5db; padding: 10px; height: 40px;"></td>
+                    <td style="border: 1px solid #d1d5db; padding: 10px; height: 40px;"></td>
+                    <td style="border: 1px solid #d1d5db; padding: 10px; height: 40px;"></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+            
+            <div>
+              <h3>Mood Scale Reference:</h3>
+              <ul>
+                <li>1-2: Very Low (Depressed, hopeless)</li>
+                <li>3-4: Low (Sad, down)</li>
+                <li>5-6: Neutral (Okay, stable)</li>
+                <li>7-8: Good (Happy, positive)</li>
+                <li>9-10: Excellent (Joyful, energetic)</li>
+              </ul>
+            </div>
+          </div>
+        `
       },
       {
         title: "Anxiety Thought Challenge Worksheet",
@@ -201,7 +251,135 @@ const ResourceLibrary: React.FC = () => {
         tags: ["anxiety", "CBT", "thoughts"],
         difficulty: "Intermediate",
         rating: 4.8,
-        downloadUrl: "/worksheets/thought-challenge.pdf"
+        content: `
+          <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+            <h1 style="text-align: center; color: #7c3aed;">Anxiety Thought Challenge Worksheet</h1>
+            <p style="text-align: center; margin-bottom: 30px;">Challenge anxious thoughts and develop more balanced thinking patterns</p>
+            
+            <div style="margin-bottom: 30px;">
+              <h3>How to Use This Worksheet:</h3>
+              <ol>
+                <li>Write down your anxious thought</li>
+                <li>Identify the emotion and rate its intensity (1-10)</li>
+                <li>Examine the evidence for and against the thought</li>
+                <li>Create a more balanced, realistic thought</li>
+                <li>Rate your emotion again after the challenge</li>
+              </ol>
+            </div>
+            
+            <div style="border: 2px solid #7c3aed; padding: 20px; margin-bottom: 20px;">
+              <h3>Thought Challenge #1</h3>
+              <p><strong>Anxious Thought:</strong></p>
+              <div style="border: 1px solid #ccc; height: 60px; margin-bottom: 15px;"></div>
+              
+              <p><strong>Emotion & Intensity (1-10):</strong></p>
+              <div style="border: 1px solid #ccc; height: 40px; margin-bottom: 15px;"></div>
+              
+              <p><strong>Evidence FOR this thought:</strong></p>
+              <div style="border: 1px solid #ccc; height: 80px; margin-bottom: 15px;"></div>
+              
+              <p><strong>Evidence AGAINST this thought:</strong></p>  
+              <div style="border: 1px solid #ccc; height: 80px; margin-bottom: 15px;"></div>
+              
+              <p><strong>More Balanced Thought:</strong></p>
+              <div style="border: 1px solid #ccc; height: 80px; margin-bottom: 15px;"></div>
+              
+              <p><strong>New Emotion & Intensity (1-10):</strong></p>
+              <div style="border: 1px solid #ccc; height: 40px;"></div>
+            </div>
+            
+            <div style="border: 2px solid #7c3aed; padding: 20px; margin-bottom: 20px;">
+              <h3>Thought Challenge #2</h3>
+              <p><strong>Anxious Thought:</strong></p>
+              <div style="border: 1px solid #ccc; height: 60px; margin-bottom: 15px;"></div>
+              
+              <p><strong>Emotion & Intensity (1-10):</strong></p>
+              <div style="border: 1px solid #ccc; height: 40px; margin-bottom: 15px;"></div>
+              
+              <p><strong>Evidence FOR this thought:</strong></p>
+              <div style="border: 1px solid #ccc; height: 80px; margin-bottom: 15px;"></div>
+              
+              <p><strong>Evidence AGAINST this thought:</strong></p>  
+              <div style="border: 1px solid #ccc; height: 80px; margin-bottom: 15px;"></div>
+              
+              <p><strong>More Balanced Thought:</strong></p>
+              <div style="border: 1px solid #ccc; height: 80px; margin-bottom: 15px;"></div>
+              
+              <p><strong>New Emotion & Intensity (1-10):</strong></p>
+              <div style="border: 1px solid #ccc; height: 40px;"></div>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "Stress Management Action Plan",
+        description: "Create a personalized plan for managing stress",
+        category: "Stress",
+        format: "PDF",
+        tags: ["stress", "planning", "management"],
+        difficulty: "Intermediate",
+        rating: 4.7,
+        content: `
+          <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+            <h1 style="text-align: center; color: #7c3aed;">Stress Management Action Plan</h1>
+            <p style="text-align: center; margin-bottom: 30px;">Develop your personalized stress management strategy</p>
+            
+            <div style="margin-bottom: 30px;">
+              <h3>My Stress Triggers:</h3>
+              <div style="border: 1px solid #ccc; height: 100px; margin-bottom: 15px;"></div>
+            </div>
+            
+            <div style="margin-bottom: 30px;">
+              <h3>Warning Signs I'm Getting Stressed:</h3>
+              <div style="display: flex; gap: 20px;">
+                <div style="flex: 1;">
+                  <p><strong>Physical:</strong></p>
+                  <div style="border: 1px solid #ccc; height: 80px;"></div>
+                </div>
+                <div style="flex: 1;">
+                  <p><strong>Emotional:</strong></p>
+                  <div style="border: 1px solid #ccc; height: 80px;"></div>
+                </div>
+                <div style="flex: 1;">
+                  <p><strong>Behavioral:</strong></p>
+                  <div style="border: 1px solid #ccc; height: 80px;"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 30px;">
+              <h3>My Stress Management Toolkit:</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background-color: #f3f4f6;">
+                    <th style="border: 1px solid #d1d5db; padding: 10px; text-align: left;">Technique</th>
+                    <th style="border: 1px solid #d1d5db; padding: 10px; text-align: left;">When to Use</th>
+                    <th style="border: 1px solid #d1d5db; padding: 10px; text-align: left;">How Effective (1-10)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${Array.from({ length: 8 }, (_, i) => `
+                    <tr>
+                      <td style="border: 1px solid #d1d5db; padding: 10px; height: 40px;"></td>
+                      <td style="border: 1px solid #d1d5db; padding: 10px; height: 40px;"></td>
+                      <td style="border: 1px solid #d1d5db; padding: 10px; height: 40px;"></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+            
+            <div>
+              <h3>Emergency Stress Plan:</h3>
+              <p>When I'm feeling overwhelmed, I will:</p>
+              <ol>
+                <li style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;"></li>
+                <li style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;"></li>
+                <li style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;"></li>
+              </ol>
+            </div>
+          </div>
+        `
       }
     ]
   };
@@ -245,13 +423,52 @@ const ResourceLibrary: React.FC = () => {
     }
   };
 
+  const generatePDFContent = (resource: any) => {
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>${resource.title}</title>
+          <style>
+            body { margin: 0; padding: 0; }
+            @media print {
+              body { margin: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          ${resource.content}
+          <script>
+            window.onload = function() {
+              window.print();
+              window.onafterprint = function() {
+                window.close();
+              };
+            };
+          </script>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
+  };
+
   const handleDownload = (resource: any) => {
     toast({
-      title: "Download Started",
-      description: `${resource.title} is being downloaded...`,
+      title: "Generating PDF...",
+      description: `Preparing ${resource.title} for download`,
     });
-    // In a real app, this would trigger an actual download
-    console.log('Downloading:', resource.downloadUrl);
+    
+    // Generate and download PDF
+    setTimeout(() => {
+      generatePDFContent(resource);
+      toast({
+        title: "PDF Ready! 📄",
+        description: `${resource.title} is ready to print/save`,
+      });
+    }, 1000);
   };
 
   const startExercise = () => {
@@ -450,7 +667,7 @@ const ResourceLibrary: React.FC = () => {
 
                           {/* Video Modal */}
                           {selectedResource?.type === 'video' && (
-                            <DialogContent className="max-w-3xl">
+                            <DialogContent className="max-w-4xl">
                               <DialogHeader>
                                 <DialogTitle>{selectedResource.title}</DialogTitle>
                                 <DialogDescription>
@@ -459,28 +676,19 @@ const ResourceLibrary: React.FC = () => {
                               </DialogHeader>
                               
                               <div className="space-y-4">
-                                <div className="aspect-video bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
-                                  <div className="text-center space-y-4">
-                                    <PlayCircle className="h-16 w-16 text-chetna-primary mx-auto" />
-                                    <p className="text-muted-foreground">Video Player Placeholder</p>
-                                    <p className="text-sm">In a real app, this would embed the actual video</p>
-                                  </div>
+                                <div className="aspect-video bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden">
+                                  <iframe
+                                    src={selectedResource.videoUrl}
+                                    title={selectedResource.title}
+                                    className="w-full h-full"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                  />
                                 </div>
                                 
-                                <div className="flex justify-center space-x-4">
-                                  <Button onClick={toggleVideoPlay}>
-                                    {isVideoPlaying ? (
-                                      <>
-                                        <Pause className="h-4 w-4 mr-2" />
-                                        Pause
-                                      </>
-                                    ) : (
-                                      <>
-                                        <Play className="h-4 w-4 mr-2" />
-                                        Play
-                                      </>
-                                    )}
-                                  </Button>
+                                <div className="text-center">
+                                  <p className="text-muted-foreground">{selectedResource.description}</p>
                                 </div>
                               </div>
                             </DialogContent>
