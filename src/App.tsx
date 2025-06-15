@@ -13,7 +13,7 @@ import "./lib/i18n";
 
 const queryClient = new QueryClient();
 
-// Lazy load components
+// Lazy load pages
 const Index = lazy(() => import("./pages/Index"));
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 const MoodTracker = lazy(() => import("./pages/MoodTracker"));
@@ -42,6 +42,12 @@ const Signup = lazy(() => import("./pages/Signup"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-chetna-primary"></div>
+  </div>
+);
+
 function App() {
   return (
     <HelmetProvider>
@@ -52,7 +58,7 @@ function App() {
             <Sonner />
             <BrowserRouter>
               <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
-                <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-32 w-32 border-b-2 border-chetna-primary"></div></div>}>
+                <Suspense fallback={<LoadingSpinner />}>
                   <Routes>
                     <Route path="/" element={<Index />} />
                     <Route path="/profile" element={<UserProfile />} />
@@ -68,6 +74,7 @@ function App() {
                     <Route path="/blog/create" element={<CreateBlogPost />} />
                     <Route path="/blog/edit/:id" element={<EditBlogPost />} />
                     <Route path="/personality-quiz" element={<PersonalityQuiz />} />
+                    <Route path="/quiz" element={<PersonalityQuiz />} />
                     <Route path="/psych-tests" element={<PsychTests />} />
                     <Route path="/psych-tests/:testType" element={<PsychTestRunner />} />
                     <Route path="/test-results" element={<TestResults />} />

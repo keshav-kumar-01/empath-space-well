@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, memo } from "react";
+import React, { useState, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import Header from "@/components/Header";
@@ -12,8 +12,7 @@ import { MessageSquare, Users, Star, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-// Memoized background component to prevent re-renders
-const BackgroundElements = memo(() => (
+const BackgroundElements = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     <div className="absolute top-20 left-10 w-60 h-60 bg-gradient-to-br from-violet-400/20 to-purple-600/20 dark:from-violet-500/30 dark:to-purple-700/30 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
     <div className="absolute top-40 right-20 w-48 h-48 bg-gradient-to-br from-blue-400/20 to-cyan-500/20 dark:from-blue-500/30 dark:to-cyan-600/30 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }}></div>
@@ -21,12 +20,9 @@ const BackgroundElements = memo(() => (
     <div className="absolute bottom-20 right-10 w-52 h-52 bg-gradient-to-br from-pink-400/20 to-rose-500/20 dark:from-pink-500/30 dark:to-rose-600/30 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '3s' }}></div>
     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-indigo-300/10 to-purple-400/10 dark:from-indigo-400/20 dark:to-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s', animationDelay: '1.5s' }}></div>
   </div>
-));
+);
 
-BackgroundElements.displayName = 'BackgroundElements';
-
-// Memoized tab navigation component
-const TabNavigation = memo(({ activeTab, setActiveTab, t }: {
+const TabNavigation = ({ activeTab, setActiveTab, t }: {
   activeTab: 'chat' | 'community';
   setActiveTab: (tab: 'chat' | 'community') => void;
   t: any;
@@ -72,9 +68,7 @@ const TabNavigation = memo(({ activeTab, setActiveTab, t }: {
       </div>
     </div>
   </div>
-));
-
-TabNavigation.displayName = 'TabNavigation';
+);
 
 const Index: React.FC = () => {
   const { t } = useTranslation();
@@ -123,4 +117,4 @@ const Index: React.FC = () => {
   );
 };
 
-export default memo(Index);
+export default Index;

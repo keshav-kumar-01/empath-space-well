@@ -6,7 +6,6 @@ import './index.css'
 import './lib/i18n'
 import { ThemeProvider } from 'next-themes'
 
-// Optimize root rendering
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error('Failed to find the root element');
 
