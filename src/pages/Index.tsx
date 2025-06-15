@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -16,37 +17,57 @@ import { useTranslation } from 'react-i18next';
 
 const Index = () => {
   const { t } = useTranslation();
+  const [showChat, setShowChat] = useState(false);
+
+  const handleStartChat = () => {
+    setShowChat(true);
+    // Scroll to chat section
+    const chatSection = document.getElementById('chat-section');
+    if (chatSection) {
+      chatSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const features = [
     {
-      icon: <Heart className="h-8 w-8 text-chetna-primary" />,
+      icon: Heart,
       title: t('features.moodTracking.title'),
       description: t('features.moodTracking.description'),
-      path: "/mood-tracker"
+      path: "/mood-tracker",
+      iconColor: "text-chetna-primary",
+      backgroundGradient: "bg-gradient-to-br from-chetna-primary/20 to-chetna-primary/30"
     },
     {
-      icon: <Calendar className="h-8 w-8 text-chetna-primary" />,
+      icon: Calendar,
       title: t('features.appointments.title'),
       description: t('features.appointments.description'),
-      path: "/appointments"
+      path: "/appointments",
+      iconColor: "text-chetna-secondary",
+      backgroundGradient: "bg-gradient-to-br from-chetna-secondary/20 to-chetna-secondary/30"
     },
     {
-      icon: <BookOpen className="h-8 w-8 text-chetna-primary" />,
+      icon: BookOpen,
       title: t('features.resources.title'),
       description: t('features.resources.description'),
-      path: "/resources"
+      path: "/resources",
+      iconColor: "text-chetna-accent",
+      backgroundGradient: "bg-gradient-to-br from-chetna-accent/20 to-chetna-accent/30"
     },
     {
-      icon: <Users className="h-8 w-8 text-chetna-primary" />,
+      icon: Users,
       title: t('features.community.title'),
       description: t('features.community.description'),
-      path: "/community"
+      path: "/community",
+      iconColor: "text-blue-600",
+      backgroundGradient: "bg-gradient-to-br from-blue-500/20 to-blue-600/30"
     },
     {
-      icon: <Shield className="h-8 w-8 text-chetna-primary" />,
+      icon: Shield,
       title: t('features.crisis.title'),
       description: t('features.crisis.description'),
-      path: "/crisis-support"
+      path: "/crisis-support",
+      iconColor: "text-red-600",
+      backgroundGradient: "bg-gradient-to-br from-red-500/20 to-red-600/30"
     },
   ];
 
@@ -56,7 +77,7 @@ const Index = () => {
       <Header />
       
       <main className="relative z-10">
-        <IntroSection />
+        <IntroSection onStartChat={handleStartChat} />
         
         {/* AI Features Highlight Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8">
@@ -150,7 +171,7 @@ const Index = () => {
         </section>
 
         {/* Chat Interface */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <section id="chat-section" className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
