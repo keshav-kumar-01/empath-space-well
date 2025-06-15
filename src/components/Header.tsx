@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Menu, LogOut, User, BookOpen, Calendar, Stethoscope, Heart, MessageCircle, Shield } from "lucide-react";
+import { Menu, LogOut, User, BookOpen, Calendar, Stethoscope, Heart, MessageCircle, Shield, Brain } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -83,6 +83,13 @@ const Header: React.FC = () => {
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             <Link
+              to="/ai-features"
+              className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-1"
+            >
+              <Brain className="h-4 w-4" />
+              AI Features
+            </Link>
+            <Link
               to="/profile"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
@@ -156,6 +163,10 @@ const Header: React.FC = () => {
             </MobileLink>
             <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
               <div className="flex flex-col space-y-3">
+                <MobileLink to="/ai-features" onOpenChange={() => {}}>
+                  <Brain className="h-4 w-4 inline mr-2" />
+                  AI Features
+                </MobileLink>
                 <MobileLink to="/profile" onOpenChange={() => {}}>
                   Profile
                 </MobileLink>
