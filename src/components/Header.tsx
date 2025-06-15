@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Menu, LogOut, User, BookOpen, Calendar, Stethoscope, Heart, MessageCircle, Shield } from "lucide-react";
@@ -24,6 +24,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import LanguageSelector from "./LanguageSelector";
 import ThemeToggle from "./ThemeToggle";
 import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 interface MobileLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   to: string;
@@ -45,6 +46,31 @@ const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
+  // Check if user is admin
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (!user?.id) {
+        setIsAdmin(false);
+        return;
+      }
+      
+      const { data, error } = await supabase
+        .from('admin_users')
+        .select('id')
+        .eq('user_id', user.id)
+        .single();
+      
+      if (data && !error) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, [user]);
 
   const handleSignOut = async () => {
     await logout();
@@ -104,6 +130,15 @@ const Header: React.FC = () => {
             >
               {t('nav.about')}
             </Link>
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-1"
+              >
+                <Shield className="h-4 w-4" />
+                Admin
+              </Link>
+            )}
           </nav>
         </div>
         <Sheet>
@@ -148,7 +183,7 @@ const Header: React.FC = () => {
                 <MobileLink to="/blog" onOpenChange={() => {}}>
                   {t('nav.blog')}
                 </MobileLink>
-                <MobileLink to="/psych-tests" onOpenChange={() => {}}>
+                <MobileLink to="/psych-tests" onOpenChange={() =>{}}>
                   {t('nav.tests')}
                 </MobileLink>
                 <MobileLink to="/feedback" onOpenChange={() => {}}>
@@ -157,6 +192,12 @@ const Header: React.FC = () => {
                 <MobileLink to="/about" onOpenChange={() => {}}>
                   {t('nav.about')}
                 </MobileLink>
+                {isAdmin && (
+                  <MobileLink to="/admin" onOpenChange={() => {}}>
+                    <Shield className="h-4 w-4 inline mr-2" />
+                    Admin Dashboard
+                  </MobileLink>
+                )}
               </div>
             </ScrollArea>
           </SheetContent>
@@ -185,6 +226,11 @@ const Header: React.FC = () => {
                       <p className="text-sm font-medium leading-none">
                         {user.email}
                       </p>
+                      {isAdmin && (
+                        <p className="text-xs text-muted-foreground">
+                          Administrator
+                        </p>
+                      )}
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -230,6 +276,17 @@ const Header: React.FC = () => {
                       {t('nav.feedback')}
                     </Link>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin">
+                          <Shield className="mr-2 h-4 w-4" />
+                          Admin Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut}>
                     <LogOut className="mr-2 h-4 w-4" />

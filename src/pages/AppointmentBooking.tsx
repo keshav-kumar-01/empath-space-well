@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
@@ -86,7 +85,7 @@ const AppointmentBooking: React.FC = () => {
     enabled: !!user?.id
   });
 
-  // Create appointment mutation
+  // Create appointment mutation with email notification
   const createAppointmentMutation = useMutation({
     mutationFn: async (appointmentData: {
       therapist_id: string;
@@ -106,13 +105,27 @@ const AppointmentBooking: React.FC = () => {
         .single();
       
       if (error) throw error;
+      
+      // Send confirmation email
+      try {
+        await supabase.functions.invoke('send-appointment-email', {
+          body: { 
+            appointmentId: data.id, 
+            emailType: 'booking_confirmation' 
+          }
+        });
+      } catch (emailError) {
+        console.error('Email sending failed:', emailError);
+        // Don't fail the appointment creation if email fails
+      }
+      
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
       toast({
         title: "Appointment booked! 📅",
-        description: "You'll receive a confirmation email shortly",
+        description: "You'll receive a confirmation email shortly with all the details",
       });
       // Reset form
       setSelectedTime('');
