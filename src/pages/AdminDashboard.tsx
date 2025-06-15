@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -7,7 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Calendar, Clock, User, Mail, Shield, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
@@ -53,12 +53,11 @@ const AdminDashboard: React.FC = () => {
   const [statusNotes, setStatusNotes] = useState<string>('');
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
-  // Check if user is admin (simplified approach)
+  // Check if user is admin
   useEffect(() => {
     const checkAdminStatus = async () => {
       if (!user?.id) return;
       
-      // Check if the current user is you (the admin)
       if (user.id === '62529ac4-eaf2-4fa8-bca1-b6c0938478f1' || user.email === 'keshavkumarhf@gmail.com') {
         setIsAdmin(true);
       } else {
@@ -73,6 +72,7 @@ const AdminDashboard: React.FC = () => {
   const { data: appointments = [], isLoading: appointmentsLoading } = useQuery({
     queryKey: ['admin-appointments'],
     queryFn: async () => {
+      console.log('Fetching appointments...');
       const { data, error } = await supabase
         .from('appointments')
         .select(`
@@ -81,13 +81,18 @@ const AdminDashboard: React.FC = () => {
         `)
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching appointments:', error);
+        throw error;
+      }
+      
+      console.log('Fetched appointments:', data);
       return data as Appointment[];
     },
     enabled: isAdmin
   });
 
-  // Fetch email notifications using the edge function
+  // Fetch email notifications
   const { data: emailNotifications = [] } = useQuery({
     queryKey: ['email-notifications'],
     queryFn: async () => {
@@ -99,7 +104,6 @@ const AdminDashboard: React.FC = () => {
           return [] as EmailNotification[];
         }
         
-        // Ensure we return an array of EmailNotification objects
         if (Array.isArray(data)) {
           return data as EmailNotification[];
         }
@@ -120,7 +124,7 @@ const AdminDashboard: React.FC = () => {
       newStatus: string; 
       notes?: string; 
     }) => {
-      console.log('Updating appointment:', appointmentId, 'to status:', newStatus);
+      console.log('Starting update for appointment:', appointmentId, 'to status:', newStatus, 'with notes:', notes);
       
       const updateData: any = { 
         status: newStatus,
@@ -132,15 +136,17 @@ const AdminDashboard: React.FC = () => {
         updateData.confirmed_at = new Date().toISOString();
       } else if (newStatus === 'cancelled') {
         updateData.cancelled_at = new Date().toISOString();
-        if (notes) updateData.cancellation_reason = notes;
+        if (notes?.trim()) {
+          updateData.cancellation_reason = notes.trim();
+        }
       }
 
-      // Add notes if provided and not for cancellation (cancellation uses cancellation_reason)
-      if (notes && newStatus !== 'cancelled') {
-        updateData.notes = notes;
+      // Add notes if provided and not for cancellation
+      if (notes?.trim() && newStatus !== 'cancelled') {
+        updateData.notes = notes.trim();
       }
 
-      console.log('Update data:', updateData);
+      console.log('Update payload:', updateData);
 
       const { data, error } = await supabase
         .from('appointments')
@@ -151,27 +157,27 @@ const AdminDashboard: React.FC = () => {
       
       if (error) {
         console.error('Supabase update error:', error);
-        throw error;
+        throw new Error(`Database error: ${error.message}`);
       }
       
-      console.log('Update successful:', data);
+      console.log('Update successful, returned data:', data);
       return data;
     },
     onSuccess: (data) => {
-      console.log('Mutation success:', data);
+      console.log('Mutation completed successfully:', data);
       queryClient.invalidateQueries({ queryKey: ['admin-appointments'] });
       toast({
-        title: "Status updated! ✅",
-        description: "Appointment status has been updated successfully",
+        title: "Success! ✅",
+        description: `Appointment status updated to ${data.status}`,
       });
       setSelectedAppointment('');
       setStatusNotes('');
     },
     onError: (error: any) => {
-      console.error('Status update error:', error);
+      console.error('Update mutation failed:', error);
       toast({
         title: "Update failed",
-        description: `Failed to update appointment status: ${error.message || 'Unknown error'}`,
+        description: error.message || 'Failed to update appointment status',
         variant: "destructive",
       });
     }
@@ -217,7 +223,7 @@ const AdminDashboard: React.FC = () => {
       return;
     }
     
-    console.log('Handling status update for:', selectedAppointment, 'to:', newStatus);
+    console.log('Handling status update - Appointment:', selectedAppointment, 'New Status:', newStatus, 'Notes:', statusNotes);
     
     updateStatusMutation.mutate({
       appointmentId: selectedAppointment,
@@ -448,7 +454,7 @@ const AdminDashboard: React.FC = () => {
                                 disabled={updateStatusMutation.isPending || appointment.status === 'confirmed'}
                                 className="bg-green-600 hover:bg-green-700"
                               >
-                                {updateStatusMutation.isPending ? '⏳' : '✅'} Confirm
+                                {updateStatusMutation.isPending ? '⏳ Updating...' : '✅ Confirm'}
                               </Button>
                               <Button
                                 size="sm"
@@ -456,7 +462,7 @@ const AdminDashboard: React.FC = () => {
                                 onClick={() => handleStatusUpdate('cancelled')}
                                 disabled={updateStatusMutation.isPending || appointment.status === 'cancelled'}
                               >
-                                {updateStatusMutation.isPending ? '⏳' : '❌'} Cancel
+                                {updateStatusMutation.isPending ? '⏳ Updating...' : '❌ Cancel'}
                               </Button>
                               <Button
                                 size="sm"
@@ -464,7 +470,7 @@ const AdminDashboard: React.FC = () => {
                                 onClick={() => handleStatusUpdate('completed')}
                                 disabled={updateStatusMutation.isPending || appointment.status === 'completed'}
                               >
-                                {updateStatusMutation.isPending ? '⏳' : '✅'} Complete
+                                {updateStatusMutation.isPending ? '⏳ Updating...' : '✅ Complete'}
                               </Button>
                               <Button
                                 size="sm"

@@ -13,6 +13,9 @@ export type Database = {
         Row: {
           appointment_date: string
           appointment_time: string
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          confirmed_at: string | null
           created_at: string
           id: string
           notes: string | null
@@ -25,6 +28,9 @@ export type Database = {
         Insert: {
           appointment_date: string
           appointment_time: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          confirmed_at?: string | null
           created_at?: string
           id?: string
           notes?: string | null
@@ -37,6 +43,9 @@ export type Database = {
         Update: {
           appointment_date?: string
           appointment_time?: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          confirmed_at?: string | null
           created_at?: string
           id?: string
           notes?: string | null
