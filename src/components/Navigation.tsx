@@ -2,18 +2,18 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Heart, MessageSquare, Calendar, BookOpen, Users, Shield } from 'lucide-react';
+import { Heart, MessageSquare, Calendar, BookOpen, Users, Shield, Brain } from 'lucide-react';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
 
   const navigationItems = [
     { path: '/', label: 'Chat', icon: MessageSquare },
-    { path: '/profile', label: 'Profile', icon: Users },
-    { path: '/mood-tracker', label: 'Mood Tracker', icon: Heart },
+    { path: '/ai-features', label: 'AI Features', icon: Brain },
+    { path: '/mood-tracker', label: 'Mood', icon: Heart },
     { path: '/appointments', label: 'Appointments', icon: Calendar },
     { path: '/resources', label: 'Resources', icon: BookOpen },
-    { path: '/crisis-support', label: 'Crisis Support', icon: Shield },
+    { path: '/crisis-support', label: 'Crisis', icon: Shield },
   ];
 
   return (
