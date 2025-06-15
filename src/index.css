@@ -62,28 +62,16 @@
     padding: 0;
     overflow-x: hidden;
     position: relative;
-    background: linear-gradient(135deg, 
-      #f8fafc 0%, 
-      #e2e8f0 25%, 
-      #cbd5e1 50%, 
-      #94a3b8 75%, 
-      #64748b 100%
-    );
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
     min-height: 100vh;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   .dark body {
-    background: linear-gradient(135deg, 
-      #0f172a 0%, 
-      #1e293b 25%, 
-      #334155 50%, 
-      #475569 75%, 
-      #64748b 100%
-    );
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
   }
 
-  /* Enhanced animated background layers with better performance */
+  /* Simplified background animations for better performance */
   body::before {
     content: '';
     position: fixed;
@@ -92,52 +80,19 @@
     width: 100%;
     height: 100%;
     background: 
-      radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 40% 60%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
-      radial-gradient(circle at 60% 40%, rgba(236, 72, 153, 0.12) 0%, transparent 40%);
-    background-size: 800px 800px, 600px 600px, 700px 700px, 500px 500px;
-    background-position: 0% 0%, 100% 100%, 30% 70%, 70% 30%;
-    animation: backgroundFlow 30s ease-in-out infinite;
+      radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+    background-size: 400px 400px, 300px 300px;
+    animation: backgroundFlow 20s ease-in-out infinite;
     pointer-events: none;
-    z-index: -3;
-    will-change: transform, background-position;
+    z-index: -2;
+    will-change: background-position;
   }
 
   .dark body::before {
     background: 
-      radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.25) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.25) 0%, transparent 50%),
-      radial-gradient(circle at 40% 60%, rgba(16, 185, 129, 0.18) 0%, transparent 50%),
-      radial-gradient(circle at 60% 40%, rgba(236, 72, 153, 0.18) 0%, transparent 40%);
-  }
-
-  body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-      linear-gradient(45deg, transparent 30%, rgba(139, 92, 246, 0.03) 35%, rgba(139, 92, 246, 0.03) 40%, transparent 45%),
-      linear-gradient(-45deg, transparent 30%, rgba(59, 130, 246, 0.03) 35%, rgba(59, 130, 246, 0.03) 40%, transparent 45%),
-      linear-gradient(90deg, transparent 45%, rgba(16, 185, 129, 0.02) 50%, rgba(16, 185, 129, 0.02) 55%, transparent 60%);
-    background-size: 200px 200px, 150px 150px, 250px 250px;
-    background-position: 0 0, 100px 100px, 0 150px;
-    animation: patternDrift 40s linear infinite;
-    opacity: 0.6;
-    pointer-events: none;
-    z-index: -2;
-    will-change: background-position, transform;
-  }
-
-  .dark body::after {
-    background-image: 
-      linear-gradient(45deg, transparent 30%, rgba(139, 92, 246, 0.05) 35%, rgba(139, 92, 246, 0.05) 40%, transparent 45%),
-      linear-gradient(-45deg, transparent 30%, rgba(59, 130, 246, 0.05) 35%, rgba(59, 130, 246, 0.05) 40%, transparent 45%),
-      linear-gradient(90deg, transparent 45%, rgba(16, 185, 129, 0.03) 50%, rgba(16, 185, 129, 0.03) 55%, transparent 60%);
-    opacity: 0.8;
+      radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
   }
   
   * {
@@ -145,204 +100,105 @@
   }
 }
 
-/* Enhanced animations with better performance */
+/* Optimized animations */
 @keyframes backgroundFlow {
   0%, 100% {
-    background-position: 0% 0%, 100% 100%, 30% 70%, 70% 30%;
-    transform: scale(1) rotate(0deg);
-  }
-  25% {
-    background-position: 25% 25%, 75% 75%, 50% 50%, 50% 50%;
-    transform: scale(1.05) rotate(0.5deg);
+    background-position: 0% 0%, 100% 100%;
   }
   50% {
-    background-position: 70% 30%, 30% 70%, 80% 20%, 20% 80%;
-    transform: scale(1) rotate(0deg);
-  }
-  75% {
-    background-position: 40% 80%, 60% 20%, 20% 60%, 80% 40%;
-    transform: scale(1.02) rotate(-0.5deg);
+    background-position: 100% 50%, 0% 50%;
   }
 }
 
-@keyframes patternDrift {
-  0% {
-    background-position: 0 0, 100px 100px, 0 150px;
-    transform: rotate(0deg);
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  25% {
-    background-position: 50px 50px, 150px 150px, 50px 200px;
-    transform: rotate(0.3deg);
-  }
-  50% {
-    background-position: 100px 100px, 50px 200px, 100px 100px;
-    transform: rotate(0deg);
-  }
-  75% {
-    background-position: 150px 50px, 200px 100px, 150px 200px;
-    transform: rotate(-0.3deg);
-  }
-  100% {
-    background-position: 200px 100px, 100px 250px, 200px 150px;
-    transform: rotate(0deg);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Enhanced component styles */
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Optimized component styles */
 .chat-container {
-  @apply flex flex-col rounded-3xl overflow-hidden backdrop-blur-2xl;
-  background: linear-gradient(145deg, 
-    rgba(255, 255, 255, 0.95), 
-    rgba(248, 250, 252, 0.9), 
-    rgba(241, 245, 249, 0.85)
-  );
+  @apply flex flex-col rounded-3xl overflow-hidden backdrop-blur-xl;
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(148, 163, 184, 0.2);
-  box-shadow: 
-    0 25px 50px rgba(139, 92, 246, 0.15), 
-    0 10px 30px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.1);
+  transition: transform 0.2s ease;
 }
 
 .dark .chat-container {
-  background: linear-gradient(145deg, 
-    rgba(15, 23, 42, 0.95), 
-    rgba(30, 41, 59, 0.9), 
-    rgba(51, 65, 85, 0.85)
-  );
+  background: rgba(15, 23, 42, 0.9);
   border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.4), 
-    0 10px 30px rgba(139, 92, 246, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .message-container {
   @apply rounded-2xl backdrop-blur-xl p-6 min-h-96 max-h-96 overflow-y-auto;
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.9), 
-    rgba(248, 250, 252, 0.8), 
-    rgba(241, 245, 249, 0.7)
-  );
+  background: rgba(255, 255, 255, 0.8);
   scrollbar-width: thin;
   scrollbar-color: rgba(139, 92, 246, 0.5) transparent;
 }
 
 .dark .message-container {
-  background: linear-gradient(135deg, 
-    rgba(15, 23, 42, 0.9), 
-    rgba(30, 41, 59, 0.8), 
-    rgba(51, 65, 85, 0.7)
-  );
-  scrollbar-color: rgba(139, 92, 246, 0.7) rgba(30, 41, 59, 0.5);
+  background: rgba(15, 23, 42, 0.8);
 }
 
 .message-input {
-  @apply rounded-2xl backdrop-blur-xl border transition-all duration-300;
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.95), 
-    rgba(248, 250, 252, 0.9)
-  );
+  @apply rounded-2xl backdrop-blur-xl border transition-colors duration-200;
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
 .dark .message-input {
-  background: linear-gradient(135deg, 
-    rgba(15, 23, 42, 0.9), 
-    rgba(30, 41, 59, 0.85)
-  );
+  background: rgba(15, 23, 42, 0.9);
   border: 1px solid rgba(139, 92, 246, 0.4);
 }
 
 .message-input:focus-within {
   border-color: rgba(139, 92, 246, 0.6);
-  box-shadow: 
-    0 0 0 4px rgba(139, 92, 246, 0.1),
-    0 10px 25px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
-/* Enhanced scrollbar styling */
+/* Simplified scrollbar */
 .message-container::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .message-container::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
+  background: transparent;
 }
 
 .message-container::-webkit-scrollbar-thumb {
-  background: linear-gradient(45deg, rgba(139, 92, 246, 0.5), rgba(168, 85, 247, 0.7));
-  border-radius: 12px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
+  background: rgba(139, 92, 246, 0.5);
+  border-radius: 10px;
 }
 
 .message-container::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(45deg, rgba(139, 92, 246, 0.7), rgba(168, 85, 247, 0.9));
+  background: rgba(139, 92, 246, 0.7);
 }
 
-.dark .message-container::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.dark .message-container::-webkit-scrollbar-thumb {
-  background: linear-gradient(45deg, rgba(139, 92, 246, 0.7), rgba(168, 85, 247, 0.9));
-}
-
-/* Enhanced animations */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-/* Enhanced feature cards */
+/* Optimized feature cards */
 .feature-card {
-  @apply rounded-3xl border backdrop-blur-xl transition-all duration-700;
-  background: linear-gradient(145deg, 
-    rgba(255, 255, 255, 0.9), 
-    rgba(248, 250, 252, 0.8), 
-    rgba(241, 245, 249, 0.7)
-  );
+  @apply rounded-2xl border backdrop-blur-xl transition-transform duration-200;
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(148, 163, 184, 0.2);
-  box-shadow: 
-    0 10px 40px rgba(139, 92, 246, 0.1),
-    0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .feature-card:hover {
-  transform: translateY(-8px) scale(1.02) rotateX(2deg);
-  box-shadow: 
-    0 25px 60px rgba(139, 92, 246, 0.2),
-    0 10px 40px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .dark .feature-card {
-  background: linear-gradient(145deg, 
-    rgba(15, 23, 42, 0.9), 
-    rgba(30, 41, 59, 0.8), 
-    rgba(51, 65, 85, 0.7)
-  );
+  background: rgba(15, 23, 42, 0.9);
   border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.3),
-    0 4px 20px rgba(139, 92, 246, 0.1);
-}
-
-.dark .feature-card:hover {
-  box-shadow: 
-    0 25px 60px rgba(0, 0, 0, 0.4), 
-    0 10px 40px rgba(139, 92, 246, 0.3);
 }
 
 /* Performance optimizations */

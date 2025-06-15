@@ -6,9 +6,20 @@ import './index.css'
 import './lib/i18n'
 import { ThemeProvider } from 'next-themes'
 
-createRoot(document.getElementById("root")!).render(
+// Optimize root rendering
+const rootElement = document.getElementById("root");
+if (!rootElement) throw new Error('Failed to find the root element');
+
+const root = createRoot(rootElement);
+
+root.render(
   <React.StrictMode>
-    <ThemeProvider attribute="class" defaultTheme="light">
+    <ThemeProvider 
+      attribute="class" 
+      defaultTheme="light"
+      enableSystem={false}
+      disableTransitionOnChange={true}
+    >
       <App />
     </ThemeProvider>
   </React.StrictMode>
