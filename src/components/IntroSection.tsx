@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Heart, MessageSquare, Shield, Brain, Star, Sparkles } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Link } from "react-router-dom";
+import FeatureCard from "./FeatureCard";
 
 interface IntroSectionProps {
   onStartChat: () => void;
@@ -11,6 +12,30 @@ interface IntroSectionProps {
 
 const IntroSection: React.FC<IntroSectionProps> = ({ onStartChat }) => {
   const { user } = useAuth();
+  
+  const features = [
+    {
+      icon: Heart,
+      title: "Compassionate Listening",
+      description: "A supportive space to express your feelings without judgment, with AI that truly understands.",
+      iconColor: "text-chetna-primary",
+      backgroundGradient: "bg-gradient-to-br from-chetna-primary/20 to-chetna-primary/30 dark:from-chetna-primary/30 dark:to-chetna-primary/40"
+    },
+    {
+      icon: Shield,
+      title: "Emotional Support",
+      description: "Personalized guidance to help you navigate challenging emotions and difficult situations.",
+      iconColor: "text-chetna-secondary",
+      backgroundGradient: "bg-gradient-to-br from-chetna-secondary/20 to-chetna-secondary/30 dark:from-chetna-secondary/30 dark:to-chetna-secondary/40"
+    },
+    {
+      icon: Brain,
+      title: "Personal Growth",
+      description: "Evidence-based insights to foster self-awareness and sustainable emotional well-being.",
+      iconColor: "text-chetna-accent",
+      backgroundGradient: "bg-gradient-to-br from-chetna-accent/20 to-chetna-accent/30 dark:from-chetna-accent/30 dark:to-chetna-accent/40"
+    }
+  ];
   
   return (
     <div className="text-center space-y-12 py-12 animate-fade-in-up relative">
@@ -65,29 +90,16 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onStartChat }) => {
       
       {/* Feature cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto mt-16">
-        <div className="feature-card p-8 group hover:scale-105 transition-all duration-500">
-          <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-chetna-primary/20 to-chetna-primary/30 dark:from-chetna-primary/30 dark:to-chetna-primary/40 rounded-2xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-500 shadow-inner-glow">
-            <Heart className="h-8 w-8 text-chetna-primary group-hover:scale-110 transition-transform duration-300" />
-          </div>
-          <h3 className="text-2xl font-semibold mb-4 text-chetna-dark dark:text-white">Compassionate Listening</h3>
-          <p className="text-muted-foreground dark:text-white/75 text-lg leading-relaxed">A supportive space to express your feelings without judgment, with AI that truly understands.</p>
-        </div>
-        
-        <div className="feature-card p-8 group hover:scale-105 transition-all duration-500">
-          <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-chetna-secondary/20 to-chetna-secondary/30 dark:from-chetna-secondary/30 dark:to-chetna-secondary/40 rounded-2xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-500 shadow-inner-glow">
-            <Shield className="h-8 w-8 text-chetna-secondary group-hover:scale-110 transition-transform duration-300" />
-          </div>
-          <h3 className="text-2xl font-semibold mb-4 text-chetna-dark dark:text-white">Emotional Support</h3>
-          <p className="text-muted-foreground dark:text-white/75 text-lg leading-relaxed">Personalized guidance to help you navigate challenging emotions and difficult situations.</p>
-        </div>
-        
-        <div className="feature-card p-8 group hover:scale-105 transition-all duration-500">
-          <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-chetna-accent/20 to-chetna-accent/30 dark:from-chetna-accent/30 dark:to-chetna-accent/40 rounded-2xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-500 shadow-inner-glow">
-            <Brain className="h-8 w-8 text-chetna-accent group-hover:scale-110 transition-transform duration-300" />
-          </div>
-          <h3 className="text-2xl font-semibold mb-4 text-chetna-dark dark:text-white">Personal Growth</h3>
-          <p className="text-muted-foreground dark:text-white/75 text-lg leading-relaxed">Evidence-based insights to foster self-awareness and sustainable emotional well-being.</p>
-        </div>
+        {features.map((feature, index) => (
+          <FeatureCard
+            key={index}
+            icon={feature.icon}
+            title={feature.title}
+            description={feature.description}
+            iconColor={feature.iconColor}
+            backgroundGradient={feature.backgroundGradient}
+          />
+        ))}
       </div>
     </div>
   );
