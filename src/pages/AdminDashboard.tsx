@@ -120,11 +120,14 @@ const AdminDashboard: React.FC = () => {
       newStatus: string; 
       notes?: string; 
     }) => {
+      console.log('Updating appointment:', appointmentId, 'to status:', newStatus);
+      
       const updateData: any = { 
         status: newStatus,
         updated_at: new Date().toISOString()
       };
 
+      // Add status-specific fields
       if (newStatus === 'confirmed') {
         updateData.confirmed_at = new Date().toISOString();
       } else if (newStatus === 'cancelled') {
@@ -132,9 +135,12 @@ const AdminDashboard: React.FC = () => {
         if (notes) updateData.cancellation_reason = notes;
       }
 
+      // Add notes if provided and not for cancellation (cancellation uses cancellation_reason)
       if (notes && newStatus !== 'cancelled') {
         updateData.notes = notes;
       }
+
+      console.log('Update data:', updateData);
 
       const { data, error } = await supabase
         .from('appointments')
@@ -143,10 +149,16 @@ const AdminDashboard: React.FC = () => {
         .select()
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase update error:', error);
+        throw error;
+      }
+      
+      console.log('Update successful:', data);
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('Mutation success:', data);
       queryClient.invalidateQueries({ queryKey: ['admin-appointments'] });
       toast({
         title: "Status updated! ✅",
@@ -155,11 +167,11 @@ const AdminDashboard: React.FC = () => {
       setSelectedAppointment('');
       setStatusNotes('');
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Status update error:', error);
       toast({
         title: "Update failed",
-        description: "Failed to update appointment status",
+        description: `Failed to update appointment status: ${error.message || 'Unknown error'}`,
         variant: "destructive",
       });
     }
@@ -196,7 +208,16 @@ const AdminDashboard: React.FC = () => {
   });
 
   const handleStatusUpdate = (newStatus: string) => {
-    if (!selectedAppointment) return;
+    if (!selectedAppointment) {
+      toast({
+        title: "No appointment selected",
+        description: "Please select an appointment first",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    console.log('Handling status update for:', selectedAppointment, 'to:', newStatus);
     
     updateStatusMutation.mutate({
       appointmentId: selectedAppointment,
@@ -385,32 +406,30 @@ const AdminDashboard: React.FC = () => {
                             </div>
                           </div>
                           <div className="flex flex-col gap-2">
-                            <Select
-                              value={selectedAppointment === appointment.id ? 'selected' : ''}
-                              onValueChange={(value) => {
-                                if (value === 'selected') {
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                if (selectedAppointment === appointment.id) {
+                                  setSelectedAppointment('');
+                                  setStatusNotes('');
+                                } else {
                                   setSelectedAppointment(appointment.id);
+                                  setStatusNotes('');
                                 }
                               }}
                             >
-                              <SelectTrigger className="w-32">
-                                <SelectValue placeholder="Actions" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="selected">Manage</SelectItem>
-                              </SelectContent>
-                            </Select>
+                              {selectedAppointment === appointment.id ? 'Cancel' : 'Manage'}
+                            </Button>
                             
-                            <div className="flex gap-1">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleSendEmail(appointment.id, 'status_update')}
-                                disabled={sendEmailMutation.isPending}
-                              >
-                                📧
-                              </Button>
-                            </div>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleSendEmail(appointment.id, 'status_update')}
+                              disabled={sendEmailMutation.isPending}
+                            >
+                              📧 Email
+                            </Button>
                           </div>
                         </div>
 
@@ -429,7 +448,7 @@ const AdminDashboard: React.FC = () => {
                                 disabled={updateStatusMutation.isPending || appointment.status === 'confirmed'}
                                 className="bg-green-600 hover:bg-green-700"
                               >
-                                ✅ Confirm
+                                {updateStatusMutation.isPending ? '⏳' : '✅'} Confirm
                               </Button>
                               <Button
                                 size="sm"
@@ -437,7 +456,7 @@ const AdminDashboard: React.FC = () => {
                                 onClick={() => handleStatusUpdate('cancelled')}
                                 disabled={updateStatusMutation.isPending || appointment.status === 'cancelled'}
                               >
-                                ❌ Cancel
+                                {updateStatusMutation.isPending ? '⏳' : '❌'} Cancel
                               </Button>
                               <Button
                                 size="sm"
@@ -445,7 +464,7 @@ const AdminDashboard: React.FC = () => {
                                 onClick={() => handleStatusUpdate('completed')}
                                 disabled={updateStatusMutation.isPending || appointment.status === 'completed'}
                               >
-                                ✅ Complete
+                                {updateStatusMutation.isPending ? '⏳' : '✅'} Complete
                               </Button>
                               <Button
                                 size="sm"
@@ -455,7 +474,7 @@ const AdminDashboard: React.FC = () => {
                                   setStatusNotes('');
                                 }}
                               >
-                                Cancel
+                                Close
                               </Button>
                             </div>
                           </div>
