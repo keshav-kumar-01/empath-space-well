@@ -1,17 +1,16 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Progress } from '@/components/ui/progress';
-import { Search, BookOpen, Play, Download, Heart, Brain, Users, Shield, Clock, X, PlayCircle, Pause, SkipForward } from 'lucide-react';
+import { BookOpen, Play, Brain, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import SearchBar from '@/components/resource-library/SearchBar';
+import ResourceCard from '@/components/resource-library/ResourceCard';
+import ResourceModal from '@/components/resource-library/ResourceModal';
+import { categories, resources } from '@/components/resource-library/resourceData';
 
 const ResourceLibrary: React.FC = () => {
   const { t } = useTranslation();
@@ -21,376 +20,10 @@ const ResourceLibrary: React.FC = () => {
   const [isExerciseActive, setIsExerciseActive] = useState(false);
   const [exerciseStep, setExerciseStep] = useState(0);
   const [exerciseProgress, setExerciseProgress] = useState(0);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
-  const categories = [
-    { id: 'articles', label: 'Articles', icon: BookOpen },
-    { id: 'exercises', label: 'Exercises', icon: Brain },
-    { id: 'videos', label: 'Videos', icon: Play },
-    { id: 'worksheets', label: 'Worksheets', icon: Download },
-  ];
-
-  const resources = {
-    articles: [
-      {
-        title: "Understanding Anxiety: A Complete Guide",
-        description: "Learn about anxiety symptoms, causes, and effective management strategies",
-        category: "Anxiety",
-        readTime: "8 min read",
-        tags: ["anxiety", "mental health", "coping"],
-        difficulty: "Beginner",
-        rating: 4.8,
-        content: `
-          <h2>Understanding Anxiety</h2>
-          <p>Anxiety is a natural response to stress and can be beneficial in some situations. However, when anxiety becomes overwhelming or persistent, it may indicate an anxiety disorder.</p>
-          
-          <h3>Common Symptoms</h3>
-          <ul>
-            <li>Excessive worry or fear</li>
-            <li>Restlessness or feeling on edge</li>
-            <li>Difficulty concentrating</li>
-            <li>Physical symptoms like rapid heartbeat</li>
-          </ul>
-          
-          <h3>Management Strategies</h3>
-          <p>There are several effective ways to manage anxiety:</p>
-          <ul>
-            <li><strong>Deep breathing exercises</strong> - Help calm the nervous system</li>
-            <li><strong>Progressive muscle relaxation</strong> - Reduces physical tension</li>
-            <li><strong>Mindfulness meditation</strong> - Helps stay present and grounded</li>
-            <li><strong>Regular exercise</strong> - Natural anxiety reducer</li>
-          </ul>
-        `
-      },
-      {
-        title: "Building Emotional Resilience",
-        description: "Techniques to bounce back from life's challenges with strength",
-        category: "Resilience",
-        readTime: "12 min read",
-        tags: ["resilience", "emotional health", "recovery"],
-        difficulty: "Intermediate",
-        rating: 4.9,
-        content: `
-          <h2>Building Emotional Resilience</h2>
-          <p>Emotional resilience is the ability to adapt and bounce back from adversity, trauma, or stress.</p>
-          
-          <h3>Key Components</h3>
-          <ul>
-            <li>Self-awareness and emotional regulation</li>
-            <li>Strong support networks</li>
-            <li>Problem-solving skills</li>
-            <li>Adaptability and flexibility</li>
-          </ul>
-        `
-      },
-      {
-        title: "Mindful Living in Modern Times",
-        description: "Incorporating mindfulness practices into your daily routine",
-        category: "Mindfulness",
-        readTime: "6 min read",
-        tags: ["mindfulness", "meditation", "daily life"],
-        difficulty: "Beginner",
-        rating: 4.7,
-        content: `
-          <h2>Mindful Living</h2>
-          <p>Mindfulness is about being fully present in the moment, aware of where you are and what you're doing.</p>
-          
-          <h3>Daily Practices</h3>
-          <ul>
-            <li>Mindful breathing</li>
-            <li>Body scan meditation</li>
-            <li>Mindful eating</li>
-            <li>Walking meditation</li>
-          </ul>
-        `
-      }
-    ],
-    exercises: [
-      {
-        title: "5-4-3-2-1 Grounding Technique",
-        description: "A simple exercise to manage anxiety and stay present",
-        category: "Anxiety",
-        duration: "5 minutes",
-        tags: ["anxiety", "grounding", "mindfulness"],
-        difficulty: "Beginner",
-        rating: 4.9,
-        steps: [
-          "Take a deep breath and look around you",
-          "Name 5 things you can see",
-          "Name 4 things you can touch",
-          "Name 3 things you can hear",
-          "Name 2 things you can smell",
-          "Name 1 thing you can taste"
-        ]
-      },
-      {
-        title: "Progressive Muscle Relaxation",
-        description: "Reduce physical tension and promote relaxation",
-        category: "Stress",
-        duration: "15 minutes",
-        tags: ["stress", "relaxation", "body awareness"],
-        difficulty: "Beginner",
-        rating: 4.8,
-        steps: [
-          "Find a comfortable position and close your eyes",
-          "Start with your toes - tense for 5 seconds, then relax",
-          "Move to your feet - tense and relax",
-          "Continue with calves, thighs, abdomen",
-          "Progress to hands, arms, shoulders",
-          "Finish with neck and face muscles",
-          "Take a moment to notice the relaxation"
-        ]
-      },
-      {
-        title: "Breathing Exercises for Calm",
-        description: "Various breathing techniques for different situations",
-        category: "Breathing",
-        duration: "10 minutes",
-        tags: ["breathing", "calm", "anxiety"],
-        difficulty: "Beginner",
-        rating: 4.7,
-        steps: [
-          "Sit comfortably with your back straight",
-          "Place one hand on chest, one on belly",
-          "Breathe in slowly through your nose for 4 counts",
-          "Hold your breath for 4 counts",
-          "Exhale slowly through your mouth for 6 counts",
-          "Repeat this cycle 10 times",
-          "Notice how you feel afterwards"
-        ]
-      }
-    ],
-    videos: [
-      {
-        title: "Introduction to Meditation",
-        description: "A beginner-friendly guide to starting your meditation practice",
-        category: "Meditation",
-        duration: "15 minutes",
-        tags: ["meditation", "beginner", "mindfulness"],
-        difficulty: "Beginner",
-        rating: 4.8,
-        videoUrl: "https://www.youtube.com/embed/ZToicYcHIOU"
-      },
-      {
-        title: "Dealing with Depression",
-        description: "Expert insights on understanding and managing depression",
-        category: "Depression",
-        duration: "25 minutes",
-        tags: ["depression", "expert", "management"],
-        difficulty: "Intermediate",
-        rating: 4.9,
-        videoUrl: "https://www.youtube.com/embed/mb85GMxNtNk"
-      },
-      {
-        title: "Anxiety Management Techniques",
-        description: "Practical strategies for managing anxiety in daily life",
-        category: "Anxiety",
-        duration: "18 minutes",
-        tags: ["anxiety", "techniques", "practical"],
-        difficulty: "Beginner",
-        rating: 4.7,
-        videoUrl: "https://www.youtube.com/embed/WWloIAQpMcQ"
-      }
-    ],
-    worksheets: [
-      {
-        title: "Daily Mood Tracker",
-        description: "Track your mood patterns and identify triggers",
-        category: "Mood",
-        format: "PDF",
-        tags: ["mood", "tracking", "patterns"],
-        difficulty: "Beginner",
-        rating: 4.6,
-        content: `
-          <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-            <h1 style="text-align: center; color: #7c3aed;">Daily Mood Tracker</h1>
-            <p style="text-align: center; margin-bottom: 30px;">Track your daily moods to identify patterns and triggers</p>
-            
-            <div style="margin-bottom: 30px;">
-              <h3>Instructions:</h3>
-              <p>Rate your mood on a scale of 1-10 each day and note any significant events or triggers.</p>
-            </div>
-            
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
-              <thead>
-                <tr style="background-color: #f3f4f6;">
-                  <th style="border: 1px solid #d1d5db; padding: 10px; text-align: left;">Date</th>
-                  <th style="border: 1px solid #d1d5db; padding: 10px; text-align: left;">Mood (1-10)</th>
-                  <th style="border: 1px solid #d1d5db; padding: 10px; text-align: left;">Notes/Triggers</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${Array.from({ length: 14 }, (_, i) => `
-                  <tr>
-                    <td style="border: 1px solid #d1d5db; padding: 10px; height: 40px;"></td>
-                    <td style="border: 1px solid #d1d5db; padding: 10px; height: 40px;"></td>
-                    <td style="border: 1px solid #d1d5db; padding: 10px; height: 40px;"></td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-            
-            <div>
-              <h3>Mood Scale Reference:</h3>
-              <ul>
-                <li>1-2: Very Low (Depressed, hopeless)</li>
-                <li>3-4: Low (Sad, down)</li>
-                <li>5-6: Neutral (Okay, stable)</li>
-                <li>7-8: Good (Happy, positive)</li>
-                <li>9-10: Excellent (Joyful, energetic)</li>
-              </ul>
-            </div>
-          </div>
-        `
-      },
-      {
-        title: "Anxiety Thought Challenge Worksheet",
-        description: "Challenge negative thoughts and develop balanced thinking",
-        category: "Anxiety",
-        format: "PDF",
-        tags: ["anxiety", "CBT", "thoughts"],
-        difficulty: "Intermediate",
-        rating: 4.8,
-        content: `
-          <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-            <h1 style="text-align: center; color: #7c3aed;">Anxiety Thought Challenge Worksheet</h1>
-            <p style="text-align: center; margin-bottom: 30px;">Challenge anxious thoughts and develop more balanced thinking patterns</p>
-            
-            <div style="margin-bottom: 30px;">
-              <h3>How to Use This Worksheet:</h3>
-              <ol>
-                <li>Write down your anxious thought</li>
-                <li>Identify the emotion and rate its intensity (1-10)</li>
-                <li>Examine the evidence for and against the thought</li>
-                <li>Create a more balanced, realistic thought</li>
-                <li>Rate your emotion again after the challenge</li>
-              </ol>
-            </div>
-            
-            <div style="border: 2px solid #7c3aed; padding: 20px; margin-bottom: 20px;">
-              <h3>Thought Challenge #1</h3>
-              <p><strong>Anxious Thought:</strong></p>
-              <div style="border: 1px solid #ccc; height: 60px; margin-bottom: 15px;"></div>
-              
-              <p><strong>Emotion & Intensity (1-10):</strong></p>
-              <div style="border: 1px solid #ccc; height: 40px; margin-bottom: 15px;"></div>
-              
-              <p><strong>Evidence FOR this thought:</strong></p>
-              <div style="border: 1px solid #ccc; height: 80px; margin-bottom: 15px;"></div>
-              
-              <p><strong>Evidence AGAINST this thought:</strong></p>  
-              <div style="border: 1px solid #ccc; height: 80px; margin-bottom: 15px;"></div>
-              
-              <p><strong>More Balanced Thought:</strong></p>
-              <div style="border: 1px solid #ccc; height: 80px; margin-bottom: 15px;"></div>
-              
-              <p><strong>New Emotion & Intensity (1-10):</strong></p>
-              <div style="border: 1px solid #ccc; height: 40px;"></div>
-            </div>
-            
-            <div style="border: 2px solid #7c3aed; padding: 20px; margin-bottom: 20px;">
-              <h3>Thought Challenge #2</h3>
-              <p><strong>Anxious Thought:</strong></p>
-              <div style="border: 1px solid #ccc; height: 60px; margin-bottom: 15px;"></div>
-              
-              <p><strong>Emotion & Intensity (1-10):</strong></p>
-              <div style="border: 1px solid #ccc; height: 40px; margin-bottom: 15px;"></div>
-              
-              <p><strong>Evidence FOR this thought:</strong></p>
-              <div style="border: 1px solid #ccc; height: 80px; margin-bottom: 15px;"></div>
-              
-              <p><strong>Evidence AGAINST this thought:</strong></p>  
-              <div style="border: 1px solid #ccc; height: 80px; margin-bottom: 15px;"></div>
-              
-              <p><strong>More Balanced Thought:</strong></p>
-              <div style="border: 1px solid #ccc; height: 80px; margin-bottom: 15px;"></div>
-              
-              <p><strong>New Emotion & Intensity (1-10):</strong></p>
-              <div style="border: 1px solid #ccc; height: 40px;"></div>
-            </div>
-          </div>
-        `
-      },
-      {
-        title: "Stress Management Action Plan",
-        description: "Create a personalized plan for managing stress",
-        category: "Stress",
-        format: "PDF",
-        tags: ["stress", "planning", "management"],
-        difficulty: "Intermediate",
-        rating: 4.7,
-        content: `
-          <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-            <h1 style="text-align: center; color: #7c3aed;">Stress Management Action Plan</h1>
-            <p style="text-align: center; margin-bottom: 30px;">Develop your personalized stress management strategy</p>
-            
-            <div style="margin-bottom: 30px;">
-              <h3>My Stress Triggers:</h3>
-              <div style="border: 1px solid #ccc; height: 100px; margin-bottom: 15px;"></div>
-            </div>
-            
-            <div style="margin-bottom: 30px;">
-              <h3>Warning Signs I'm Getting Stressed:</h3>
-              <div style="display: flex; gap: 20px;">
-                <div style="flex: 1;">
-                  <p><strong>Physical:</strong></p>
-                  <div style="border: 1px solid #ccc; height: 80px;"></div>
-                </div>
-                <div style="flex: 1;">
-                  <p><strong>Emotional:</strong></p>
-                  <div style="border: 1px solid #ccc; height: 80px;"></div>
-                </div>
-                <div style="flex: 1;">
-                  <p><strong>Behavioral:</strong></p>
-                  <div style="border: 1px solid #ccc; height: 80px;"></div>
-                </div>
-              </div>
-            </div>
-            
-            <div style="margin-bottom: 30px;">
-              <h3>My Stress Management Toolkit:</h3>
-              <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                  <tr style="background-color: #f3f4f6;">
-                    <th style="border: 1px solid #d1d5db; padding: 10px; text-align: left;">Technique</th>
-                    <th style="border: 1px solid #d1d5db; padding: 10px; text-align: left;">When to Use</th>
-                    <th style="border: 1px solid #d1d5db; padding: 10px; text-align: left;">How Effective (1-10)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${Array.from({ length: 8 }, (_, i) => `
-                    <tr>
-                      <td style="border: 1px solid #d1d5db; padding: 10px; height: 40px;"></td>
-                      <td style="border: 1px solid #d1d5db; padding: 10px; height: 40px;"></td>
-                      <td style="border: 1px solid #d1d5db; padding: 10px; height: 40px;"></td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-            
-            <div>
-              <h3>Emergency Stress Plan:</h3>
-              <p>When I'm feeling overwhelmed, I will:</p>
-              <ol>
-                <li style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;"></li>
-                <li style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;"></li>
-                <li style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;"></li>
-              </ol>
-            </div>
-          </div>
-        `
-      }
-    ]
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Beginner': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300';
-      case 'Intermediate': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300';
-      case 'Advanced': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300';
-    }
+  const getIconComponent = (iconName: string) => {
+    const icons = { BookOpen, Brain, Play, Download };
+    return icons[iconName as keyof typeof icons] || BookOpen;
   };
 
   const filteredResources = (categoryResources: any[]) => {
@@ -415,7 +48,6 @@ const ResourceLibrary: React.FC = () => {
         break;
       case 'videos':
         setSelectedResource({ ...resource, type: 'video' });
-        setIsVideoPlaying(false);
         break;
       case 'worksheets':
         handleDownload(resource);
@@ -461,7 +93,6 @@ const ResourceLibrary: React.FC = () => {
       description: `Preparing ${resource.title} for download`,
     });
     
-    // Generate and download PDF
     setTimeout(() => {
       generatePDFContent(resource);
       toast({
@@ -483,21 +114,12 @@ const ResourceLibrary: React.FC = () => {
       setExerciseStep(newStep);
       setExerciseProgress((newStep / selectedResource.steps.length) * 100);
     } else {
-      // Exercise completed
       setIsExerciseActive(false);
       toast({
         title: "Exercise Completed! 🎉",
         description: "Great job completing this mindfulness exercise.",
       });
     }
-  };
-
-  const toggleVideoPlay = () => {
-    setIsVideoPlaying(!isVideoPlaying);
-    toast({
-      title: isVideoPlaying ? "Video Paused" : "Video Playing",
-      description: `${selectedResource?.title} ${isVideoPlaying ? 'paused' : 'is now playing'}`,
-    });
   };
 
   return (
@@ -519,22 +141,12 @@ const ResourceLibrary: React.FC = () => {
           </p>
         </div>
 
-        {/* Search */}
-        <div className="relative mb-8 max-w-md mx-auto">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input
-            placeholder="Search resources..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
+        <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
-        {/* Resource Categories */}
         <Tabs defaultValue="articles" className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-8">
             {categories.map((category) => {
-              const IconComponent = category.icon;
+              const IconComponent = getIconComponent(category.icon);
               return (
                 <TabsTrigger key={category.id} value={category.id} className="flex items-center gap-2">
                   <IconComponent className="h-4 w-4" />
@@ -548,155 +160,21 @@ const ResourceLibrary: React.FC = () => {
             <TabsContent key={categoryId} value={categoryId}>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredResources(categoryResources).map((resource, index) => (
-                  <Card key={index} className="backdrop-blur-xl bg-white/80 dark:bg-slate-800/80 border border-white/50 dark:border-slate-700/50 hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <Badge variant="secondary" className="mb-2">
-                          {resource.category}
-                        </Badge>
-                        <Badge className={getDifficultyColor(resource.difficulty)}>
-                          {resource.difficulty}
-                        </Badge>
-                      </div>
-                      <CardTitle className="text-lg leading-tight">{resource.title}</CardTitle>
-                      <CardDescription>{resource.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {resource.readTime || resource.duration || resource.format}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Heart className="h-3 w-3 fill-current text-red-500" />
-                            {resource.rating}
-                          </div>
-                        </div>
-                        
-                        <div className="flex flex-wrap gap-1">
-                          {resource.tags.map((tag: string, tagIndex: number) => (
-                            <Badge key={tagIndex} variant="outline" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button 
-                              className="w-full bg-gradient-to-r from-chetna-primary to-chetna-secondary hover:opacity-90 transition-opacity"
-                              onClick={() => handleResourceAction(resource, categoryId)}
-                            >
-                              {categoryId === 'articles' && <BookOpen className="h-4 w-4 mr-2" />}
-                              {categoryId === 'exercises' && <Brain className="h-4 w-4 mr-2" />}
-                              {categoryId === 'videos' && <Play className="h-4 w-4 mr-2" />}
-                              {categoryId === 'worksheets' && <Download className="h-4 w-4 mr-2" />}
-                              {categoryId === 'articles' && 'Read Article'}
-                              {categoryId === 'exercises' && 'Try Exercise'}
-                              {categoryId === 'videos' && 'Watch Video'}
-                              {categoryId === 'worksheets' && 'Download'}
-                            </Button>
-                          </DialogTrigger>
-
-                          {/* Article Modal */}
-                          {selectedResource?.type === 'article' && (
-                            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-                              <DialogHeader>
-                                <DialogTitle>{selectedResource.title}</DialogTitle>
-                                <DialogDescription>
-                                  {selectedResource.readTime} • {selectedResource.category}
-                                </DialogDescription>
-                              </DialogHeader>
-                              <div 
-                                className="prose prose-sm max-w-none dark:prose-invert"
-                                dangerouslySetInnerHTML={{ __html: selectedResource.content }}
-                              />
-                            </DialogContent>
-                          )}
-
-                          {/* Exercise Modal */}
-                          {selectedResource?.type === 'exercise' && (
-                            <DialogContent className="max-w-2xl">
-                              <DialogHeader>
-                                <DialogTitle>{selectedResource.title}</DialogTitle>
-                                <DialogDescription>
-                                  {selectedResource.duration} • {selectedResource.category}
-                                </DialogDescription>
-                              </DialogHeader>
-                              
-                              {!isExerciseActive ? (
-                                <div className="space-y-4">
-                                  <p className="text-muted-foreground">{selectedResource.description}</p>
-                                  <Button onClick={startExercise} className="w-full">
-                                    <Play className="h-4 w-4 mr-2" />
-                                    Start Exercise
-                                  </Button>
-                                </div>
-                              ) : (
-                                <div className="space-y-6">
-                                  <div className="space-y-2">
-                                    <div className="flex justify-between text-sm">
-                                      <span>Progress</span>
-                                      <span>{exerciseStep + 1} of {selectedResource.steps.length}</span>
-                                    </div>
-                                    <Progress value={exerciseProgress} className="w-full" />
-                                  </div>
-                                  
-                                  <div className="text-center space-y-4">
-                                    <h3 className="text-lg font-semibold">Step {exerciseStep + 1}</h3>
-                                    <p className="text-lg">{selectedResource.steps[exerciseStep]}</p>
-                                  </div>
-                                  
-                                  <Button onClick={nextExerciseStep} className="w-full">
-                                    {exerciseStep < selectedResource.steps.length - 1 ? (
-                                      <>
-                                        <SkipForward className="h-4 w-4 mr-2" />
-                                        Next Step
-                                      </>
-                                    ) : (
-                                      <>
-                                        Complete Exercise
-                                      </>
-                                    )}
-                                  </Button>
-                                </div>
-                              )}
-                            </DialogContent>
-                          )}
-
-                          {/* Video Modal */}
-                          {selectedResource?.type === 'video' && (
-                            <DialogContent className="max-w-4xl">
-                              <DialogHeader>
-                                <DialogTitle>{selectedResource.title}</DialogTitle>
-                                <DialogDescription>
-                                  {selectedResource.duration} • {selectedResource.category}
-                                </DialogDescription>
-                              </DialogHeader>
-                              
-                              <div className="space-y-4">
-                                <div className="aspect-video bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden">
-                                  <iframe
-                                    src={selectedResource.videoUrl}
-                                    title={selectedResource.title}
-                                    className="w-full h-full"
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                  />
-                                </div>
-                                
-                                <div className="text-center">
-                                  <p className="text-muted-foreground">{selectedResource.description}</p>
-                                </div>
-                              </div>
-                            </DialogContent>
-                          )}
-                        </Dialog>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <ResourceCard
+                    key={index}
+                    resource={resource}
+                    categoryId={categoryId}
+                    onResourceAction={handleResourceAction}
+                  >
+                    <ResourceModal
+                      selectedResource={selectedResource}
+                      isExerciseActive={isExerciseActive}
+                      exerciseStep={exerciseStep}
+                      exerciseProgress={exerciseProgress}
+                      onStartExercise={startExercise}
+                      onNextStep={nextExerciseStep}
+                    />
+                  </ResourceCard>
                 ))}
               </div>
             </TabsContent>
