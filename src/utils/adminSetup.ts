@@ -21,9 +21,14 @@ export const addUserAsAdmin = async (userEmail: string) => {
 };
 
 // Helper function to check if current user is admin
-export const checkIsAdmin = async (userEmail?: string) => {
+export const checkIsAdmin = async (userId?: string, userEmail?: string) => {
   try {
-    // For now, check by email
+    // Check by user ID first (most reliable)
+    if (userId === '62529ac4-eaf2-4fa8-bca1-b6c0938478f1') {
+      return { isAdmin: true, error: null };
+    }
+    
+    // Fallback to email check
     if (userEmail === 'keshavkumarhf@gmail.com' || userEmail === 'admin@example.com') {
       return { isAdmin: true, error: null };
     }

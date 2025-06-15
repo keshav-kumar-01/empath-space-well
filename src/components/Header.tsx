@@ -55,9 +55,8 @@ const Header: React.FC = () => {
         return;
       }
       
-      // For now, we'll set admin status based on email
-      // This will be updated once the database types are properly synced
-      if (user.email === 'keshavkumarhf@gmail.com' || user.email === 'admin@example.com') {
+      // Check if the current user is you (the admin)
+      if (user.id === '62529ac4-eaf2-4fa8-bca1-b6c0938478f1' || user.email === 'keshavkumarhf@gmail.com') {
         setIsAdmin(true);
       } else {
         setIsAdmin(false);

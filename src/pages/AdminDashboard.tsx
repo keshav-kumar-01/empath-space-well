@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -59,9 +58,11 @@ const AdminDashboard: React.FC = () => {
     const checkAdminStatus = async () => {
       if (!user?.id) return;
       
-      // For now, check by email until database types are synced
-      if (user.email === 'keshavkumarhf@gmail.com' || user.email === 'admin@example.com') {
+      // Check if the current user is you (the admin)
+      if (user.id === '62529ac4-eaf2-4fa8-bca1-b6c0938478f1' || user.email === 'keshavkumarhf@gmail.com') {
         setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
       }
     };
 
@@ -86,17 +87,28 @@ const AdminDashboard: React.FC = () => {
     enabled: isAdmin
   });
 
-  // Fetch email notifications using raw SQL
+  // Fetch email notifications using the edge function
   const { data: emailNotifications = [] } = useQuery({
     queryKey: ['email-notifications'],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_email_notifications');
-      
-      if (error) {
-        console.log('Email notifications query failed:', error);
+      try {
+        const { data, error } = await supabase.functions.invoke('get-email-notifications');
+        
+        if (error) {
+          console.log('Email notifications query failed:', error);
+          return [] as EmailNotification[];
+        }
+        
+        // Ensure we return an array of EmailNotification objects
+        if (Array.isArray(data)) {
+          return data as EmailNotification[];
+        }
+        
+        return [] as EmailNotification[];
+      } catch (error) {
+        console.log('Email notifications error:', error);
         return [] as EmailNotification[];
       }
-      return data as EmailNotification[];
     },
     enabled: isAdmin
   });
@@ -239,7 +251,7 @@ const AdminDashboard: React.FC = () => {
             <h1 className="text-2xl font-bold text-red-600">Access Denied</h1>
             <p className="text-muted-foreground">You don't have admin privileges to access this dashboard.</p>
             <p className="text-sm text-muted-foreground mt-2">
-              Current user: {user.email}
+              Current user: {user.email} (ID: {user.id})
             </p>
           </div>
         </main>
