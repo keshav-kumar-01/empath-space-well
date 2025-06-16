@@ -284,19 +284,19 @@ const AboutPage = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center p-3 bg-chetna-primary/5 rounded-lg">
                     <span className="font-medium">Active Users</span>
-                    <span className="text-chetna-primary font-bold">10,000+</span>
+                    <span className="text-chetna-primary font-bold">20+</span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-chetna-primary/5 rounded-lg">
                     <span className="font-medium">Daily Conversations</span>
-                    <span className="text-chetna-primary font-bold">25,000+</span>
+                    <span className="text-chetna-primary font-bold">100+</span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-chetna-primary/5 rounded-lg">
                     <span className="font-medium">User Satisfaction</span>
                     <span className="text-chetna-primary font-bold">95%</span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-chetna-primary/5 rounded-lg">
-                    <span className="font-medium">Countries Served</span>
-                    <span className="text-chetna-primary font-bold">50+</span>
+                    <span className="font-medium">Countries Serving</span>
+                    <span className="text-chetna-primary font-bold">1</span>
                   </div>
                 </div>
               </CardContent>
