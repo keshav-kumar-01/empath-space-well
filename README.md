@@ -6,23 +6,53 @@ ChetnaAI is an AI-powered mental health platform designed to provide emotional s
 
 ## ✨ Features
 
-- 🤖 **AI Mental Health Chatbot**  
-  Empathetic and intelligent chatbot powered by Mistral AI, providing therapeutic conversation and emotional support.
-
-- 🧠 **Anonymous Community**  
-  Share your thoughts, traumas, or feelings anonymously. Upvote and comment on others’ stories — a Reddit-style safe space.
-
-- 📓 **Daily Journal & Streaks**  
-  Maintain a private journal to reflect on your day. Track your journaling streak to stay consistent with your mental wellness.
-
-- 👤 **Personal Profile Page**  
-  View your posts, journal entries, and streak progress. Your space, your journey.
-
-- ✍️ **Blog Page**  
-  Express yourself and contribute articles that help others. Blogs are visible to all users.
-
-- 💬 **Feedback Collection**  
-  Share your thoughts on the platform to help us improve and grow.
+- **🤖AI Chat Interface** - Advanced mental health chatbot powered by Mistral AI
+- **Personalized AI Responses** - AI adapts based on user's psychological test results
+- **Multilingual Support** - English and Hindi language options
+- **Speech Recognition** - Voice input for chat interactions
+- **Auto-clear Chat** - Privacy protection with 20-minute auto-clear
+- **Conversation Memory** - Context-aware responses that build on previous conversations
+- **🧠 Psychological Assessment Tools**
+      -PHQ-9 Test - Depression screening questionnaire
+      -GAD-7 Test - Generalized anxiety disorder assessment
+      -Beck Anxiety Inventory (BAI) - Comprehensive anxiety evaluation
+      -BDI-2 Test - Beck Depression Inventory
+      -MMPI-2 Test - Minnesota Multiphasic Personality Inventory
+      -SIS Test - Suicidal Ideation Scale
+      -CPT Test - Continuous Performance Test for attention
+      -Personality Quiz - 4-trait personality assessment (Empath, Strategist, Connector, Innovator, Harmonizer)
+- **👥 Community & Social Features**
+     -Community Forum - User discussion platform with posts and comments
+     -Post Creation/Editing - Rich text editor for community posts
+     -Upvoting System - Community engagement through voting
+     -User Profiles - Detailed profile management with avatars and bios
+     -Follow/Unfollow System - Social networking capabilities
+- **📝 Personal Wellness Tools**
+     -Digital Journal - Personal journaling with mood tracking
+     -Mood Tracker - Daily mood logging with visual charts
+     -Test Results Dashboard - Historical view of all psychological assessments
+     -Progress Tracking - Visual representation of mental health journey
+- **📚 Resource Library**
+     -Mental Health Articles - Curated educational content
+     -Guided Exercises - Step-by-step wellness activities (5-4-3-2-1 grounding, progressive muscle relaxation, breathing exercises)
+     -Educational Videos - Embedded mental health videos
+     -Downloadable Worksheets - PDF resources (mood tracker, thought challenge worksheet, stress management plan)
+     -Search & Filter - Advanced resource discovery system
+- **🏥 Professional Services**
+     -Appointment Booking - Schedule sessions with therapists and psychologists
+     -Provider Profiles - Detailed therapist/psychologist information with ratings
+     -Session Reviews - Rate and review mental health professionals
+     -Availability Management - Real-time scheduling system
+- **📖 Content Management**
+     -Blog System - Educational blog with rich content editor
+     -Article Creation/Editing - Admin content management
+     -SEO Optimization - Meta tags and structured content
+     -Content Categories - Organized content discovery
+- **🆘 Crisis Support**
+    -Emergency Resources - 24/7 crisis hotlines and support
+    -Indian Mental Health Helplines - Localized emergency contacts
+    -Safety Planning - Crisis intervention resources
+    -Immediate Help Detection - AI recognizes crisis situations
 
 ## 🛠️ Tech Stack
 
