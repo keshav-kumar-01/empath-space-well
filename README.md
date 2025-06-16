@@ -2,7 +2,7 @@
 
 ChetnaAI is an AI-powered mental health platform designed to provide emotional support, journaling tools, anonymous community engagement, and personal growth through intelligent conversation. Built with empathy and technology, ChetnaAI aims to break mental health stigmas and make emotional wellness accessible to everyone.
 
-🌐 Live Demo: [chetna.life](https://chetna.life)
+🌐 Website: [chetna.life](https://chetna.life)
 
 ## ✨ Features
 
