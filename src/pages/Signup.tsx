@@ -22,7 +22,7 @@ const Signup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name.trim() || !email.trim() || !password || !confirmPassword) {
       toast({
         variant: "destructive",
         title: "Error",
@@ -39,33 +39,52 @@ const Signup: React.FC = () => {
       });
       return;
     }
+
+    if (password.length < 6) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Password must be at least 6 characters long"
+      });
+      return;
+    }
     
     setIsSubmitting(true);
     
     try {
-      const { error } = await signup(email, password, { name });
+      const { error } = await signup(email.trim(), password, { name: name.trim() });
       
       if (error) {
+        let errorMessage = "Please check your information and try again";
+        
+        if (error.message?.includes('already registered')) {
+          errorMessage = "This email is already registered. Please try logging in instead.";
+        } else if (error.message?.includes('invalid email')) {
+          errorMessage = "Please enter a valid email address";
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
         toast({
           variant: "destructive",
           title: "Sign up failed",
-          description: error.message || "Please check your information and try again"
+          description: errorMessage
         });
-        setIsSubmitting(false);
         return;
       }
       
-      toast({
-        title: "Account created!",
-        description: "You've successfully signed up. Please check your email to confirm your account.",
-      });
-      navigate('/');
+      // Success - the toast will be shown by the auth context
+      // Navigate to home page after a short delay
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
+      
     } catch (error) {
       console.error('Signup error:', error);
       toast({
         variant: "destructive",
         title: "Sign up failed",
-        description: "An unexpected error occurred"
+        description: "An unexpected error occurred. Please try again."
       });
     } finally {
       setIsSubmitting(false);
@@ -106,6 +125,7 @@ const Signup: React.FC = () => {
                   onChange={(e) => setName(e.target.value)}
                   className="pl-10"
                   placeholder="John Doe"
+                  required
                 />
               </div>
             </div>
@@ -121,6 +141,7 @@ const Signup: React.FC = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
                   placeholder="your.email@example.com"
+                  required
                 />
               </div>
             </div>
@@ -133,7 +154,10 @@ const Signup: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
+                required
+                minLength={6}
               />
+              <p className="text-xs text-muted-foreground">Password must be at least 6 characters long</p>
             </div>
             
             <div className="space-y-2">
@@ -144,6 +168,7 @@ const Signup: React.FC = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
+                required
               />
             </div>
             
