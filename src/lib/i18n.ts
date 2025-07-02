@@ -38,8 +38,23 @@ const resources = {
       "header.darkMode": "Dark Mode",
       "header.menu": "Menu",
       
+      // Features Section
+      "features.title": "Comprehensive Mental Health Support",
+      "features.subtitle": "Discover our range of AI-powered tools designed to support your mental wellness journey",
+      "features.moodTracking.title": "Mood Tracking",
+      "features.moodTracking.description": "Track your daily emotions and identify patterns in your mental health journey",
+      "features.appointments.title": "Therapy Sessions",
+      "features.appointments.description": "Book and manage appointments with qualified mental health professionals",
+      "features.resources.title": "Resource Library",
+      "features.resources.description": "Access a comprehensive collection of mental health resources and educational content",
+      "features.community.title": "Community Support",
+      "features.community.description": "Connect with others on similar journeys in a safe, supportive environment",
+      "features.crisis.title": "Crisis Support",
+      "features.crisis.description": "24/7 emergency support and resources for mental health crises",
+      
       // Chat Interface
       "chat.title": "Chat with Chetna",
+      "chat.subtitle": "Your AI companion for mental wellness support and guidance",
       "chat.clearChat": "Clear Chat",
       "chat.placeholder": "Type your message here...",
       "chat.placeholderTyping": "Chetna is typing...",
@@ -103,8 +118,23 @@ const resources = {
       "header.darkMode": "डार्क मोड",
       "header.menu": "मेन्यू",
       
+      // Features Section
+      "features.title": "व्यापक मानसिक स्वास्थ्य सहायता",
+      "features.subtitle": "आपकी मानसिक कल्याण यात्रा का समर्थन करने के लिए डिज़ाइन किए गए हमारे AI-संचालित उपकरणों की खोज करें",
+      "features.moodTracking.title": "मूड ट्रैकिंग",
+      "features.moodTracking.description": "अपनी दैनिक भावनाओं को ट्रैक करें और अपनी मानसिक स्वास्थ्य यात्रा में पैटर्न की पहचान करें",
+      "features.appointments.title": "थेरेपी सत्र",
+      "features.appointments.description": "योग्य मानसिक स्वास्थ्य पेशेवरों के साथ अपॉइंटमेंट बुक करें और प्रबंधित करें",
+      "features.resources.title": "संसाधन पुस्तकालय",
+      "features.resources.description": "मानसिक स्वास्थ्य संसाधनों और शैक्षिक सामग्री के व्यापक संग्रह तक पहुंच प्राप्त करें",
+      "features.community.title": "सामुदायिक सहायता",
+      "features.community.description": "एक सुरक्षित, सहायक वातावरण में समान यात्राओं पर दूसरों से जुड़ें",
+      "features.crisis.title": "संकट सहायता",
+      "features.crisis.description": "मानसिक स्वास्थ्य संकटों के लिए 24/7 आपातकालीन सहायता और संसाधन",
+      
       // Chat Interface
       "chat.title": "चेतना से चैट करें",
+      "chat.subtitle": "मानसिक कल्याण सहायता और मार्गदर्शन के लिए आपकी AI साथी",
       "chat.clearChat": "चैट साफ़ करें",
       "chat.placeholder": "यहाँ अपना संदेश टाइप करें...",
       "chat.placeholderTyping": "चेतना टाइप कर रही है...",
@@ -168,8 +198,23 @@ const resources = {
       "header.darkMode": "ડાર્ક મોડ", 
       "header.menu": "મેન્યુ",
       
+      // Features Section
+      "features.title": "વ્યાપક માનસિક સ્વાસ્થ્ય સહાય",
+      "features.subtitle": "તમારી માનસિક કલ્યાણ યાત્રાને સમર્થન આપવા માટે ડિઝાઇન કરેલા અમારા AI-સંચાલિત સાધનોની શોધ કરો",
+      "features.moodTracking.title": "મૂડ ટ્રૅકિંગ",
+      "features.moodTracking.description": "તમારી દૈનિક લાગણીઓને ટ્રૅક કરો અને તમારી માનસિક સ્વાસ્થ્ય યાત્રામાં પેટર્નની ઓળખ કરો",
+      "features.appointments.title": "થેરાપી સત્રો",
+      "features.appointments.description": "લાયક માનસિક સ્વાસ્થ્ય વ્યાવસાયિકો સાથે એપોઇન્ટમેન્ટ બુક કરો અને મેનેજ કરો",
+      "features.resources.title": "સંસાધન લાઇબ્રેરી",
+      "features.resources.description": "માનસિક સ્વાસ્થ્ય સંસાધનો અને શૈક્ષણિક સામગ્રીના વ્યાપક સંગ્રહને ઍક્સેસ કરો",
+      "features.community.title": "સામુદાયિક સહાય",
+      "features.community.description": "સુરક્ષિત, સહાયક વાતાવરણમાં સમાન યાત્રાઓ પર અન્ય લોકો સાથે જોડાઓ",
+      "features.crisis.title": "કટોકટી સહાય",
+      "features.crisis.description": "માનસિક સ્વાસ્થ્ય કટોકટી માટે 24/7 આપાતકાલીન સહાય અને સંસાધનો",
+      
       // Chat Interface
       "chat.title": "ચેતના સાથે ચેટ કરો",
+      "chat.subtitle": "માનસિક કલ્યાણ સહાય અને માર્ગદર્શન માટે તમારી AI સાથી",
       "chat.clearChat": "ચેટ સાફ કરો",
       "chat.placeholder": "અહીં તમારો સંદેશ ટાઇપ કરો...",
       "chat.placeholderTyping": "ચેતના ટાઇપ કરી રહી છે...",
