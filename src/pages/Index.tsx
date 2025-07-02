@@ -21,11 +21,13 @@ const Index = () => {
 
   const handleStartChat = () => {
     setShowChat(true);
-    // Scroll to chat section
-    const chatSection = document.getElementById('chat-section');
-    if (chatSection) {
-      chatSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    // Scroll to chat section only when user clicks the button
+    setTimeout(() => {
+      const chatSection = document.getElementById('chat-section');
+      if (chatSection) {
+        chatSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
   };
 
   const features = [
@@ -99,20 +101,22 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Chat Interface */}
-        <section id="chat-section" className="py-16 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                {t('chat.title')}
-              </h2>
-              <p className="text-xl text-gray-600">
-                {t('chat.subtitle')}
-              </p>
+        {/* Chat Interface - Only show when user clicks Start Chatting */}
+        {showChat && (
+          <section id="chat-section" className="py-16 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                  {t('chat.title')}
+                </h2>
+                <p className="text-xl text-gray-600">
+                  {t('chat.subtitle')}
+                </p>
+              </div>
+              <ChatInterface />
             </div>
-            <ChatInterface />
-          </div>
-        </section>
+          </section>
+        )}
 
         <ReviewsSection />
         <CustomerServiceBot />
