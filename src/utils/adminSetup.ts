@@ -1,25 +1,8 @@
 
 import { supabase } from '@/integrations/supabase/client';
 
-export const addUserAsAdmin = async (userEmail: string) => {
+export const addUserAsAdmin = async (userId: string) => {
   try {
-    // First, get the user by email
-    const { data: users, error: userError } = await supabase
-      .from('auth.users')
-      .select('id')
-      .eq('email', userEmail);
-
-    if (userError) {
-      console.error('Error finding user:', userError);
-      return { error: 'Failed to find user' };
-    }
-
-    if (!users || users.length === 0) {
-      return { error: 'User not found' };
-    }
-
-    const userId = users[0].id;
-
     // Insert admin role for the user
     const { error: roleError } = await supabase
       .from('user_roles')
