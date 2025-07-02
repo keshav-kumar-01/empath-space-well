@@ -2,170 +2,161 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { 
-  Sparkles, 
+  Brain, 
+  Heart, 
   Mic, 
   Moon, 
   Camera, 
   Target, 
   Users, 
   BarChart3, 
-  Heart,
-  Brain,
-  ArrowRight 
+  MessageHeart,
+  Sparkles,
+  ArrowLeft
 } from 'lucide-react';
+import Header from './Header';
+import Footer from './Footer';
 
 const AIFeaturesMenu = () => {
-  const features = [
+  const aiFeatures = [
     {
       title: 'Wellness Plans',
-      description: 'AI-generated daily/weekly mental health routines',
-      icon: <Sparkles className="h-6 w-6" />,
+      description: 'AI-generated personalized mental health routines',
+      icon: Sparkles,
       path: '/wellness-plans',
-      color: 'from-pink-500 to-purple-500',
-      badge: 'AI-Powered'
+      color: 'bg-gradient-to-br from-pink-500/20 to-purple-500/30',
+      iconColor: 'text-pink-600',
+      badge: 'Popular'
     },
     {
       title: 'Voice Therapy',
-      description: 'AI voice conversations for anxiety/stress relief',
-      icon: <Mic className="h-6 w-6" />,
+      description: 'Talk through your feelings with AI voice analysis',
+      icon: Mic,
       path: '/voice-therapy',
-      color: 'from-blue-500 to-indigo-500',
-      badge: 'Voice AI'
+      color: 'bg-gradient-to-br from-blue-500/20 to-cyan-500/30',
+      iconColor: 'text-blue-600',
+      badge: 'New'
     },
     {
       title: 'Dream Analysis',
-      description: 'AI interpretation of your dreams',
-      icon: <Moon className="h-6 w-6" />,
+      description: 'Understand your dreams with AI interpretation',
+      icon: Moon,
       path: '/dream-analysis',
-      color: 'from-purple-500 to-pink-500',
-      badge: 'Psychology'
+      color: 'bg-gradient-to-br from-purple-500/20 to-indigo-500/30',
+      iconColor: 'text-purple-600'
     },
     {
       title: 'Emotion Recognition',
-      description: 'Upload photos for mood analysis',
-      icon: <Camera className="h-6 w-6" />,
+      description: 'AI-powered facial emotion detection and analysis',
+      icon: Camera,
       path: '/emotion-recognition',
-      color: 'from-green-500 to-teal-500',
-      badge: 'Computer Vision'
+      color: 'bg-gradient-to-br from-green-500/20 to-teal-500/30',
+      iconColor: 'text-green-600'
     },
     {
       title: 'Mental Health Goals',
-      description: 'Gamified mental health goals',
-      icon: <Target className="h-6 w-6" />,
+      description: 'Set and track your mental wellness objectives',
+      icon: Target,
       path: '/goals',
-      color: 'from-orange-500 to-red-500',
-      badge: 'Goal Tracking'
+      color: 'bg-gradient-to-br from-orange-500/20 to-red-500/30',
+      iconColor: 'text-orange-600'
     },
     {
       title: 'Group Therapy',
-      description: 'Video conferencing for group sessions',
-      icon: <Users className="h-6 w-6" />,
+      description: 'Join AI-moderated group therapy sessions',
+      icon: Users,
       path: '/group-therapy',
-      color: 'from-cyan-500 to-blue-500',
-      badge: 'Community'
+      color: 'bg-gradient-to-br from-teal-500/20 to-cyan-500/30',
+      iconColor: 'text-teal-600'
     },
     {
       title: 'Mental Health Insights',
-      description: 'Detailed progress tracking and trends',
-      icon: <BarChart3 className="h-6 w-6" />,
+      description: 'AI-powered analysis of your mental health patterns',
+      icon: BarChart3,
       path: '/insights',
-      color: 'from-indigo-500 to-purple-500',
-      badge: 'Analytics'
+      color: 'bg-gradient-to-br from-violet-500/20 to-purple-500/30',
+      iconColor: 'text-violet-600'
     },
     {
       title: 'Peer Support',
-      description: 'AI-powered peer buddy system',
-      icon: <Heart className="h-6 w-6" />,
+      description: 'Connect with others through AI-powered matching',
+      icon: MessageHeart,
       path: '/peer-support',
-      color: 'from-rose-500 to-pink-500',
-      badge: 'AI Matching'
+      color: 'bg-gradient-to-br from-rose-500/20 to-pink-500/30',
+      iconColor: 'text-rose-600'
     }
   ];
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-3">
-          <Brain className="h-8 w-8 text-purple-600" />
-          AI-Powered Features
-        </h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Discover our advanced AI features designed to enhance your mental wellness journey with 
-          personalized insights and intelligent support.
-        </p>
-      </div>
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {features.map((feature, index) => (
-          <Card key={index} className="hover:shadow-lg transition-all duration-300 group border-0 bg-white/70 backdrop-blur-sm">
-            <CardHeader className="pb-4">
-              <div className="flex items-center justify-between mb-2">
-                <div className={`p-3 rounded-lg bg-gradient-to-r ${feature.color} text-white group-hover:scale-110 transition-transform`}>
-                  {feature.icon}
-                </div>
-                <Badge variant="secondary" className="text-xs">
-                  {feature.badge}
-                </Badge>
-              </div>
-              <CardTitle className="text-lg group-hover:text-purple-600 transition-colors">
-                {feature.title}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                {feature.description}
-              </p>
-              <Link to={feature.path}>
-                <Button 
-                  className="w-full group/btn bg-gradient-to-r from-gray-100 to-gray-200 hover:from-purple-500 hover:to-pink-500 text-gray-700 hover:text-white transition-all duration-300"
-                  variant="outline"
-                >
-                  <span>Explore Feature</span>
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-0">
-        <CardContent className="pt-6">
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center gap-3">
-              <Sparkles className="h-6 w-6 text-purple-600" />
-              <h3 className="text-xl font-semibold text-gray-900">
-                Powered by Advanced AI
-              </h3>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <Link to="/">
+            <Button variant="ghost" className="mb-4">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Home
+            </Button>
+          </Link>
+          
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Brain className="h-8 w-8 text-chetna-primary" />
+              <h1 className="text-4xl font-bold text-gray-900">AI-Powered Features</h1>
             </div>
-            <p className="text-gray-600 max-w-3xl mx-auto">
-              Our AI features use cutting-edge machine learning algorithms to provide personalized 
-              mental health support. From analyzing your emotional patterns to matching you with 
-              compatible peers, our AI is designed to understand and support your unique journey.
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Discover cutting-edge AI tools designed to enhance your mental wellness journey
             </p>
-            <div className="grid md:grid-cols-3 gap-4 mt-6 text-sm">
-              <div className="text-center">
-                <Brain className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                <h4 className="font-medium">Personalized AI</h4>
-                <p className="text-gray-600">Adapts to your unique mental health profile</p>
-              </div>
-              <div className="text-center">
-                <Heart className="h-8 w-8 text-pink-500 mx-auto mb-2" />
-                <h4 className="font-medium">Empathetic Support</h4>
-                <p className="text-gray-600">AI trained in therapeutic communication</p>
-              </div>
-              <div className="text-center">
-                <BarChart3 className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                <h4 className="font-medium">Data-Driven Insights</h4>
-                <p className="text-gray-600">Analytics for meaningful progress tracking</p>
-              </div>
-            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {aiFeatures.map((feature, index) => (
+            <Link key={index} to={feature.path}>
+              <Card className={`h-full hover:shadow-lg transition-all duration-300 hover:scale-105 ${feature.color} border-2 hover:border-chetna-primary/30`}>
+                <CardHeader className="pb-4">
+                  <div className="flex items-start justify-between">
+                    <div className={`p-3 rounded-lg bg-white/50 ${feature.iconColor}`}>
+                      <feature.icon className="h-6 w-6" />
+                    </div>
+                    {feature.badge && (
+                      <Badge variant="secondary" className="text-xs">
+                        {feature.badge}
+                      </Badge>
+                    )}
+                  </div>
+                  <CardTitle className="text-xl text-gray-900">
+                    {feature.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+
+        <div className="text-center">
+          <div className="bg-white/50 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+            <Heart className="h-8 w-8 text-chetna-primary mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              More AI Features Coming Soon!
+            </h3>
+            <p className="text-gray-600">
+              We're constantly developing new AI-powered tools to support your mental health journey.
+            </p>
+          </div>
+        </div>
+      </main>
+      
+      <Footer />
     </div>
   );
 };
