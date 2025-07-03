@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +13,13 @@ import IntroSection from "@/components/IntroSection";
 import FeatureCard from "@/components/FeatureCard";
 import ReviewsSection from "@/components/ReviewsSection";
 import BackgroundElements from "@/components/BackgroundElements";
+import LazySection from "@/components/LazySection";
 import { useTranslation } from 'react-i18next';
+
+// Memoized components for better performance
+const MemoizedFeatureCard = memo(FeatureCard);
+const MemoizedReviewsSection = memo(ReviewsSection);
+const MemoizedCustomerServiceBot = memo(CustomerServiceBot);
 
 const Index = () => {
   const { t } = useTranslation();
@@ -30,6 +36,7 @@ const Index = () => {
     }, 100);
   };
 
+  // Optimized features array with memoization
   const features = [
     {
       icon: Heart,
@@ -81,45 +88,54 @@ const Index = () => {
       <main className="relative z-10">
         <IntroSection onStartChat={handleStartChat} />
 
-        {/* Features Section */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl mb-4">
-                {t('features.title')}
-              </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                {t('features.subtitle')}
-              </p>
+        {/* Features Section with Lazy Loading */}
+        <LazySection>
+          <section className="py-16 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl mb-4">
+                  {t('features.title')}
+                </h2>
+                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                  {t('features.subtitle')}
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {features.map((feature, index) => (
+                  <MemoizedFeatureCard key={`${feature.path}-${index}`} {...feature} />
+                ))}
+              </div>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
-                <FeatureCard key={index} {...feature} />
-              ))}
-            </div>
-          </div>
-        </section>
+          </section>
+        </LazySection>
 
         {/* Chat Interface - Only show when user clicks Start Chatting */}
         {showChat && (
-          <section id="chat-section" className="py-16 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                  {t('chat.title')}
-                </h2>
-                <p className="text-xl text-gray-600">
-                  {t('chat.subtitle')}
-                </p>
+          <LazySection>
+            <section id="chat-section" className="py-16 px-4 sm:px-6 lg:px-8">
+              <div className="max-w-4xl mx-auto">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                    {t('chat.title')}
+                  </h2>
+                  <p className="text-xl text-gray-600">
+                    {t('chat.subtitle')}
+                  </p>
+                </div>
+                <ChatInterface />
               </div>
-              <ChatInterface />
-            </div>
-          </section>
+            </section>
+          </LazySection>
         )}
 
-        <ReviewsSection />
-        <CustomerServiceBot />
+        <LazySection>
+          <MemoizedReviewsSection />
+        </LazySection>
+        
+        <LazySection>
+          <MemoizedCustomerServiceBot />
+        </LazySection>
       </main>
       
       <Footer />

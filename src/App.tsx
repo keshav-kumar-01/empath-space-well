@@ -8,20 +8,23 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from "@/context/AuthContext";
 import Navigation from "@/components/Navigation";
+import OptimizedLoadingSpinner from "@/components/OptimizedLoadingSpinner";
 import "./App.css";
 import "./lib/i18n";
 
-// Configure QueryClient for better performance
+// Enhanced QueryClient configuration for better performance
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes
+      staleTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 15 * 60 * 1000, // 15 minutes
+      retry: 1, // Reduce retries for faster failure handling
+      refetchOnWindowFocus: false, // Prevent unnecessary refetches
     },
   },
 });
 
-// Lazy load pages for better initial load performance
+// Lazy load pages with prefetching for critical routes
 const Index = lazy(() => import("./pages/Index"));
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 const MoodTracker = lazy(() => import("./pages/MoodTracker"));
@@ -50,7 +53,7 @@ const Signup = lazy(() => import("./pages/Signup"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 
-// New AI-powered feature pages
+// AI-powered feature pages
 const WellnessPlans = lazy(() => import("./pages/WellnessPlans"));
 const VoiceTherapy = lazy(() => import("./pages/VoiceTherapy"));
 const DreamAnalysis = lazy(() => import("./pages/DreamAnalysis"));
@@ -60,13 +63,6 @@ const GroupTherapy = lazy(() => import("./pages/GroupTherapy"));
 const MentalHealthInsights = lazy(() => import("./pages/MentalHealthInsights"));
 const PeerSupport = lazy(() => import("./pages/PeerSupport"));
 const AIFeaturesMenu = lazy(() => import("./components/AIFeaturesMenu"));
-
-// Optimized loading spinner
-const LoadingSpinner = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-chetna-primary"></div>
-  </div>
-);
 
 function App() {
   return (
@@ -78,7 +74,7 @@ function App() {
             <Sonner />
             <BrowserRouter>
               <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
-                <Suspense fallback={<LoadingSpinner />}>
+                <Suspense fallback={<OptimizedLoadingSpinner />}>
                   <Routes>
                     <Route path="/" element={<Index />} />
                     <Route path="/profile" element={<UserProfile />} />

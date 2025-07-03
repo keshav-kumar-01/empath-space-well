@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +19,37 @@ import {
 } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
+import LazySection from './LazySection';
+
+// Memoized card component for better performance
+const FeatureCard = memo(({ feature, index }: { feature: any; index: number }) => (
+  <Link key={index} to={feature.path}>
+    <Card className={`h-full hover:shadow-lg transition-all duration-300 hover:scale-105 ${feature.color} border-2 hover:border-chetna-primary/30 will-change-transform`}>
+      <CardHeader className="pb-4">
+        <div className="flex items-start justify-between">
+          <div className={`p-3 rounded-lg bg-white/50 ${feature.iconColor}`}>
+            <feature.icon className="h-6 w-6" />
+          </div>
+          {feature.badge && (
+            <Badge variant="secondary" className="text-xs">
+              {feature.badge}
+            </Badge>
+          )}
+        </div>
+        <CardTitle className="text-xl text-gray-900">
+          {feature.title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-600 leading-relaxed">
+          {feature.description}
+        </p>
+      </CardContent>
+    </Card>
+  </Link>
+));
+
+FeatureCard.displayName = 'FeatureCard';
 
 const AIFeaturesMenu = () => {
   const aiFeatures = [
@@ -114,46 +145,27 @@ const AIFeaturesMenu = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {aiFeatures.map((feature, index) => (
-            <Link key={index} to={feature.path}>
-              <Card className={`h-full hover:shadow-lg transition-all duration-300 hover:scale-105 ${feature.color} border-2 hover:border-chetna-primary/30`}>
-                <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between">
-                    <div className={`p-3 rounded-lg bg-white/50 ${feature.iconColor}`}>
-                      <feature.icon className="h-6 w-6" />
-                    </div>
-                    {feature.badge && (
-                      <Badge variant="secondary" className="text-xs">
-                        {feature.badge}
-                      </Badge>
-                    )}
-                  </div>
-                  <CardTitle className="text-xl text-gray-900">
-                    {feature.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 leading-relaxed">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
-
-        <div className="text-center">
-          <div className="bg-white/50 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-            <Heart className="h-8 w-8 text-chetna-primary mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              More AI Features Coming Soon!
-            </h3>
-            <p className="text-gray-600">
-              We're constantly developing new AI-powered tools to support your mental health journey.
-            </p>
+        <LazySection>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {aiFeatures.map((feature, index) => (
+              <FeatureCard key={`${feature.path}-${index}`} feature={feature} index={index} />
+            ))}
           </div>
-        </div>
+        </LazySection>
+
+        <LazySection>
+          <div className="text-center">
+            <div className="bg-white/50 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+              <Heart className="h-8 w-8 text-chetna-primary mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                More AI Features Coming Soon!
+              </h3>
+              <p className="text-gray-600">
+                We're constantly developing new AI-powered tools to support your mental health journey.
+              </p>
+            </div>
+          </div>
+        </LazySection>
       </main>
       
       <Footer />
@@ -161,4 +173,4 @@ const AIFeaturesMenu = () => {
   );
 };
 
-export default AIFeaturesMenu;
+export default memo(AIFeaturesMenu);

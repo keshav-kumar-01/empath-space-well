@@ -77,11 +77,14 @@
   animation: fade-in 0.3s ease-out; 
 }
 
+/* Optimized chat container with better performance */
 .chat-container {
   @apply flex flex-col rounded-3xl overflow-hidden backdrop-blur-xl;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(148, 163, 184, 0.2);
   box-shadow: 0 10px 30px rgba(139, 92, 246, 0.1);
+  will-change: transform;
+  contain: layout style paint;
 }
 
 .dark .chat-container {
@@ -95,6 +98,7 @@
   background: rgba(255, 255, 255, 0.8);
   scrollbar-width: thin;
   scrollbar-color: rgba(139, 92, 246, 0.5) transparent;
+  contain: layout style paint;
 }
 
 .dark .message-container {
@@ -105,6 +109,7 @@
   @apply rounded-2xl backdrop-blur-xl border transition-colors duration-200;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(139, 92, 246, 0.2);
+  contain: layout style;
 }
 
 .dark .message-input {
@@ -131,6 +136,8 @@
   @apply rounded-2xl border backdrop-blur-xl transition-transform duration-200;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(148, 163, 184, 0.2);
+  will-change: transform;
+  contain: layout style paint;
 }
 
 .feature-card:hover { 
@@ -158,4 +165,41 @@
   .will-change-transform {
     will-change: auto;
   }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  .chat-container {
+    backdrop-filter: blur(8px);
+  }
+  
+  .message-container {
+    backdrop-filter: blur(8px);
+  }
+  
+  .feature-card {
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Optimize image loading */
+img {
+  content-visibility: auto;
+  contain-intrinsic-size: 200px 200px;
+}
+
+/* Optimize text rendering */
+h1, h2, h3, h4, h5, h6 {
+  text-rendering: optimizeLegibility;
+  font-display: swap;
+}
+
+/* Optimize layout shifts */
+.container {
+  contain: layout;
+}
+
+/* Reduce repaints */
+.bg-gradient-to-br {
+  contain: style;
 }
