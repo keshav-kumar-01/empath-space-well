@@ -5,16 +5,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Users, Video, Clock, UserPlus, UserMinus, Calendar } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Users, Video, UserPlus, UserMinus, Calendar, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const GroupTherapy = () => {
-  const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: rooms } = useQuery({
+  const { data: rooms, isLoading } = useQuery({
     queryKey: ['group-therapy-rooms'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -30,7 +31,10 @@ const GroupTherapy = () => {
         .eq('is_active', true)
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching rooms:', error);
+        throw error;
+      }
       return data;
     },
   });
@@ -38,19 +42,28 @@ const GroupTherapy = () => {
   const { data: myParticipations } = useQuery({
     queryKey: ['my-group-participations'],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+      
       const { data, error } = await supabase
         .from('group_therapy_participants')
         .select('*')
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+        .eq('user_id', user.id)
         .eq('is_active', true);
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching participations:', error);
+        throw error;
+      }
       return data;
     },
   });
 
   const joinRoomMutation = useMutation({
     mutationFn: async (roomId: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
       const room = rooms?.find(r => r.id === roomId);
       if (!room) throw new Error('Room not found');
       
@@ -62,7 +75,7 @@ const GroupTherapy = () => {
         .from('group_therapy_participants')
         .insert({
           room_id: roomId,
-          user_id: (await supabase.auth.getUser()).data.user?.id,
+          user_id: user.id,
         })
         .select()
         .single();
@@ -89,11 +102,14 @@ const GroupTherapy = () => {
 
   const leaveRoomMutation = useMutation({
     mutationFn: async (roomId: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
       const { error } = await supabase
         .from('group_therapy_participants')
         .update({ is_active: false })
         .eq('room_id', roomId)
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
+        .eq('user_id', user.id);
 
       if (error) throw error;
 
@@ -149,117 +165,143 @@ const GroupTherapy = () => {
     }
   };
 
-  return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">👥 Group Therapy Rooms</h1>
-        <p className="text-gray-600">Join supportive group sessions for healing and growth</p>
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+        <Header />
+        <div className="container mx-auto p-6">
+          <div className="text-center">Loading group therapy rooms...</div>
+        </div>
       </div>
+    );
+  }
 
-      <div className="grid gap-6">
-        {rooms?.map((room) => (
-          <Card key={room.id} className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{getTherapyTypeEmoji(room.therapy_type)}</span>
-                  <div>
-                    <CardTitle className="text-lg">{room.room_name}</CardTitle>
-                    <p className="text-gray-600 text-sm mt-1">{room.description}</p>
-                  </div>
-                </div>
-                <Badge className={getTherapyTypeColor(room.therapy_type)}>
-                  {room.therapy_type}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-4 text-sm text-gray-600">
-                  <div className="flex items-center gap-1">
-                    <Users className="h-4 w-4" />
-                    {room.current_participants}/{room.max_participants} members
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4" />
-                    {formatSchedule(room.meeting_schedule)}
-                  </div>
-                </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <Header />
+      
+      <main className="container mx-auto p-6 space-y-6">
+        <div className="mb-8">
+          <Link to="/ai-features">
+            <Button variant="ghost" className="mb-4">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to AI Features
+            </Button>
+          </Link>
+          
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">👥 Group Therapy Rooms</h1>
+            <p className="text-gray-600">Join supportive group sessions for healing and growth</p>
+          </div>
+        </div>
 
-                <div className="flex items-center gap-2">
-                  {isUserInRoom(room.id) ? (
-                    <>
+        <div className="grid gap-6">
+          {rooms?.map((room) => (
+            <Card key={room.id} className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="flex justify-between items-start">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{getTherapyTypeEmoji(room.therapy_type)}</span>
+                    <div>
+                      <CardTitle className="text-lg">{room.room_name}</CardTitle>
+                      <p className="text-gray-600 text-sm mt-1">{room.description}</p>
+                    </div>
+                  </div>
+                  <Badge className={getTherapyTypeColor(room.therapy_type)}>
+                    {room.therapy_type}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <Users className="h-4 w-4" />
+                      {room.current_participants}/{room.max_participants} members
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-4 w-4" />
+                      {formatSchedule(room.meeting_schedule)}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {isUserInRoom(room.id) ? (
+                      <>
+                        <Button
+                          size="sm"
+                          className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600"
+                        >
+                          <Video className="mr-2 h-4 w-4" />
+                          Join Session
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => leaveRoomMutation.mutate(room.id)}
+                        >
+                          <UserMinus className="h-4 w-4" />
+                        </Button>
+                      </>
+                    ) : (
                       <Button
                         size="sm"
-                        className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600"
+                        onClick={() => joinRoomMutation.mutate(room.id)}
+                        disabled={room.current_participants >= room.max_participants}
+                        className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
                       >
-                        <Video className="mr-2 h-4 w-4" />
-                        Join Session
+                        <UserPlus className="mr-2 h-4 w-4" />
+                        {room.current_participants >= room.max_participants ? 'Room Full' : 'Join Room'}
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => leaveRoomMutation.mutate(room.id)}
-                      >
-                        <UserMinus className="h-4 w-4" />
-                      </Button>
-                    </>
-                  ) : (
-                    <Button
-                      size="sm"
-                      onClick={() => joinRoomMutation.mutate(room.id)}
-                      disabled={room.current_participants >= room.max_participants}
-                      className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
-                    >
-                      <UserPlus className="mr-2 h-4 w-4" />
-                      {room.current_participants >= room.max_participants ? 'Room Full' : 'Join Room'}
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              {room.group_therapy_participants && room.group_therapy_participants.length > 0 && (
-                <div>
-                  <p className="text-sm font-medium mb-2">Active Members</p>
-                  <div className="flex -space-x-2">
-                    {room.group_therapy_participants
-                      .filter((p: any) => p.is_active)
-                      .slice(0, 5)
-                      .map((participant: any, index: number) => (
-                        <Avatar key={participant.id} className="border-2 border-white w-8 h-8">
-                          <AvatarFallback className="text-xs">
-                            U{index + 1}
-                          </AvatarFallback>
-                        </Avatar>
-                      ))}
-                    {room.group_therapy_participants.filter((p: any) => p.is_active).length > 5 && (
-                      <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs">
-                        +{room.group_therapy_participants.filter((p: any) => p.is_active).length - 5}
-                      </div>
                     )}
                   </div>
                 </div>
-              )}
 
-              {isUserInRoom(room.id) && (
-                <div className="bg-green-50 p-3 rounded-lg">
-                  <p className="text-green-800 text-sm font-medium">
-                    🌸 You're a member of this group! The next session will start soon.
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                {room.group_therapy_participants && room.group_therapy_participants.length > 0 && (
+                  <div>
+                    <p className="text-sm font-medium mb-2">Active Members</p>
+                    <div className="flex -space-x-2">
+                      {room.group_therapy_participants
+                        .filter((p: any) => p.is_active)
+                        .slice(0, 5)
+                        .map((participant: any, index: number) => (
+                          <Avatar key={participant.id} className="border-2 border-white w-8 h-8">
+                            <AvatarFallback className="text-xs">
+                              U{index + 1}
+                            </AvatarFallback>
+                          </Avatar>
+                        ))}
+                      {room.group_therapy_participants.filter((p: any) => p.is_active).length > 5 && (
+                        <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs">
+                          +{room.group_therapy_participants.filter((p: any) => p.is_active).length - 5}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
-      {rooms?.length === 0 && (
-        <div className="text-center py-12">
-          <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No active therapy rooms</h3>
-          <p className="text-gray-600">New group therapy sessions will be available soon!</p>
+                {isUserInRoom(room.id) && (
+                  <div className="bg-green-50 p-3 rounded-lg">
+                    <p className="text-green-800 text-sm font-medium">
+                      🌸 You're a member of this group! The next session will start soon.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      )}
+
+        {rooms?.length === 0 && (
+          <div className="text-center py-12">
+            <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No active therapy rooms</h3>
+            <p className="text-gray-600">New group therapy sessions will be available soon!</p>
+          </div>
+        )}
+      </main>
+      
+      <Footer />
     </div>
   );
 };
