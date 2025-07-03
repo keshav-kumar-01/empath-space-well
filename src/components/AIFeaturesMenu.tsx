@@ -13,7 +13,7 @@ import {
   Target, 
   Users, 
   BarChart3, 
-  MessageHeart,
+  MessageCircle,
   Sparkles,
   ArrowLeft
 } from 'lucide-react';
@@ -83,7 +83,7 @@ const AIFeaturesMenu = () => {
     {
       title: 'Peer Support',
       description: 'Connect with others through AI-powered matching',
-      icon: MessageHeart,
+      icon: MessageCircle,
       path: '/peer-support',
       color: 'bg-gradient-to-br from-rose-500/20 to-pink-500/30',
       iconColor: 'text-rose-600'
