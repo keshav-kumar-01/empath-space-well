@@ -1,0 +1,55 @@
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .will-change-transform {
+    will-change: auto;
+  }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  .chat-container {
+    backdrop-filter: blur(8px);
+  }
+  
+  .message-container {
+    backdrop-filter: blur(8px);
+  }
+  
+  .feature-card {
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Optimize image loading */
+img {
+  content-visibility: auto;
+  contain-intrinsic-size: 200px 200px;
+}
+
+/* Optimize text rendering */
+h1, h2, h3, h4, h5, h6 {
+  text-rendering: optimizeLegibility;
+  font-display: swap;
+}
+
+/* Optimize layout shifts */
+.container {
+  contain: layout;
+}
+
+/* Reduce repaints */
+.bg-gradient-to-br {
+  contain: style;
+}

@@ -1,0 +1,76 @@
+
+/* Chat Components */
+.chat-container {
+  @apply flex flex-col rounded-3xl overflow-hidden backdrop-blur-xl border;
+  background: hsl(0 0% 100% / 0.9);
+  border-color: hsl(240 5.9% 90%);
+  box-shadow: 0 10px 30px hsl(260 63% 64% / 0.1);
+  will-change: transform;
+  contain: layout style paint;
+}
+
+.dark .chat-container {
+  background: hsl(240 10% 3.9% / 0.95);
+  border-color: hsl(240 3.7% 15.9%);
+  box-shadow: 0 10px 30px hsl(0 0% 0% / 0.5);
+}
+
+.message-container {
+  @apply rounded-2xl backdrop-blur-xl p-6 min-h-96 max-h-96 overflow-y-auto border;
+  background: hsl(0 0% 100% / 0.8);
+  border-color: hsl(240 5.9% 90%);
+  scrollbar-width: thin;
+  scrollbar-color: hsl(260 63% 64% / 0.5) transparent;
+  contain: layout style paint;
+}
+
+.dark .message-container {
+  background: hsl(240 10% 3.9% / 0.8);
+  border-color: hsl(240 3.7% 15.9%);
+}
+
+.message-input {
+  @apply rounded-2xl backdrop-blur-xl border transition-colors duration-200;
+  background: hsl(0 0% 100% / 0.9);
+  border-color: hsl(260 63% 64% / 0.2);
+  contain: layout style;
+}
+
+.dark .message-input {
+  background: hsl(240 10% 3.9% / 0.9);
+  border-color: hsl(240 3.7% 15.9%);
+}
+
+.message-input:focus-within {
+  border-color: hsl(260 63% 64% / 0.6);
+  box-shadow: 0 0 0 3px hsl(260 63% 64% / 0.1);
+}
+
+.dark .message-input:focus-within {
+  border-color: hsl(263 70% 50%);
+  box-shadow: 0 0 0 3px hsl(263 70% 50% / 0.2);
+}
+
+/* Feature Cards */
+.feature-card {
+  @apply rounded-2xl border backdrop-blur-xl transition-all duration-200;
+  background: hsl(0 0% 100% / 0.9);
+  border-color: hsl(240 5.9% 90%);
+  will-change: transform;
+  contain: layout style paint;
+}
+
+.feature-card:hover { 
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px hsl(260 63% 64% / 0.15);
+}
+
+.dark .feature-card {
+  background: hsl(240 10% 3.9% / 0.95);
+  border-color: hsl(240 3.7% 15.9%);
+}
+
+.dark .feature-card:hover {
+  box-shadow: 0 10px 25px hsl(0 0% 0% / 0.3);
+  border-color: hsl(263 70% 50% / 0.3);
+}

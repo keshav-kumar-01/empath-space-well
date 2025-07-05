@@ -1,0 +1,11 @@
+
+/* Custom Scrollbars */
+.message-container::-webkit-scrollbar { width: 6px; }
+.message-container::-webkit-scrollbar-track { background: transparent; }
+.message-container::-webkit-scrollbar-thumb { 
+  background: hsl(260 63% 64% / 0.5); 
+  border-radius: 10px; 
+}
+.message-container::-webkit-scrollbar-thumb:hover { 
+  background: hsl(260 63% 64% / 0.7); 
+}
