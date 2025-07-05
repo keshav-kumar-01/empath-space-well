@@ -29,24 +29,24 @@
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
-    --popover: 224 71% 4%;
-    --popover-foreground: 213 31% 91%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
     --primary: 263 70% 50%;
     --primary-foreground: 210 20% 98%;
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 215 28% 17%;
-    --muted-foreground: 217 11% 65%;
-    --accent: 215 28% 17%;
-    --accent-foreground: 210 20% 98%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 215 28% 17%;
-    --input: 215 28% 17%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
     --ring: 263 70% 50%;
   }
   
@@ -58,13 +58,14 @@
   body {
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+    background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 50%, hsl(210 40% 90%) 100%);
     min-height: 100vh;
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   .dark body {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    background: linear-gradient(135deg, hsl(240 10% 3.9%) 0%, hsl(240 10% 8%) 50%, hsl(240 10% 12%) 100%);
+    color: hsl(0 0% 98%);
   }
 }
 
@@ -79,74 +80,87 @@
 
 /* Optimized chat container with better performance */
 .chat-container {
-  @apply flex flex-col rounded-3xl overflow-hidden backdrop-blur-xl;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.1);
+  @apply flex flex-col rounded-3xl overflow-hidden backdrop-blur-xl border;
+  background: hsl(0 0% 100% / 0.9);
+  border-color: hsl(240 5.9% 90%);
+  box-shadow: 0 10px 30px hsl(260 63% 64% / 0.1);
   will-change: transform;
   contain: layout style paint;
 }
 
 .dark .chat-container {
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  background: hsl(240 10% 3.9% / 0.95);
+  border-color: hsl(240 3.7% 15.9%);
+  box-shadow: 0 10px 30px hsl(0 0% 0% / 0.5);
 }
 
 .message-container {
-  @apply rounded-2xl backdrop-blur-xl p-6 min-h-96 max-h-96 overflow-y-auto;
-  background: rgba(255, 255, 255, 0.8);
+  @apply rounded-2xl backdrop-blur-xl p-6 min-h-96 max-h-96 overflow-y-auto border;
+  background: hsl(0 0% 100% / 0.8);
+  border-color: hsl(240 5.9% 90%);
   scrollbar-width: thin;
-  scrollbar-color: rgba(139, 92, 246, 0.5) transparent;
+  scrollbar-color: hsl(260 63% 64% / 0.5) transparent;
   contain: layout style paint;
 }
 
 .dark .message-container {
-  background: rgba(15, 23, 42, 0.8);
+  background: hsl(240 10% 3.9% / 0.8);
+  border-color: hsl(240 3.7% 15.9%);
 }
 
 .message-input {
   @apply rounded-2xl backdrop-blur-xl border transition-colors duration-200;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: hsl(0 0% 100% / 0.9);
+  border-color: hsl(260 63% 64% / 0.2);
   contain: layout style;
 }
 
 .dark .message-input {
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(139, 92, 246, 0.4);
+  background: hsl(240 10% 3.9% / 0.9);
+  border-color: hsl(240 3.7% 15.9%);
 }
 
 .message-input:focus-within {
-  border-color: rgba(139, 92, 246, 0.6);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  border-color: hsl(260 63% 64% / 0.6);
+  box-shadow: 0 0 0 3px hsl(260 63% 64% / 0.1);
+}
+
+.dark .message-input:focus-within {
+  border-color: hsl(263 70% 50%);
+  box-shadow: 0 0 0 3px hsl(263 70% 50% / 0.2);
 }
 
 .message-container::-webkit-scrollbar { width: 6px; }
 .message-container::-webkit-scrollbar-track { background: transparent; }
 .message-container::-webkit-scrollbar-thumb { 
-  background: rgba(139, 92, 246, 0.5); 
+  background: hsl(260 63% 64% / 0.5); 
   border-radius: 10px; 
 }
 .message-container::-webkit-scrollbar-thumb:hover { 
-  background: rgba(139, 92, 246, 0.7); 
+  background: hsl(260 63% 64% / 0.7); 
 }
 
 .feature-card {
-  @apply rounded-2xl border backdrop-blur-xl transition-transform duration-200;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  @apply rounded-2xl border backdrop-blur-xl transition-all duration-200;
+  background: hsl(0 0% 100% / 0.9);
+  border-color: hsl(240 5.9% 90%);
   will-change: transform;
   contain: layout style paint;
 }
 
 .feature-card:hover { 
-  transform: translateY(-2px); 
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px hsl(260 63% 64% / 0.15);
 }
 
 .dark .feature-card {
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: hsl(240 10% 3.9% / 0.95);
+  border-color: hsl(240 3.7% 15.9%);
+}
+
+.dark .feature-card:hover {
+  box-shadow: 0 10px 25px hsl(0 0% 0% / 0.3);
+  border-color: hsl(263 70% 50% / 0.3);
 }
 
 /* Performance optimizations */

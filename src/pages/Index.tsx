@@ -44,7 +44,7 @@ const Index = () => {
       description: t('features.moodTracking.description'),
       path: "/mood-tracker",
       iconColor: "text-chetna-primary",
-      backgroundGradient: "bg-gradient-to-br from-chetna-primary/20 to-chetna-primary/30"
+      backgroundGradient: "bg-gradient-to-br from-chetna-primary/20 to-chetna-primary/30 dark:from-chetna-primary/10 dark:to-chetna-primary/20"
     },
     {
       icon: Calendar,
@@ -52,7 +52,7 @@ const Index = () => {
       description: t('features.appointments.description'),
       path: "/appointments",
       iconColor: "text-chetna-secondary",
-      backgroundGradient: "bg-gradient-to-br from-chetna-secondary/20 to-chetna-secondary/30"
+      backgroundGradient: "bg-gradient-to-br from-chetna-secondary/20 to-chetna-secondary/30 dark:from-chetna-secondary/10 dark:to-chetna-secondary/20"
     },
     {
       icon: BookOpen,
@@ -60,28 +60,28 @@ const Index = () => {
       description: t('features.resources.description'),
       path: "/resources",
       iconColor: "text-chetna-accent",
-      backgroundGradient: "bg-gradient-to-br from-chetna-accent/20 to-chetna-accent/30"
+      backgroundGradient: "bg-gradient-to-br from-chetna-accent/20 to-chetna-accent/30 dark:from-chetna-accent/10 dark:to-chetna-accent/20"
     },
     {
       icon: Users,
       title: t('features.community.title'),
       description: t('features.community.description'),
       path: "/community",
-      iconColor: "text-blue-600",
-      backgroundGradient: "bg-gradient-to-br from-blue-500/20 to-blue-600/30"
+      iconColor: "text-blue-600 dark:text-blue-400",
+      backgroundGradient: "bg-gradient-to-br from-blue-500/20 to-blue-600/30 dark:from-blue-500/10 dark:to-blue-600/20"
     },
     {
       icon: Shield,
       title: t('features.crisis.title'),
       description: t('features.crisis.description'),
       path: "/crisis-support",
-      iconColor: "text-red-600",
-      backgroundGradient: "bg-gradient-to-br from-red-500/20 to-red-600/30"
+      iconColor: "text-red-600 dark:text-red-400",
+      backgroundGradient: "bg-gradient-to-br from-red-500/20 to-red-600/30 dark:from-red-500/10 dark:to-red-600/20"
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
       <BackgroundElements />
       <Header />
       
@@ -93,10 +93,10 @@ const Index = () => {
           <section className="py-16 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-16">
-                <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl mb-4">
+                <h2 className="text-3xl font-bold text-foreground sm:text-4xl mb-4">
                   {t('features.title')}
                 </h2>
-                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                   {t('features.subtitle')}
                 </p>
               </div>
@@ -116,10 +116,10 @@ const Index = () => {
             <section id="chat-section" className="py-16 px-4 sm:px-6 lg:px-8">
               <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                  <h2 className="text-3xl font-bold text-foreground mb-4">
                     {t('chat.title')}
                   </h2>
-                  <p className="text-xl text-gray-600">
+                  <p className="text-xl text-muted-foreground">
                     {t('chat.subtitle')}
                   </p>
                 </div>
