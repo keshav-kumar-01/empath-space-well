@@ -12,10 +12,10 @@ import MMPI2Test from '@/components/tests/MMPI2Test';
 import SISTest from '@/components/tests/SISTest';
 
 const PsychTestRunner = () => {
-  const { testId } = useParams<{ testId: string }>();
+  const { testType } = useParams<{ testType: string }>();
 
   const renderTest = () => {
-    switch (testId) {
+    switch (testType) {
       case 'gad7':
         return <GAD7Test />;
       case 'bai':
