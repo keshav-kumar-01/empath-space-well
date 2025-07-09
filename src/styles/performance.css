@@ -21,14 +21,66 @@
 @media (max-width: 768px) {
   .chat-container {
     backdrop-filter: blur(8px);
+    margin: 0 1rem;
+    min-height: 60vh;
+    max-height: 70vh;
   }
   
   .message-container {
     backdrop-filter: blur(8px);
+    padding: 1rem;
+    min-height: 40vh;
+    max-height: 50vh;
   }
   
   .feature-card {
     backdrop-filter: blur(8px);
+    margin: 0.5rem 0;
+  }
+  
+  /* Fix flex layouts on mobile */
+  .flex {
+    display: flex !important;
+  }
+  
+  .flex-col {
+    flex-direction: column !important;
+  }
+  
+  .flex-row {
+    flex-direction: row !important;
+  }
+  
+  .flex-wrap {
+    flex-wrap: wrap !important;
+  }
+  
+  .items-center {
+    align-items: center !important;
+  }
+  
+  .justify-between {
+    justify-content: space-between !important;
+  }
+  
+  .justify-center {
+    justify-content: center !important;
+  }
+  
+  /* Container improvements */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: 100%;
+  }
+  
+  /* Navigation improvements */
+  .md\\:hidden {
+    display: block !important;
+  }
+  
+  .hidden.md\\:flex {
+    display: none !important;
   }
 }
 

@@ -362,7 +362,7 @@ const ChatInterface: React.FC = () => {
   };
 
   return (
-    <div className="chat-container flex flex-col h-[70vh] md:h-[75vh] bg-white dark:bg-chetna-dark/50 rounded-xl shadow-lg overflow-hidden border border-chetna-primary/10 dark:border-chetna-primary/30">
+    <div className="chat-container flex flex-col h-[60vh] sm:h-[65vh] md:h-[75vh] bg-white dark:bg-chetna-dark/50 rounded-xl shadow-lg overflow-hidden border border-chetna-primary/10 dark:border-chetna-primary/30 w-full max-w-full mx-auto">
       {/* Chat header with clear button */}
       <div className="flex justify-between items-center p-3 border-b border-chetna-primary/10 dark:border-chetna-primary/30 bg-gradient-to-r from-chetna-primary/5 to-chetna-accent/5">
         <h3 className="font-semibold text-chetna-primary dark:text-chetna-primary">{t('chat.title')}</h3>
@@ -376,7 +376,7 @@ const ChatInterface: React.FC = () => {
         </Button>
       </div>
 
-      <div className="message-container flex-grow p-4 md:p-6 overflow-y-auto space-y-4 bg-white/80 dark:bg-chetna-darker/80">
+      <div className="message-container flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto space-y-4 bg-white/80 dark:bg-chetna-darker/80 w-full">
         {loadingModel && (
           <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-2 mb-2 text-sm text-center">
             {t('chat.connecting')}
