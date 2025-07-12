@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -10,9 +9,11 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar, Clock, User, Mail, Shield, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, User, Mail, Shield, CheckCircle, XCircle, AlertCircle, Plus } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
+import AddTherapistForm from '@/components/AddTherapistForm';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface Appointment {
   id: string;
@@ -52,6 +53,7 @@ const AdminDashboard: React.FC = () => {
   const [selectedAppointment, setSelectedAppointment] = useState<string>('');
   const [statusNotes, setStatusNotes] = useState<string>('');
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [showAddTherapistDialog, setShowAddTherapistDialog] = useState<boolean>(false);
 
   // Check if user is admin
   useEffect(() => {
@@ -88,6 +90,27 @@ const AdminDashboard: React.FC = () => {
       
       console.log('Fetched appointments:', data);
       return data as Appointment[];
+    },
+    enabled: isAdmin
+  });
+
+  // Fetch therapists for admin
+  const { data: therapists = [], isLoading: therapistsLoading } = useQuery({
+    queryKey: ['admin-therapists'],
+    queryFn: async () => {
+      console.log('Fetching therapists...');
+      const { data, error } = await supabase
+        .from('therapists')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching therapists:', error);
+        throw error;
+      }
+      
+      console.log('Fetched therapists:', data);
+      return data;
     },
     enabled: isAdmin
   });
@@ -494,16 +517,105 @@ const AdminDashboard: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="therapists" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-2xl font-bold">Therapist Management</h2>
+                <p className="text-muted-foreground">Manage therapist profiles and availability</p>
+              </div>
+              <Dialog open={showAddTherapistDialog} onOpenChange={setShowAddTherapistDialog}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add New Therapist
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Add New Therapist</DialogTitle>
+                    <DialogDescription>
+                      Fill in the details to add a new therapist to the platform
+                    </DialogDescription>
+                  </DialogHeader>
+                  <AddTherapistForm 
+                    onSuccess={() => setShowAddTherapistDialog(false)}
+                  />
+                </DialogContent>
+              </Dialog>
+            </div>
+
             <Card>
               <CardHeader>
-                <CardTitle>Therapist Management</CardTitle>
-                <CardDescription>Coming soon - manage therapist accounts and profiles</CardDescription>
+                <CardTitle>All Therapists</CardTitle>
+                <CardDescription>
+                  {therapists.length} therapist{therapists.length !== 1 ? 's' : ''} in the system
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  <User className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Therapist management features will be available soon</p>
-                </div>
+                {therapistsLoading ? (
+                  <div className="text-center py-8">Loading therapists...</div>
+                ) : therapists.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <User className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No therapists found</p>
+                    <p className="text-sm">Add your first therapist to get started</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {therapists.map((therapist) => (
+                      <Card key={therapist.id} className="p-4">
+                        <div className="flex items-start gap-4">
+                          {therapist.avatar_url ? (
+                            <img
+                              src={therapist.avatar_url}
+                              alt={therapist.name}
+                              className="w-12 h-12 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                              <User className="h-6 w-6" />
+                            </div>
+                          )}
+                          <div className="flex-1">
+                            <h3 className="font-semibold">{therapist.name}</h3>
+                            <p className="text-sm text-muted-foreground">{therapist.experience}</p>
+                            <p className="text-sm font-medium">{therapist.fee}</p>
+                            
+                            <div className="mt-2 flex items-center gap-2">
+                              <Badge variant={therapist.available ? "default" : "secondary"}>
+                                {therapist.available ? "Available" : "Unavailable"}
+                              </Badge>
+                              <span className="text-sm text-muted-foreground">
+                                ⭐ {therapist.rating} ({therapist.total_reviews} reviews)
+                              </span>
+                            </div>
+                            
+                            <div className="mt-2">
+                              <p className="text-xs text-muted-foreground mb-1">Specialties:</p>
+                              <div className="flex flex-wrap gap-1">
+                                {therapist.specialties.map((specialty) => (
+                                  <Badge key={specialty} variant="outline" className="text-xs">
+                                    {specialty}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                            
+                            <div className="mt-2">
+                              <p className="text-xs text-muted-foreground mb-1">Languages:</p>
+                              <div className="flex flex-wrap gap-1">
+                                {therapist.languages.map((language) => (
+                                  <Badge key={language} variant="outline" className="text-xs">
+                                    {language}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
