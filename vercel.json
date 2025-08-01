@@ -1,5 +1,17 @@
-
 {
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://chetna.life/$1",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.chetna.life"
+        }
+      ],
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
