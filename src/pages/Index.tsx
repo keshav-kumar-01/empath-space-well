@@ -24,16 +24,36 @@ const MemoizedCustomerServiceBot = memo(CustomerServiceBot);
 const Index = () => {
   const { t } = useTranslation();
   const [showChat, setShowChat] = useState(false);
+  const chatSectionRef = useRef<HTMLDivElement>(null);
 
   const handleStartChat = () => {
     setShowChat(true);
-    // Scroll to chat section only when user clicks the button
-    setTimeout(() => {
-      const chatSection = document.getElementById('chat-section');
-      if (chatSection) {
-        chatSection.scrollIntoView({ behavior: 'smooth' });
+    
+    // Use a slightly longer timeout and multiple attempts to ensure scroll works
+    const scrollToChat = () => {
+      if (chatSectionRef.current) {
+        chatSectionRef.current.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start',
+          inline: 'nearest'
+        });
+      } else {
+        // Fallback: try to find the element by ID
+        const chatSection = document.getElementById('chat-section');
+        if (chatSection) {
+          chatSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start',
+            inline: 'nearest'
+          });
+        }
       }
-    }, 100);
+    };
+
+    // Try scrolling multiple times with increasing delays to handle lazy loading
+    setTimeout(scrollToChat, 100);
+    setTimeout(scrollToChat, 300);
+    setTimeout(scrollToChat, 500);
   };
 
   // Optimized features array with memoization
@@ -113,7 +133,11 @@ const Index = () => {
         {/* Chat Interface - Only show when user clicks Start Chatting */}
         {showChat && (
           <LazySection>
-            <section id="chat-section" className="py-16 px-4 sm:px-6 lg:px-8">
+            <section 
+              id="chat-section" 
+              ref={chatSectionRef}
+              className="py-16 px-4 sm:px-6 lg:px-8"
+            >
               <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
                   <h2 className="text-3xl font-bold text-foreground mb-4">
