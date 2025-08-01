@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef, memo } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -29,31 +28,16 @@ const Index = () => {
   const handleStartChat = () => {
     setShowChat(true);
     
-    // Use a slightly longer timeout and multiple attempts to ensure scroll works
-    const scrollToChat = () => {
+    // Immediate scroll after state update
+    setTimeout(() => {
       if (chatSectionRef.current) {
         chatSectionRef.current.scrollIntoView({ 
           behavior: 'smooth', 
           block: 'start',
           inline: 'nearest'
         });
-      } else {
-        // Fallback: try to find the element by ID
-        const chatSection = document.getElementById('chat-section');
-        if (chatSection) {
-          chatSection.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start',
-            inline: 'nearest'
-          });
-        }
       }
-    };
-
-    // Try scrolling multiple times with increasing delays to handle lazy loading
-    setTimeout(scrollToChat, 100);
-    setTimeout(scrollToChat, 300);
-    setTimeout(scrollToChat, 500);
+    }, 50);
   };
 
   // Optimized features array with memoization
@@ -130,27 +114,25 @@ const Index = () => {
           </section>
         </LazySection>
 
-        {/* Chat Interface - Only show when user clicks Start Chatting */}
+        {/* Chat Interface - Show immediately without lazy loading when user clicks Start Chatting */}
         {showChat && (
-          <LazySection>
-            <section 
-              id="chat-section" 
-              ref={chatSectionRef}
-              className="py-16 px-4 sm:px-6 lg:px-8"
-            >
-              <div className="max-w-4xl mx-auto">
-                <div className="text-center mb-12">
-                  <h2 className="text-3xl font-bold text-foreground mb-4">
-                    {t('chat.title')}
-                  </h2>
-                  <p className="text-xl text-muted-foreground">
-                    {t('chat.subtitle')}
-                  </p>
-                </div>
-                <ChatInterface />
+          <section 
+            id="chat-section" 
+            ref={chatSectionRef}
+            className="py-16 px-4 sm:px-6 lg:px-8"
+          >
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-foreground mb-4">
+                  {t('chat.title')}
+                </h2>
+                <p className="text-xl text-muted-foreground">
+                  {t('chat.subtitle')}
+                </p>
               </div>
-            </section>
-          </LazySection>
+              <ChatInterface />
+            </div>
+          </section>
         )}
 
         <LazySection>
