@@ -14,6 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import AddTherapistForm from '@/components/AddTherapistForm';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { checkIsAdmin } from '@/utils/adminSetup';
 
 interface Appointment {
   id: string;
@@ -53,17 +54,26 @@ const AdminDashboard: React.FC = () => {
   const [selectedAppointment, setSelectedAppointment] = useState<string>('');
   const [statusNotes, setStatusNotes] = useState<string>('');
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isCheckingAdmin, setIsCheckingAdmin] = useState<boolean>(true);
   const [showAddTherapistDialog, setShowAddTherapistDialog] = useState<boolean>(false);
 
-  // Check if user is admin
+  // Check if user is admin using the proper role system
   useEffect(() => {
     const checkAdminStatus = async () => {
-      if (!user?.id) return;
-      
-      if (user.id === '62529ac4-eaf2-4fa8-bca1-b6c0938478f1' || user.email === 'keshavkumarhf@gmail.com') {
-        setIsAdmin(true);
-      } else {
+      if (!user?.id) {
         setIsAdmin(false);
+        setIsCheckingAdmin(false);
+        return;
+      }
+      
+      try {
+        const { isAdmin: adminStatus } = await checkIsAdmin(user.id, user.email);
+        setIsAdmin(adminStatus);
+      } catch (error) {
+        console.error('Error checking admin status:', error);
+        setIsAdmin(false);
+      } finally {
+        setIsCheckingAdmin(false);
       }
     };
 
@@ -285,6 +295,21 @@ const AdminDashboard: React.FC = () => {
           <div className="text-center">
             <h1 className="text-2xl font-bold text-red-600">Access Denied</h1>
             <p className="text-muted-foreground">Please sign in to access the admin dashboard.</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (isCheckingAdmin) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
+        <Header />
+        <main className="flex-grow container mx-auto px-4 py-8 max-w-6xl">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold">Checking permissions...</h1>
+            <p className="text-muted-foreground">Please wait while we verify your admin access.</p>
           </div>
         </main>
         <Footer />
