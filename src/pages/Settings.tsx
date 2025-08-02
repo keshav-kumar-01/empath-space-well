@@ -1,50 +1,36 @@
 
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useTheme } from "next-themes";
-import { ArrowLeft, User, Bell, Shield, Globe, Palette, Save, Eye, EyeOff } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
-import { useToast } from "@/hooks/use-toast";
-import Header from "@/components/Header";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { User, Bell, Shield, Palette, CreditCard } from 'lucide-react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import UsageDashboard from '@/components/UsageDashboard';
 
 const Settings: React.FC = () => {
-  const navigate = useNavigate();
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile, logout } = useAuth();
   const { toast } = useToast();
-  const { t, i18n } = useTranslation();
-  const { theme, setTheme } = useTheme();
-  
-  // Form states
-  const [displayName, setDisplayName] = useState(user?.name || "");
-  const [email, setEmail] = useState(user?.email || "");
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPasswords, setShowPasswords] = useState(false);
-  
-  // Settings states
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [pushNotifications, setPushNotifications] = useState(true);
-  const [journalReminders, setJournalReminders] = useState(true);
-  const [dataCollection, setDataCollection] = useState(true);
-  const [profileVisibility, setProfileVisibility] = useState("public");
-  
+  const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSaveProfile = async () => {
-    if (!displayName.trim()) {
+  useEffect(() => {
+    if (user) {
+      setName(user.name || '');
+    }
+  }, [user]);
+
+  const handleUpdateProfile = async () => {
+    if (!name.trim()) {
       toast({
         title: "Error",
-        description: "Display name cannot be empty",
+        description: "Name cannot be empty.",
         variant: "destructive",
       });
       return;
@@ -52,15 +38,15 @@ const Settings: React.FC = () => {
 
     setIsLoading(true);
     try {
-      await updateProfile({ name: displayName });
+      await updateProfile({ name: name.trim() });
       toast({
         title: "Success",
-        description: "Profile updated successfully",
+        description: "Profile updated successfully!",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to update profile",
+        description: "Failed to update profile. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -68,336 +54,245 @@ const Settings: React.FC = () => {
     }
   };
 
-  const handlePasswordChange = async () => {
-    if (newPassword !== confirmPassword) {
-      toast({
-        title: "Error",
-        description: "New passwords don't match",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      toast({
-        title: "Error",
-        description: "Password must be at least 6 characters long",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
+  const handleLogout = async () => {
     try {
-      // Here you would typically call your auth service to change password
+      await logout();
       toast({
-        title: "Success",
-        description: "Password updated successfully",
+        title: "Logged out",
+        description: "You have been successfully logged out.",
       });
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to update password",
+        description: "Failed to logout. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
-  };
-
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(part => part[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
   };
 
   if (!user) {
-    navigate("/login");
-    return null;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
+        <Header />
+        <div className="container mx-auto px-4 py-12 mt-16">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-chetna-dark dark:text-white mb-4">
+              Please log in to access settings
+            </h1>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-light via-white to-chetna-peach/20 dark:from-chetna-dark dark:to-chetna-dark/80">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
       <Header />
       
-      <main className="flex-grow container mx-auto px-4 py-6 space-y-6 max-w-4xl">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/profile")}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Profile
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-secondary bg-clip-text text-transparent">
-              Settings
-            </h1>
-            <p className="text-muted-foreground">Manage your account and preferences</p>
+      <div className="container mx-auto px-4 py-12 mt-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-chetna-dark dark:text-white mb-2">Settings</h1>
+            <p className="text-muted-foreground">Manage your account settings and preferences</p>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Profile Settings */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card className="shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center text-chetna-primary">
-                  <User className="h-5 w-5 mr-2" />
-                  Profile Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center gap-6">
-                  <Avatar className="w-20 h-20 border-4 border-chetna-primary/20">
-                    {user.photoURL ? (
-                      <AvatarImage src={user.photoURL} alt={user.name} />
-                    ) : (
-                      <AvatarFallback className="bg-gradient-to-br from-chetna-primary to-chetna-secondary text-white text-lg">
-                        {getInitials(user.name)}
-                      </AvatarFallback>
-                    )}
-                  </Avatar>
-                  <div>
-                    <h3 className="font-semibold">{user.name}</h3>
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
-                    <Button variant="outline" size="sm" className="mt-2">
-                      Change Photo
+          <Tabs defaultValue="profile" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-5">
+              <TabsTrigger value="profile" className="flex items-center gap-2">
+                <User className="w-4 h-4" />
+                Profile
+              </TabsTrigger>
+              <TabsTrigger value="subscription" className="flex items-center gap-2">
+                <CreditCard className="w-4 h-4" />
+                Subscription
+              </TabsTrigger>
+              <TabsTrigger value="notifications" className="flex items-center gap-2">
+                <Bell className="w-4 h-4" />
+                Notifications
+              </TabsTrigger>
+              <TabsTrigger value="privacy" className="flex items-center gap-2">
+                <Shield className="w-4 h-4" />
+                Privacy
+              </TabsTrigger>
+              <TabsTrigger value="appearance" className="flex items-center gap-2">
+                <Palette className="w-4 h-4" />
+                Appearance
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="profile" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Profile Information</CardTitle>
+                  <CardDescription>
+                    Update your personal information and profile details.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Full Name</Label>
+                      <Input
+                        id="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Enter your full name"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        value={user.email}
+                        disabled
+                        placeholder="Your email address"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between pt-4">
+                    <Button
+                      onClick={handleUpdateProfile}
+                      disabled={isLoading}
+                      className="bg-chetna-primary hover:bg-chetna-primary/90"
+                    >
+                      {isLoading ? 'Updating...' : 'Update Profile'}
+                    </Button>
+                    
+                    <Button
+                      onClick={handleLogout}
+                      variant="destructive"
+                    >
+                      Logout
                     </Button>
                   </div>
-                </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <TabsContent value="subscription" className="space-y-6">
+              <UsageDashboard />
+            </TabsContent>
+
+            <TabsContent value="notifications" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Notification Preferences</CardTitle>
+                  <CardDescription>
+                    Choose what notifications you want to receive.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <div className="text-base">Email Notifications</div>
+                      <div className="text-sm text-muted-foreground">
+                        Receive email updates about your mental health journey
+                      </div>
+                    </div>
+                    <Switch />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <div className="text-base">Appointment Reminders</div>
+                      <div className="text-sm text-muted-foreground">
+                        Get reminded about your upcoming therapy sessions
+                      </div>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <div className="text-base">Daily Check-ins</div>
+                      <div className="text-sm text-muted-foreground">
+                        Receive daily reminders to log your mood
+                      </div>
+                    </div>
+                    <Switch />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="privacy" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Privacy Settings</CardTitle>
+                  <CardDescription>
+                    Control your privacy and data sharing preferences.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <div className="text-base">Anonymous Usage Analytics</div>
+                      <div className="text-sm text-muted-foreground">
+                        Help us improve by sharing anonymous usage data
+                      </div>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <div className="text-base">Public Profile</div>
+                      <div className="text-sm text-muted-foreground">
+                        Allow others to see your profile in community features
+                      </div>
+                    </div>
+                    <Switch />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="appearance" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Appearance Settings</CardTitle>
+                  <CardDescription>
+                    Customize how the app looks and feels for you.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="displayName">Display Name</Label>
-                    <Input
-                      id="displayName"
-                      value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
-                      placeholder="Enter your display name"
-                    />
+                    <Label htmlFor="theme">Theme</Label>
+                    <Select defaultValue="light">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select theme" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="light">Light</SelectItem>
+                        <SelectItem value="dark">Dark</SelectItem>
+                        <SelectItem value="system">System</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
+                  
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      type="email"
-                    />
+                    <Label htmlFor="language">Language</Label>
+                    <Select defaultValue="en">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select language" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="en">English</SelectItem>
+                        <SelectItem value="hi">Hindi</SelectItem>
+                        <SelectItem value="es">Spanish</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                </div>
-
-                <Button onClick={handleSaveProfile} disabled={isLoading} className="bg-chetna-primary hover:bg-chetna-primary/90">
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Profile
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Password Settings */}
-            <Card className="shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center text-chetna-primary">
-                  <Shield className="h-5 w-5 mr-2" />
-                  Security
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="currentPassword">Current Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="currentPassword"
-                      type={showPasswords ? "text" : "password"}
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                      placeholder="Enter current password"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="newPassword">New Password</Label>
-                    <Input
-                      id="newPassword"
-                      type={showPasswords ? "text" : "password"}
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="Enter new password"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirm Password</Label>
-                    <Input
-                      id="confirmPassword"
-                      type={showPasswords ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Confirm new password"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="showPasswords"
-                      checked={showPasswords}
-                      onCheckedChange={setShowPasswords}
-                    />
-                    <Label htmlFor="showPasswords" className="flex items-center cursor-pointer">
-                      {showPasswords ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
-                      Show Passwords
-                    </Label>
-                  </div>
-                  <Button onClick={handlePasswordChange} disabled={isLoading} variant="outline">
-                    Update Password
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Settings Sidebar */}
-          <div className="space-y-6">
-            {/* Theme Settings */}
-            <Card className="shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center text-chetna-primary">
-                  <Palette className="h-5 w-5 mr-2" />
-                  Appearance
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label>Theme</Label>
-                  <Select value={theme} onValueChange={setTheme}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select theme" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="light">Light</SelectItem>
-                      <SelectItem value="dark">Dark</SelectItem>
-                      <SelectItem value="system">System</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Language Settings */}
-            <Card className="shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center text-chetna-primary">
-                  <Globe className="h-5 w-5 mr-2" />
-                  Language
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <Label>Language</Label>
-                  <Select value={i18n.language} onValueChange={(value) => i18n.changeLanguage(value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select language" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="hi">हिंदी (Hindi)</SelectItem>
-                      <SelectItem value="bn">বাংলা (Bengali)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Notification Settings */}
-            <Card className="shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center text-chetna-primary">
-                  <Bell className="h-5 w-5 mr-2" />
-                  Notifications
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="emailNotifications" className="cursor-pointer">Email Notifications</Label>
-                  <Switch
-                    id="emailNotifications"
-                    checked={emailNotifications}
-                    onCheckedChange={setEmailNotifications}
-                  />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="pushNotifications" className="cursor-pointer">Push Notifications</Label>
-                  <Switch
-                    id="pushNotifications"
-                    checked={pushNotifications}
-                    onCheckedChange={setPushNotifications}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="journalReminders" className="cursor-pointer">Journal Reminders</Label>
-                  <Switch
-                    id="journalReminders"
-                    checked={journalReminders}
-                    onCheckedChange={setJournalReminders}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Privacy Settings */}
-            <Card className="shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center text-chetna-primary">
-                  <Shield className="h-5 w-5 mr-2" />
-                  Privacy
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label>Profile Visibility</Label>
-                  <Select value={profileVisibility} onValueChange={setProfileVisibility}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select visibility" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="public">Public</SelectItem>
-                      <SelectItem value="friends">Friends Only</SelectItem>
-                      <SelectItem value="private">Private</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="dataCollection" className="cursor-pointer">Data Collection</Label>
-                  <Switch
-                    id="dataCollection"
-                    checked={dataCollection}
-                    onCheckedChange={setDataCollection}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
-      </main>
+      </div>
+
+      <Footer />
     </div>
   );
 };
