@@ -9,6 +9,9 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import SimpleSubscriptionGuard from '@/components/SimpleSubscriptionGuard';
 import { useSimpleSubscription } from '@/hooks/useSimpleSubscription';
+import { getAIResponse, initModel } from '@/services/aiService';
+import { getResponse } from '@/utils/chatResponses';
+import MessageBubble from '@/components/MessageBubble';
 
 interface Message {
   id: string;
@@ -21,13 +24,14 @@ const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: 'Hello! I\'m here to support your mental health journey. How are you feeling today?',
+      content: 'Hello! I\'m Dr. Chetna Sharma, your mental wellness companion. How are you feeling today? 😊',
       isBot: true,
       timestamp: new Date(),
     },
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [aiInitialized, setAiInitialized] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const { toast } = useToast();
@@ -40,6 +44,22 @@ const ChatInterface: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Initialize AI model on component mount
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        await initModel();
+        setAiInitialized(true);
+        console.log('AI model initialized successfully');
+      } catch (error) {
+        console.error('Failed to initialize AI model:', error);
+        setAiInitialized(false);
+      }
+    };
+    
+    initialize();
+  }, []);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || !user) return;
@@ -66,11 +86,23 @@ const ChatInterface: React.FC = () => {
       // Increment AI conversation usage
       incrementUsage('aiConversations');
 
-      // Generate bot response (simplified for now)
-      const botResponse = generateBotResponse(userMessage.content);
+      // Get bot response using AI service with fallback
+      let botResponseContent: string;
+      
+      if (aiInitialized) {
+        // Try to get AI response first
+        botResponseContent = await getAIResponse(
+          userMessage.content,
+          getResponse, // Fallback function
+        );
+      } else {
+        // Use fallback response system
+        botResponseContent = getResponse(userMessage.content);
+      }
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: botResponse,
+        content: botResponseContent,
         isBot: true,
         timestamp: new Date(),
       };
@@ -98,18 +130,6 @@ const ChatInterface: React.FC = () => {
     }
   };
 
-  const generateBotResponse = (userMessage: string): string => {
-    const responses = [
-      "I understand how you're feeling. It's important to acknowledge these emotions.",
-      "Thank you for sharing that with me. How has this been affecting your daily life?",
-      "That sounds challenging. What coping strategies have you tried before?",
-      "I hear you. Remember that seeking help is a sign of strength, not weakness.",
-      "It's completely normal to feel this way. What would make you feel more supported right now?",
-    ];
-    
-    return responses[Math.floor(Math.random() * responses.length)];
-  };
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -122,37 +142,12 @@ const ChatInterface: React.FC = () => {
       <div className="flex flex-col h-[600px] max-w-4xl mx-auto">
         <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 rounded-t-lg">
           {messages.map((message) => (
-            <div
+            <MessageBubble
               key={message.id}
-              className={`flex items-start space-x-2 ${
-                message.isBot ? '' : 'justify-end'
-              }`}
-            >
-              {message.isBot && (
-                <div className="flex-shrink-0 w-8 h-8 bg-chetna-primary rounded-full flex items-center justify-center">
-                  <Bot className="w-5 h-5 text-white" />
-                </div>
-              )}
-              <Card
-                className={`max-w-xs lg:max-w-md ${
-                  message.isBot
-                    ? 'bg-white border-chetna-primary/20'
-                    : 'bg-chetna-primary text-white border-0'
-                }`}
-              >
-                <CardContent className="p-3">
-                  <p className="text-sm">{message.content}</p>
-                  <p className="text-xs opacity-70 mt-1">
-                    {message.timestamp.toLocaleTimeString()}
-                  </p>
-                </CardContent>
-              </Card>
-              {!message.isBot && (
-                <div className="flex-shrink-0 w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center">
-                  <User className="w-5 h-5 text-white" />
-                </div>
-              )}
-            </div>
+              message={message.content}
+              isUser={!message.isBot}
+              timestamp={message.timestamp}
+            />
           ))}
           {isLoading && (
             <div className="flex items-center space-x-2">
@@ -163,7 +158,7 @@ const ChatInterface: React.FC = () => {
                 <CardContent className="p-3">
                   <div className="flex items-center space-x-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="text-sm">Typing...</span>
+                    <span className="text-sm">Dr. Chetna is thinking...</span>
                   </div>
                 </CardContent>
               </Card>
@@ -178,7 +173,7 @@ const ChatInterface: React.FC = () => {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Type your message here..."
+              placeholder="Share what's on your mind..."
               className="flex-1 min-h-[60px] resize-none"
               disabled={isLoading}
             />
@@ -190,6 +185,11 @@ const ChatInterface: React.FC = () => {
               <Send className="w-4 h-4" />
             </Button>
           </div>
+          {!aiInitialized && (
+            <p className="text-xs text-gray-500 mt-2">
+              Using fallback responses (AI service unavailable)
+            </p>
+          )}
         </div>
       </div>
     </SimpleSubscriptionGuard>
