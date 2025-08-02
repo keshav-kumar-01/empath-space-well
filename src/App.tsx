@@ -52,6 +52,7 @@ const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const Pricing = lazy(() => import("./pages/Pricing"));
 
 // AI-powered feature pages
 const WellnessPlans = lazy(() => import("./pages/WellnessPlans"));
@@ -94,6 +95,7 @@ function App() {
                     <Route path="/psych-tests" element={<PsychTests />} />
                     <Route path="/psych-tests/:testType" element={<PsychTestRunner />} />
                     <Route path="/test-results" element={<TestResults />} />
+                    <Route path="/pricing" element={<Pricing />} />
                     
                     {/* AI Features Menu */}
                     <Route path="/ai-features" element={<AIFeaturesMenu />} />
