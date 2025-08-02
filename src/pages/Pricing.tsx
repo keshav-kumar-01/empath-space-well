@@ -5,56 +5,28 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { useSubscription } from '@/hooks/useSubscription';
+import { useSimpleSubscription } from '@/hooks/useSimpleSubscription';
 import { useAuth } from '@/context/AuthContext';
 
 const Pricing: React.FC = () => {
   const [isAnnual, setIsAnnual] = useState(false);
   const { user } = useAuth();
-  const { userSubscription, subscribeToPlan } = useSubscription();
-
-  const { data: subscriptionPlans = [], isLoading: plansLoading } = useQuery({
-    queryKey: ['subscription-plans'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('subscription_plans')
-        .select('*')
-        .order('monthly_price');
-      
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  const { data: sessionPricing = [], isLoading: sessionPricingLoading } = useQuery({
-    queryKey: ['session-pricing'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('session_pricing')
-        .select('*')
-        .order('price');
-      
-      if (error) throw error;
-      return data;
-    },
-  });
+  const { plans, sessionPricing, currentPlan, subscribeToPlan } = useSimpleSubscription();
 
   const getPrice = (plan: any) => {
-    if (plan.monthly_price === 0) return 0;
-    return isAnnual ? Math.round(plan.annual_price / 12) : plan.monthly_price;
+    if (plan.monthlyPrice === 0) return 0;
+    return isAnnual ? plan.annualPrice : plan.monthlyPrice;
   };
 
   const getSavings = (plan: any) => {
-    if (plan.monthly_price === 0) return 0;
-    return plan.monthly_price - Math.round(plan.annual_price / 12);
+    if (plan.monthlyPrice === 0) return 0;
+    return plan.monthlyPrice - plan.annualPrice;
   };
 
-  const formatPrice = (priceInPaise: number) => {
-    return (priceInPaise / 100).toLocaleString();
+  const formatPrice = (price: number) => {
+    return price.toLocaleString();
   };
 
   const getSessionIcon = (sessionType: string) => {
@@ -67,24 +39,9 @@ const Pricing: React.FC = () => {
     }
   };
 
-  const isCurrentPlan = (planName: string) => {
-    return userSubscription?.plan_name === planName;
+  const isCurrentPlan = (planId: string) => {
+    return currentPlan?.id === planId;
   };
-
-  if (plansLoading || sessionPricingLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
-        <Header />
-        <div className="container mx-auto px-4 py-12 mt-16">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-chetna-primary mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">Loading subscription plans...</p>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
@@ -137,11 +94,11 @@ const Pricing: React.FC = () => {
           <TabsContent value="subscriptions">
             {/* Subscription Plans */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-              {subscriptionPlans.map((plan, index) => {
+              {plans.map((plan, index) => {
                 const price = getPrice(plan);
                 const savings = getSavings(plan);
                 const popular = plan.name === 'Essential Plan';
-                const current = isCurrentPlan(plan.name);
+                const current = isCurrentPlan(plan.id);
                 
                 return (
                   <Card key={plan.id} className={`relative transition-all duration-300 hover:shadow-lg ${
@@ -170,7 +127,7 @@ const Pricing: React.FC = () => {
                           ₹{formatPrice(price)}
                         </span>
                         <span className="text-muted-foreground">/month</span>
-                        {isAnnual && plan.monthly_price > 0 && (
+                        {isAnnual && plan.monthlyPrice > 0 && (
                           <div className="text-sm text-green-600 mt-1">
                             Save ₹{formatPrice(savings)}/month
                           </div>
@@ -192,7 +149,7 @@ const Pricing: React.FC = () => {
                         className={`w-full ${
                           current 
                             ? 'bg-green-600 hover:bg-green-700 text-white' 
-                            : plan.monthly_price === 0 
+                            : plan.monthlyPrice === 0 
                               ? 'bg-chetna-light hover:bg-chetna-light/90 text-chetna-primary border border-chetna-primary'
                               : 'bg-chetna-primary hover:bg-chetna-primary/90 text-white'
                         }`}
@@ -201,7 +158,7 @@ const Pricing: React.FC = () => {
                       >
                         {current 
                           ? 'Current Plan' 
-                          : plan.monthly_price === 0 
+                          : plan.monthlyPrice === 0 
                             ? 'Get Started Free' 
                             : 'Choose Plan'
                         }
@@ -217,19 +174,19 @@ const Pricing: React.FC = () => {
             {/* Per-Session Pricing */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
               {sessionPricing.map((session, index) => {
-                const IconComponent = getSessionIcon(session.session_type);
+                const IconComponent = getSessionIcon(session.id);
                 return (
                   <Card key={session.id} className="bg-white border-chetna-primary/20 hover:shadow-lg transition-all duration-300">
                     <CardHeader className="text-center pb-4">
                       <div className="w-12 h-12 bg-chetna-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                         <IconComponent className="w-6 h-6 text-chetna-primary" />
                       </div>
-                      <CardTitle className="text-lg font-bold text-chetna-dark dark:text-white capitalize">
-                        {session.session_type.replace('_', ' ')} Session
+                      <CardTitle className="text-lg font-bold text-chetna-dark dark:text-white">
+                        {session.type}
                       </CardTitle>
-                      {session.duration_minutes && (
+                      {session.duration && (
                         <CardDescription className="text-sm text-muted-foreground">
-                          {session.duration_minutes} minutes
+                          {session.duration} minutes
                         </CardDescription>
                       )}
                     </CardHeader>
@@ -253,22 +210,17 @@ const Pricing: React.FC = () => {
         </Tabs>
 
         {/* Current Subscription Status */}
-        {user && userSubscription && (
+        {user && currentPlan && (
           <div className="bg-white/50 dark:bg-slate-800/50 rounded-2xl p-8 backdrop-blur-sm mb-16">
             <h2 className="text-2xl font-bold text-center text-chetna-dark dark:text-white mb-6">
               Your Current Subscription
             </h2>
             <div className="text-center">
               <Badge className="bg-chetna-primary text-white text-lg px-4 py-2 mb-4">
-                {userSubscription.plan_name}
+                {currentPlan.name}
               </Badge>
               <p className="text-muted-foreground">
-                {userSubscription.is_annual ? 'Annual' : 'Monthly'} billing
-                {userSubscription.expires_at && (
-                  <span className="block mt-2">
-                    Expires: {new Date(userSubscription.expires_at).toLocaleDateString()}
-                  </span>
-                )}
+                Free tier - upgrade anytime for more features
               </p>
             </div>
           </div>

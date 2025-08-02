@@ -1,31 +1,37 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import { useAuth } from '@/context/AuthContext';
+import { Card, CardContent } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
-import { chatResponses } from '@/utils/chatResponses';
+import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { useSubscription } from '@/hooks/useSubscription';
-import SubscriptionGuard from '@/components/SubscriptionGuard';
+import SimpleSubscriptionGuard from '@/components/SimpleSubscriptionGuard';
+import { useSimpleSubscription } from '@/hooks/useSimpleSubscription';
 
 interface Message {
   id: string;
-  text: string;
+  content: string;
   isBot: boolean;
   timestamp: Date;
 }
 
 const ChatInterface: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState('');
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      content: 'Hello! I\'m here to support your mental health journey. How are you feeling today?',
+      isBot: true,
+      timestamp: new Date(),
+    },
+  ]);
+  const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const { toast } = useToast();
-  const { hasReachedLimit, updateUsage, getRemainingUsage } = useSubscription();
+  const { incrementUsage } = useSimpleSubscription();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -35,86 +41,54 @@ const ChatInterface: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  useEffect(() => {
-    // Add welcome message
-    const welcomeMessage: Message = {
-      id: '1',
-      text: "Hello! I'm your AI mental health companion. I'm here to listen, support, and provide guidance. How are you feeling today?",
-      isBot: true,
-      timestamp: new Date(),
-    };
-    setMessages([welcomeMessage]);
-  }, []);
-
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to start a conversation.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Check if user has reached AI conversation limit
-    if (hasReachedLimit('ai_conversations')) {
-      toast({
-        title: "Usage Limit Reached",
-        description: "You've reached your monthly AI conversation limit. Please upgrade your plan.",
-        variant: "destructive",
-      });
-      return;
-    }
+    if (!inputMessage.trim() || !user) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputValue,
+      content: inputMessage.trim(),
       isBot: false,
       timestamp: new Date(),
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
+    setInputMessage('');
     setIsLoading(true);
 
     try {
       // Save user message to database
       await supabase.from('conversations').insert({
         user_id: user.id,
-        message: inputValue,
+        message: userMessage.content,
         is_bot: false,
       });
 
-      // Get AI response
-      const aiResponse = chatResponses.getResponse(inputValue);
-      
-      // Simulate AI thinking time
-      setTimeout(async () => {
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: aiResponse,
-          isBot: true,
-          timestamp: new Date(),
-        };
+      // Increment AI conversation usage
+      incrementUsage('aiConversations');
 
+      // Generate bot response (simplified for now)
+      const botResponse = generateBotResponse(userMessage.content);
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: botResponse,
+        isBot: true,
+        timestamp: new Date(),
+      };
+
+      // Save bot message to database
+      await supabase.from('conversations').insert({
+        user_id: user.id,
+        message: botMessage.content,
+        is_bot: true,
+      });
+
+      setTimeout(() => {
         setMessages(prev => [...prev, botMessage]);
-
-        // Save AI response to database
-        await supabase.from('conversations').insert({
-          user_id: user.id,
-          message: aiResponse,
-          is_bot: true,
-        });
-
-        // Update usage count
-        updateUsage({ type: 'ai_conversations' });
-        
         setIsLoading(false);
-      }, 1000 + Math.random() * 2000);
+      }, 1000);
 
     } catch (error) {
-      console.error('Error in chat:', error);
+      console.error('Error sending message:', error);
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
@@ -124,6 +98,18 @@ const ChatInterface: React.FC = () => {
     }
   };
 
+  const generateBotResponse = (userMessage: string): string => {
+    const responses = [
+      "I understand how you're feeling. It's important to acknowledge these emotions.",
+      "Thank you for sharing that with me. How has this been affecting your daily life?",
+      "That sounds challenging. What coping strategies have you tried before?",
+      "I hear you. Remember that seeking help is a sign of strength, not weakness.",
+      "It's completely normal to feel this way. What would make you feel more supported right now?",
+    ];
+    
+    return responses[Math.floor(Math.random() * responses.length)];
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -131,112 +117,82 @@ const ChatInterface: React.FC = () => {
     }
   };
 
-  const remaining = getRemainingUsage('ai_conversations');
-
   return (
-    <SubscriptionGuard 
-      usageType="ai_conversations"
-      fallbackTitle="AI Conversation Limit Reached"
-      fallbackDescription="You've used all your AI conversations for this month. Upgrade to continue chatting with our AI companion."
-    >
-      <Card className="h-[600px] flex flex-col bg-white/80 backdrop-blur-sm border border-white/20 shadow-xl">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-chetna-primary rounded-full flex items-center justify-center">
-              <Bot className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-chetna-dark">AI Mental Health Companion</h3>
-              <p className="text-sm text-gray-600">Always here to listen and support</p>
-            </div>
-          </div>
-          {remaining !== null && (
-            <div className="text-right">
-              <p className="text-xs text-gray-500">Conversations remaining</p>
-              <p className="text-sm font-semibold text-chetna-primary">{remaining}</p>
-            </div>
-          )}
-        </div>
-
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <SimpleSubscriptionGuard usageType="aiConversations">
+      <div className="flex flex-col h-[600px] max-w-4xl mx-auto">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 rounded-t-lg">
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}
+              className={`flex items-start space-x-2 ${
+                message.isBot ? '' : 'justify-end'
+              }`}
             >
-              <div className={`flex items-start space-x-2 max-w-xs lg:max-w-md`}>
-                {message.isBot && (
-                  <div className="w-8 h-8 bg-chetna-primary rounded-full flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-5 h-5 text-white" />
-                  </div>
-                )}
-                <div
-                  className={`px-4 py-2 rounded-2xl ${
-                    message.isBot
-                      ? 'bg-gray-100 text-gray-800'
-                      : 'bg-chetna-primary text-white'
-                  }`}
-                >
-                  <p className="text-sm whitespace-pre-wrap">{message.text}</p>
-                  <p className="text-xs opacity-70 mt-1">
-                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </p>
-                </div>
-                {!message.isBot && (
-                  <div className="w-8 h-8 bg-chetna-secondary rounded-full flex items-center justify-center flex-shrink-0">
-                    <User className="w-5 h-5 text-white" />
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-          
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="flex items-start space-x-2">
-                <div className="w-8 h-8 bg-chetna-primary rounded-full flex items-center justify-center">
+              {message.isBot && (
+                <div className="flex-shrink-0 w-8 h-8 bg-chetna-primary rounded-full flex items-center justify-center">
                   <Bot className="w-5 h-5 text-white" />
                 </div>
-                <div className="bg-gray-100 px-4 py-2 rounded-2xl">
+              )}
+              <Card
+                className={`max-w-xs lg:max-w-md ${
+                  message.isBot
+                    ? 'bg-white border-chetna-primary/20'
+                    : 'bg-chetna-primary text-white border-0'
+                }`}
+              >
+                <CardContent className="p-3">
+                  <p className="text-sm">{message.content}</p>
+                  <p className="text-xs opacity-70 mt-1">
+                    {message.timestamp.toLocaleTimeString()}
+                  </p>
+                </CardContent>
+              </Card>
+              {!message.isBot && (
+                <div className="flex-shrink-0 w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 text-white" />
+                </div>
+              )}
+            </div>
+          ))}
+          {isLoading && (
+            <div className="flex items-center space-x-2">
+              <div className="flex-shrink-0 w-8 h-8 bg-chetna-primary rounded-full flex items-center justify-center">
+                <Bot className="w-5 h-5 text-white" />
+              </div>
+              <Card className="bg-white border-chetna-primary/20">
+                <CardContent className="p-3">
                   <div className="flex items-center space-x-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="text-sm text-gray-600">Thinking...</span>
+                    <span className="text-sm">Typing...</span>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </div>
           )}
           <div ref={messagesEndRef} />
         </div>
-
-        {/* Input */}
-        <div className="p-4 border-t border-gray-200">
+        
+        <div className="p-4 bg-white border-t rounded-b-lg">
           <div className="flex space-x-2">
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+            <Textarea
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Type your message..."
-              className="flex-1 border-gray-300 focus:border-chetna-primary"
-              disabled={isLoading || hasReachedLimit('ai_conversations')}
+              placeholder="Type your message here..."
+              className="flex-1 min-h-[60px] resize-none"
+              disabled={isLoading}
             />
             <Button
               onClick={handleSendMessage}
-              disabled={!inputValue.trim() || isLoading || hasReachedLimit('ai_conversations')}
+              disabled={!inputMessage.trim() || isLoading}
               className="bg-chetna-primary hover:bg-chetna-primary/90 text-white px-6"
             >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Send className="w-4 h-4" />
-              )}
+              <Send className="w-4 h-4" />
             </Button>
           </div>
         </div>
-      </Card>
-    </SubscriptionGuard>
+      </div>
+    </SimpleSubscriptionGuard>
   );
 };
 
