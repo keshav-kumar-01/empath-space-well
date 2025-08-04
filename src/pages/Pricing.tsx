@@ -1,46 +1,118 @@
 
 import React, { useState } from 'react';
-import { Check, Star, Phone, Mail, Users, Shield, Zap, Heart, Crown } from 'lucide-react';
+import { Check, Star, Phone, Mail, Users, Shield, Zap, Heart } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { useSimpleSubscription } from '@/hooks/useSimpleSubscription';
-import { useAuth } from '@/context/AuthContext';
 
 const Pricing: React.FC = () => {
   const [isAnnual, setIsAnnual] = useState(false);
-  const { user } = useAuth();
-  const { plans, sessionPricing, currentPlan, subscribeToPlan } = useSimpleSubscription();
 
-  const getPrice = (plan: any) => {
-    if (plan.monthlyPrice === 0) return 0;
-    return isAnnual ? plan.annualPrice : plan.monthlyPrice;
-  };
-
-  const getSavings = (plan: any) => {
-    if (plan.monthlyPrice === 0) return 0;
-    return plan.monthlyPrice - plan.annualPrice;
-  };
-
-  const formatPrice = (price: number) => {
-    return price.toLocaleString();
-  };
-
-  const getSessionIcon = (sessionType: string) => {
-    switch (sessionType) {
-      case 'standard': return Heart;
-      case 'extended': return Zap;
-      case 'group': return Users;
-      case 'crisis': return Shield;
-      default: return Heart;
+  const subscriptionPlans = [
+    {
+      name: "Freemium Foundation",
+      monthlyPrice: 0,
+      annualPrice: 0,
+      color: "bg-chetna-light border-chetna-primary/20",
+      buttonColor: "bg-chetna-primary hover:bg-chetna-primary/90",
+      popular: false,
+      features: [
+        "5 AI conversations per month",
+        "Basic mood tracking",
+        "1 psychological assessment per month",
+        "Community access (read-only)",
+        "Educational resources"
+      ]
+    },
+    {
+      name: "Essential Plan",
+      monthlyPrice: 499,
+      annualPrice: Math.round(499 * 0.65 * 12),
+      color: "bg-white border-chetna-secondary/30",
+      buttonColor: "bg-chetna-secondary hover:bg-chetna-secondary/90",
+      popular: true,
+      features: [
+        "Unlimited AI conversations",
+        "1 professional session per month",
+        "Complete assessment suite",
+        "Full community features",
+        "Voice therapy access"
+      ]
+    },
+    {
+      name: "Growth Plan",
+      monthlyPrice: 899,
+      annualPrice: Math.round(899 * 0.65 * 12),
+      color: "bg-chetna-accent/10 border-chetna-accent/30",
+      buttonColor: "bg-chetna-accent hover:bg-chetna-accent/90",
+      popular: false,
+      features: [
+        "2 professional sessions per month",
+        "Priority AI support",
+        "Advanced analytics",
+        "Group therapy access",
+        "Email support"
+      ]
+    },
+    {
+      name: "Pro Plan",
+      monthlyPrice: 1499,
+      annualPrice: Math.round(1499 * 0.65 * 12),
+      color: "bg-gradient-to-br from-chetna-primary/10 to-chetna-secondary/10 border-chetna-primary/40",
+      buttonColor: "bg-gradient-to-r from-chetna-primary to-chetna-secondary hover:opacity-90",
+      popular: false,
+      features: [
+        "4 professional sessions per month",
+        "Dedicated therapist matching",
+        "Crisis support access",
+        "Phone support",
+        "Custom wellness plans"
+      ]
     }
+  ];
+
+  const sessionPricing = [
+    {
+      type: "Standard Session",
+      duration: "45 minutes",
+      price: 799,
+      icon: Heart,
+      description: "Individual therapy session with certified professionals"
+    },
+    {
+      type: "Extended Session",
+      duration: "60 minutes",
+      price: 1099,
+      icon: Zap,
+      description: "Extended therapy session for deeper exploration"
+    },
+    {
+      type: "Group Session",
+      duration: "per person",
+      price: 399,
+      icon: Users,
+      description: "Therapeutic group sessions with shared experiences"
+    },
+    {
+      type: "Crisis Support Session",
+      duration: "immediate",
+      price: 1299,
+      icon: Shield,
+      description: "Emergency mental health support when you need it most"
+    }
+  ];
+
+  const getPrice = (plan: typeof subscriptionPlans[0]) => {
+    if (plan.monthlyPrice === 0) return 0;
+    return isAnnual ? Math.round(plan.annualPrice / 12) : plan.monthlyPrice;
   };
 
-  const isCurrentPlan = (planId: string) => {
-    return currentPlan?.id === planId;
+  const getSavings = (plan: typeof subscriptionPlans[0]) => {
+    if (plan.monthlyPrice === 0) return 0;
+    return plan.monthlyPrice - Math.round(plan.annualPrice / 12);
   };
 
   return (
@@ -94,79 +166,48 @@ const Pricing: React.FC = () => {
           <TabsContent value="subscriptions">
             {/* Subscription Plans */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-              {plans.map((plan, index) => {
-                const price = getPrice(plan);
-                const savings = getSavings(plan);
-                const popular = plan.name === 'Essential Plan';
-                const current = isCurrentPlan(plan.id);
-                
-                return (
-                  <Card key={plan.id} className={`relative transition-all duration-300 hover:shadow-lg ${
-                    popular ? 'scale-105 shadow-lg border-chetna-primary/30' : ''
-                  } ${current ? 'ring-2 ring-chetna-primary' : ''}`}>
-                    {popular && (
-                      <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-chetna-primary text-white">
-                        <Star className="w-3 h-3 mr-1" />
-                        Most Popular
-                      </Badge>
-                    )}
+              {subscriptionPlans.map((plan, index) => (
+                <Card key={index} className={`relative ${plan.color} transition-all duration-300 hover:shadow-lg ${plan.popular ? 'scale-105 shadow-lg' : ''}`}>
+                  {plan.popular && (
+                    <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-chetna-primary text-white">
+                      <Star className="w-3 h-3 mr-1" />
+                      Most Popular
+                    </Badge>
+                  )}
+                  
+                  <CardHeader className="text-center pb-4">
+                    <CardTitle className="text-xl font-bold text-chetna-dark dark:text-white">
+                      {plan.name}
+                    </CardTitle>
+                    <div className="mt-4">
+                      <span className="text-3xl font-bold text-chetna-primary">
+                        ₹{getPrice(plan).toLocaleString()}
+                      </span>
+                      <span className="text-muted-foreground">/month</span>
+                      {isAnnual && plan.monthlyPrice > 0 && (
+                        <div className="text-sm text-green-600 mt-1">
+                          Save ₹{getSavings(plan)}/month
+                        </div>
+                      )}
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent>
+                    <ul className="space-y-3 mb-6">
+                      {plan.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-start gap-2">
+                          <Check className="w-4 h-4 text-chetna-primary mt-0.5 flex-shrink-0" />
+                          <span className="text-sm text-muted-foreground">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
                     
-                    {current && (
-                      <Badge className="absolute -top-3 right-4 bg-green-600 text-white">
-                        <Crown className="w-3 h-3 mr-1" />
-                        Current Plan
-                      </Badge>
-                    )}
-                    
-                    <CardHeader className="text-center pb-4">
-                      <CardTitle className="text-xl font-bold text-chetna-dark dark:text-white">
-                        {plan.name}
-                      </CardTitle>
-                      <div className="mt-4">
-                        <span className="text-3xl font-bold text-chetna-primary">
-                          ₹{formatPrice(price)}
-                        </span>
-                        <span className="text-muted-foreground">/month</span>
-                        {isAnnual && plan.monthlyPrice > 0 && (
-                          <div className="text-sm text-green-600 mt-1">
-                            Save ₹{formatPrice(savings)}/month
-                          </div>
-                        )}
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent>
-                      <ul className="space-y-3 mb-6">
-                        {plan.features.map((feature: string, featureIndex: number) => (
-                          <li key={featureIndex} className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-chetna-primary mt-0.5 flex-shrink-0" />
-                            <span className="text-sm text-muted-foreground">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      
-                      <Button 
-                        className={`w-full ${
-                          current 
-                            ? 'bg-green-600 hover:bg-green-700 text-white' 
-                            : plan.monthlyPrice === 0 
-                              ? 'bg-chetna-light hover:bg-chetna-light/90 text-chetna-primary border border-chetna-primary'
-                              : 'bg-chetna-primary hover:bg-chetna-primary/90 text-white'
-                        }`}
-                        onClick={() => !current && subscribeToPlan(plan.id, isAnnual)}
-                        disabled={current}
-                      >
-                        {current 
-                          ? 'Current Plan' 
-                          : plan.monthlyPrice === 0 
-                            ? 'Get Started Free' 
-                            : 'Choose Plan'
-                        }
-                      </Button>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                    <Button className={`w-full ${plan.buttonColor} text-white`}>
+                      {plan.monthlyPrice === 0 ? 'Get Started Free' : 'Choose Plan'}
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </TabsContent>
 
@@ -174,9 +215,9 @@ const Pricing: React.FC = () => {
             {/* Per-Session Pricing */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
               {sessionPricing.map((session, index) => {
-                const IconComponent = getSessionIcon(session.id);
+                const IconComponent = session.icon;
                 return (
-                  <Card key={session.id} className="bg-white border-chetna-primary/20 hover:shadow-lg transition-all duration-300">
+                  <Card key={index} className="bg-white border-chetna-primary/20 hover:shadow-lg transition-all duration-300">
                     <CardHeader className="text-center pb-4">
                       <div className="w-12 h-12 bg-chetna-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                         <IconComponent className="w-6 h-6 text-chetna-primary" />
@@ -184,16 +225,14 @@ const Pricing: React.FC = () => {
                       <CardTitle className="text-lg font-bold text-chetna-dark dark:text-white">
                         {session.type}
                       </CardTitle>
-                      {session.duration && (
-                        <CardDescription className="text-sm text-muted-foreground">
-                          {session.duration} minutes
-                        </CardDescription>
-                      )}
+                      <CardDescription className="text-sm text-muted-foreground">
+                        {session.duration}
+                      </CardDescription>
                     </CardHeader>
                     
                     <CardContent className="text-center">
                       <div className="text-2xl font-bold text-chetna-primary mb-3">
-                        ₹{formatPrice(session.price)}
+                        ₹{session.price.toLocaleString()}
                       </div>
                       <p className="text-sm text-muted-foreground mb-6">
                         {session.description}
@@ -208,23 +247,6 @@ const Pricing: React.FC = () => {
             </div>
           </TabsContent>
         </Tabs>
-
-        {/* Current Subscription Status */}
-        {user && currentPlan && (
-          <div className="bg-white/50 dark:bg-slate-800/50 rounded-2xl p-8 backdrop-blur-sm mb-16">
-            <h2 className="text-2xl font-bold text-center text-chetna-dark dark:text-white mb-6">
-              Your Current Subscription
-            </h2>
-            <div className="text-center">
-              <Badge className="bg-chetna-primary text-white text-lg px-4 py-2 mb-4">
-                {currentPlan.name}
-              </Badge>
-              <p className="text-muted-foreground">
-                Free tier - upgrade anytime for more features
-              </p>
-            </div>
-          </div>
-        )}
 
         {/* FAQ Section */}
         <div className="bg-white/50 dark:bg-slate-800/50 rounded-2xl p-8 backdrop-blur-sm">

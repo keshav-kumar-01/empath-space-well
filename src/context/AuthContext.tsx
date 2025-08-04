@@ -9,10 +9,6 @@ type User = {
   name: string;
   email: string;
   photoURL?: string;
-  user_metadata?: {
-    name?: string;
-    avatar_url?: string;
-  };
 };
 
 type AuthContextType = {
@@ -22,10 +18,8 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<{error: any | null}>;
   signup: (email: string, password: string, userData: {name: string}) => Promise<{error: any | null}>;
   logout: () => Promise<void>;
-  signOut: () => Promise<void>;
   loginWithGoogle: () => Promise<void>;
   updateProfile: (userData: {name?: string; photoURL?: string}) => Promise<void>;
-  updateUserProfile: (userData: {name?: string; photoURL?: string}) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -50,7 +44,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             name: currentSession.user.user_metadata?.name || currentSession.user.email?.split('@')[0] || 'User',
             email: currentSession.user.email || '',
             photoURL: currentSession.user.user_metadata?.avatar_url,
-            user_metadata: currentSession.user.user_metadata,
           };
           setUser(userData);
         } else {
@@ -72,7 +65,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           name: currentSession.user.user_metadata?.name || currentSession.user.email?.split('@')[0] || 'User',
           email: currentSession.user.email || '',
           photoURL: currentSession.user.user_metadata?.avatar_url,
-          user_metadata: currentSession.user.user_metadata,
         };
         setUser(userData);
       }
@@ -153,13 +145,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setSession(null);
   };
 
-  const signOut = async () => {
-    console.log('Signing out');
-    await supabase.auth.signOut();
-    setUser(null);
-    setSession(null);
-  };
-
   const loginWithGoogle = async () => {
     try {
       console.log('Initiating Google login');
@@ -204,11 +189,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           ...user,
           name: userData.name || user.name,
           photoURL: userData.photoURL || user.photoURL,
-          user_metadata: {
-            ...user.user_metadata,
-            name: userData.name,
-            avatar_url: userData.photoURL,
-          },
         });
       }
 
@@ -219,21 +199,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const updateUserProfile = updateProfile; // Alias for compatibility
-
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      session, 
-      isLoading, 
-      login, 
-      signup, 
-      logout, 
-      signOut,
-      loginWithGoogle, 
-      updateProfile,
-      updateUserProfile
-    }}>
+    <AuthContext.Provider value={{ user, session, isLoading, login, signup, logout, loginWithGoogle, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );
