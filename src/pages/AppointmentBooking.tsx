@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -59,7 +60,10 @@ const AppointmentBooking: React.FC = () => {
         .eq('available', true)
         .order('rating', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching therapists:', error);
+        return [];
+      }
       return data as Therapist[];
     }
   });
@@ -79,13 +83,16 @@ const AppointmentBooking: React.FC = () => {
         .eq('user_id', user.id)
         .order('appointment_date', { ascending: true });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching appointments:', error);
+        return [];
+      }
       return data as Appointment[];
     },
     enabled: !!user?.id
   });
 
-  // Create appointment mutation with email notification
+  // Create appointment mutation
   const createAppointmentMutation = useMutation({
     mutationFn: async (appointmentData: {
       therapist_id: string;
@@ -99,14 +106,18 @@ const AppointmentBooking: React.FC = () => {
         .from('appointments')
         .insert({
           user_id: user.id,
-          ...appointmentData
+          ...appointmentData,
+          status: 'pending'
         })
         .select()
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error creating appointment:', error);
+        throw error;
+      }
       
-      // Send confirmation email
+      // Try to send confirmation email, but don't fail if it doesn't work
       try {
         await supabase.functions.invoke('send-appointment-email', {
           body: { 
@@ -115,7 +126,7 @@ const AppointmentBooking: React.FC = () => {
           }
         });
       } catch (emailError) {
-        console.error('Email sending failed:', emailError);
+        console.warn('Email sending failed:', emailError);
         // Don't fail the appointment creation if email fails
       }
       
@@ -125,7 +136,7 @@ const AppointmentBooking: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
       toast({
         title: "Appointment booked! 📅",
-        description: "You'll receive a confirmation email shortly with all the details",
+        description: "Your appointment has been successfully booked. You'll receive a confirmation email shortly.",
       });
       // Reset form
       setSelectedTime('');
@@ -180,6 +191,21 @@ const AppointmentBooking: React.FC = () => {
     });
   };
 
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
+        <Header />
+        <main className="flex-grow container mx-auto px-4 py-8 max-w-6xl">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold mb-4">Please Sign In</h1>
+            <p className="text-lg text-muted-foreground">You need to be signed in to book appointments.</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   if (therapistsLoading) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
@@ -225,7 +251,7 @@ const AppointmentBooking: React.FC = () => {
                 {appointments.slice(0, 3).map((appointment) => (
                   <div key={appointment.id} className="flex items-center justify-between p-4 rounded-lg border">
                     <div>
-                      <h4 className="font-semibold">{appointment.therapist?.name}</h4>
+                      <h4 className="font-semibold">{appointment.therapist?.name || 'Therapist'}</h4>
                       <p className="text-sm text-muted-foreground">
                         {appointment.appointment_date} at {appointment.appointment_time}
                       </p>
@@ -243,74 +269,85 @@ const AppointmentBooking: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Therapist Selection */}
           <div className="lg:col-span-2">
-            <Card className="backdrop-blur-xl bg-white/80 dark:bg-slate-800/80 border border-white/50 dark:border-slate-700/50 mb-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Stethoscope className="h-5 w-5 text-chetna-primary" />
-                  Choose Your Therapist
-                </CardTitle>
-                <CardDescription>
-                  Select from our licensed mental health professionals
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {therapists.map((therapist) => (
-                    <div
-                      key={therapist.id}
-                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                        selectedTherapist === therapist.id
-                          ? 'border-chetna-primary bg-chetna-primary/5'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-chetna-primary/50'
-                      } ${!therapist.available ? 'opacity-50' : ''}`}
-                      onClick={() => therapist.available && setSelectedTherapist(therapist.id)}
-                    >
-                      <div className="flex items-start gap-4">
-                        <Avatar className="h-16 w-16">
-                          <AvatarImage src={therapist.avatar_url} alt={therapist.name} />
-                          <AvatarFallback>{therapist.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h4 className="font-semibold text-lg">{therapist.name}</h4>
-                              <p className="text-sm text-muted-foreground">{therapist.experience}</p>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-semibold text-chetna-primary">{therapist.fee}</p>
-                              <div className="flex items-center gap-1">
-                                <Star className="h-4 w-4 fill-current text-yellow-500" />
-                                <span className="text-sm">{therapist.rating}</span>
+            {therapists.length === 0 ? (
+              <Card className="backdrop-blur-xl bg-white/80 dark:bg-slate-800/80 border border-white/50 dark:border-slate-700/50 mb-6">
+                <CardHeader>
+                  <CardTitle>No Therapists Available</CardTitle>
+                  <CardDescription>
+                    There are currently no therapists available. Please check back later.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            ) : (
+              <Card className="backdrop-blur-xl bg-white/80 dark:bg-slate-800/80 border border-white/50 dark:border-slate-700/50 mb-6">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Stethoscope className="h-5 w-5 text-chetna-primary" />
+                    Choose Your Therapist
+                  </CardTitle>
+                  <CardDescription>
+                    Select from our licensed mental health professionals
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {therapists.map((therapist) => (
+                      <div
+                        key={therapist.id}
+                        className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                          selectedTherapist === therapist.id
+                            ? 'border-chetna-primary bg-chetna-primary/5'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-chetna-primary/50'
+                        } ${!therapist.available ? 'opacity-50' : ''}`}
+                        onClick={() => therapist.available && setSelectedTherapist(therapist.id)}
+                      >
+                        <div className="flex items-start gap-4">
+                          <Avatar className="h-16 w-16">
+                            <AvatarImage src={therapist.avatar_url} alt={therapist.name} />
+                            <AvatarFallback>{therapist.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className="font-semibold text-lg">{therapist.name}</h4>
+                                <p className="text-sm text-muted-foreground">{therapist.experience}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-semibold text-chetna-primary">{therapist.fee}</p>
+                                <div className="flex items-center gap-1">
+                                  <Star className="h-4 w-4 fill-current text-yellow-500" />
+                                  <span className="text-sm">{therapist.rating}</span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="mt-2">
-                            <div className="flex flex-wrap gap-2 mb-2">
-                              {therapist.specialties.map((specialty, index) => (
-                                <Badge key={index} variant="secondary" className="text-xs">
-                                  {specialty}
-                                </Badge>
-                              ))}
+                            <div className="mt-2">
+                              <div className="flex flex-wrap gap-2 mb-2">
+                                {therapist.specialties.map((specialty, index) => (
+                                  <Badge key={index} variant="secondary" className="text-xs">
+                                    {specialty}
+                                  </Badge>
+                                ))}
+                              </div>
+                              <p className="text-sm text-muted-foreground">
+                                Languages: {therapist.languages.join(', ')}
+                              </p>
+                              {therapist.bio && (
+                                <p className="text-sm text-muted-foreground mt-2">{therapist.bio}</p>
+                              )}
                             </div>
-                            <p className="text-sm text-muted-foreground">
-                              Languages: {therapist.languages.join(', ')}
-                            </p>
-                            {therapist.bio && (
-                              <p className="text-sm text-muted-foreground mt-2">{therapist.bio}</p>
+                            {!therapist.available && (
+                              <Badge variant="destructive" className="mt-2">
+                                Currently Unavailable
+                              </Badge>
                             )}
                           </div>
-                          {!therapist.available && (
-                            <Badge variant="destructive" className="mt-2">
-                              Currently Unavailable
-                            </Badge>
-                          )}
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Session Type */}
             <Card className="backdrop-blur-xl bg-white/80 dark:bg-slate-800/80 border border-white/50 dark:border-slate-700/50">
