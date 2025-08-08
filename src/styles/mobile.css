@@ -1,0 +1,103 @@
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  /* Safe area handling for iOS */
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Fix viewport issues */
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+  
+  /* Improve touch targets */
+  button, 
+  [role="button"],
+  input[type="submit"],
+  input[type="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Chat container mobile optimizations */
+  .chat-container {
+    height: calc(100vh - 8rem);
+    margin: 0 0.5rem 5rem 0.5rem;
+    border-radius: 0.75rem;
+  }
+  
+  /* Message container scrolling */
+  .message-container {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  
+  /* Breathing dots animation for typing indicator */
+  .breathing-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #7C65E1;
+    animation: breathing 1.5s infinite ease-in-out;
+  }
+  
+  @keyframes breathing {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  
+  /* Microphone pulse animation */
+  .mic-pulse {
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  }
+  
+  /* Navigation improvements */
+  .fixed.bottom-0 {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  
+  /* Text input improvements */
+  input[type="text"] {
+    font-size: 16px; /* Prevent zoom on iOS */
+    -webkit-appearance: none;
+    border-radius: 25px;
+  }
+  
+  /* Prevent pull-to-refresh on chat area */
+  .touch-pan-y {
+    overscroll-behavior-y: contain;
+  }
+}
+
+/* Landscape mobile optimizations */
+@media (max-width: 768px) and (orientation: landscape) {
+  .chat-container {
+    height: calc(100vh - 6rem);
+  }
+}
+
+/* Very small screens */
+@media (max-width: 320px) {
+  .chat-container {
+    margin: 0 0.25rem 5rem 0.25rem;
+  }
+  
+  .message-container {
+    padding: 0.75rem;
+  }
+}
