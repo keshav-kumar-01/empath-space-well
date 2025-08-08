@@ -45,7 +45,7 @@ const AdminDashboard: React.FC = () => {
   const [isCheckingAdmin, setIsCheckingAdmin] = useState<boolean>(true);
   const [showAddTherapistDialog, setShowAddTherapistDialog] = useState<boolean>(false);
 
-  // Check if user is admin using the proper role system
+  // Check if user is admin
   useEffect(() => {
     const checkAdminStatus = async () => {
       if (!user?.id) {
@@ -77,54 +77,55 @@ const AdminDashboard: React.FC = () => {
     checkAdminStatus();
   }, [user]);
 
-  // Fetch all appointments for admin with better error handling
+  // Fetch all appointments for admin - simplified query
   const { data: appointments = [], isLoading: appointmentsLoading, error: appointmentsError } = useQuery({
     queryKey: ['admin-appointments'],
     queryFn: async () => {
       console.log('Fetching appointments for admin dashboard...');
       
-      if (!user?.id) {
-        console.log('No user ID available');
-        return [];
-      }
-
       try {
-        // First try with therapist join
-        const { data, error } = await supabase
+        // Simple query to get all appointments
+        const { data: appointmentsData, error: appointmentsError } = await supabase
           .from('appointments')
-          .select(`
-            *,
-            therapist:therapists(name)
-          `)
+          .select('*')
           .order('created_at', { ascending: false });
         
-        if (error) {
-          console.error('Error fetching appointments with therapist join:', error);
-          // Fallback to basic appointment fetch without therapist join
-          const { data: basicData, error: basicError } = await supabase
-            .from('appointments')
-            .select('*')
-            .order('created_at', { ascending: false });
-          
-          if (basicError) {
-            console.error('Error fetching basic appointments:', basicError);
-            throw basicError;
-          }
-          
-          console.log('Fetched basic appointments:', basicData);
-          return basicData as Appointment[];
+        if (appointmentsError) {
+          console.error('Error fetching appointments:', appointmentsError);
+          throw appointmentsError;
         }
         
-        console.log('Fetched appointments with therapist data:', data);
-        return data as Appointment[];
+        console.log('Fetched appointments:', appointmentsData?.length || 0, 'appointments');
+        console.log('Sample appointment:', appointmentsData?.[0]);
+        
+        // Get therapists separately
+        const { data: therapistsData, error: therapistsError } = await supabase
+          .from('therapists')
+          .select('id, name');
+        
+        if (therapistsError) {
+          console.warn('Error fetching therapists:', therapistsError);
+        }
+        
+        // Map therapist names to appointments
+        const appointmentsWithTherapists = appointmentsData?.map(appointment => {
+          const therapist = therapistsData?.find(t => t.id === appointment.therapist_id);
+          return {
+            ...appointment,
+            therapist: therapist ? { name: therapist.name } : { name: 'Unknown Therapist' }
+          };
+        }) || [];
+        
+        console.log('Appointments with therapists:', appointmentsWithTherapists.length);
+        return appointmentsWithTherapists as Appointment[];
       } catch (error) {
         console.error('Exception while fetching appointments:', error);
         throw error;
       }
     },
     enabled: isAdmin && !isCheckingAdmin,
-    retry: 3,
-    retryDelay: 1000,
+    retry: 1,
+    refetchInterval: 30000, // Refetch every 30 seconds
   });
 
   // Fetch therapists for admin
@@ -142,10 +143,10 @@ const AdminDashboard: React.FC = () => {
         throw error;
       }
       
-      console.log('Fetched therapists:', data);
-      return data;
+      console.log('Fetched therapists:', data?.length || 0);
+      return data || [];
     },
-    enabled: isAdmin
+    enabled: isAdmin && !isCheckingAdmin
   });
 
   // Update appointment status mutation
@@ -155,7 +156,7 @@ const AdminDashboard: React.FC = () => {
       newStatus: string; 
       notes?: string; 
     }) => {
-      console.log('Starting update for appointment:', appointmentId, 'to status:', newStatus, 'with notes:', notes);
+      console.log('Updating appointment:', appointmentId, 'to status:', newStatus);
       
       const updateData: any = { 
         status: newStatus,
@@ -177,8 +178,6 @@ const AdminDashboard: React.FC = () => {
         updateData.notes = notes.trim();
       }
 
-      console.log('Update payload:', updateData);
-
       const { data, error } = await supabase
         .from('appointments')
         .update(updateData)
@@ -187,15 +186,14 @@ const AdminDashboard: React.FC = () => {
         .single();
       
       if (error) {
-        console.error('Supabase update error:', error);
+        console.error('Update error:', error);
         throw new Error(`Database error: ${error.message}`);
       }
       
-      console.log('Update successful, returned data:', data);
+      console.log('Update successful:', data);
       return data;
     },
     onSuccess: (data) => {
-      console.log('Mutation completed successfully:', data);
       queryClient.invalidateQueries({ queryKey: ['admin-appointments'] });
       toast({
         title: "Success! ✅",
@@ -223,8 +221,6 @@ const AdminDashboard: React.FC = () => {
       });
       return;
     }
-    
-    console.log('Handling status update - Appointment:', selectedAppointment, 'New Status:', newStatus, 'Notes:', statusNotes);
     
     updateStatusMutation.mutate({
       appointmentId: selectedAppointment,
@@ -259,7 +255,7 @@ const AdminDashboard: React.FC = () => {
     isAdmin,
     appointmentsCount: appointments.length,
     appointmentsLoading,
-    appointmentsError
+    appointmentsError: appointmentsError?.message
   });
 
   if (!user) {
@@ -303,12 +299,6 @@ const AdminDashboard: React.FC = () => {
             <p className="text-sm text-muted-foreground mt-2">
               Current user: {user.email} (ID: {user.id})
             </p>
-            <div className="mt-4 p-4 bg-muted rounded-lg text-left max-w-md mx-auto">
-              <p className="font-semibold mb-2">Debug Information:</p>
-              <p className="text-xs">User ID: {user.id}</p>
-              <p className="text-xs">User Email: {user.email}</p>
-              <p className="text-xs">Admin Status: {isAdmin ? 'Yes' : 'No'}</p>
-            </div>
           </div>
         </main>
         <Footer />
@@ -341,7 +331,9 @@ const AdminDashboard: React.FC = () => {
 
         {appointmentsError && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-600">Error loading appointments: {appointmentsError.message}</p>
+            <p className="text-red-600 font-semibold">Error loading appointments:</p>
+            <p className="text-red-600">{appointmentsError.message}</p>
+            <p className="text-sm text-red-500 mt-2">Please refresh the page or contact support if this persists.</p>
           </div>
         )}
 
@@ -408,47 +400,72 @@ const AdminDashboard: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle>All Appointments</CardTitle>
-                <CardDescription>Manage and track all system appointments</CardDescription>
+                <CardDescription>
+                  Manage and track all system appointments
+                  {appointmentsLoading && <span className="text-blue-600 ml-2">(Loading...)</span>}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {appointmentsLoading ? (
-                  <div className="text-center py-8">Loading appointments...</div>
+                  <div className="text-center py-8">
+                    <div className="animate-pulse">Loading appointments...</div>
+                  </div>
                 ) : appointments.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
-                    No appointments found in the system
+                    <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p className="font-semibold">No appointments found</p>
+                    <p className="text-sm">Appointments will appear here once users start booking</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {appointments.map((appointment) => (
                       <div
                         key={appointment.id}
-                        className="p-4 border rounded-lg space-y-3"
+                        className="p-4 border rounded-lg space-y-3 hover:bg-muted/50 transition-colors"
                       >
                         <div className="flex justify-between items-start">
-                          <div>
+                          <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
                               {getStatusIcon(appointment.status)}
                               <Badge variant={getStatusBadgeVariant(appointment.status)}>
                                 {appointment.status.toUpperCase()}
                               </Badge>
-                              <span className="text-sm text-muted-foreground">
+                              <span className="text-sm text-muted-foreground font-mono">
                                 #{appointment.id.slice(0, 8)}
                               </span>
                             </div>
-                            <h4 className="font-semibold">
+                            <h4 className="font-semibold text-lg">
                               {appointment.therapist?.name || 'Unknown Therapist'}
                             </h4>
-                            <div className="text-sm text-muted-foreground space-y-1">
-                              <p>📅 {appointment.appointment_date} at {appointment.appointment_time}</p>
-                              <p>🎯 {appointment.session_type.replace('_', ' ').toUpperCase()}</p>
-                              <p>👤 User ID: {appointment.user_id.slice(0, 8)}...</p>
-                              {appointment.notes && <p>📝 Notes: {appointment.notes}</p>}
-                              {appointment.cancellation_reason && (
-                                <p>❌ Cancellation: {appointment.cancellation_reason}</p>
-                              )}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-muted-foreground mt-2">
+                              <p className="flex items-center gap-1">
+                                📅 <span className="font-medium">{appointment.appointment_date}</span>
+                              </p>
+                              <p className="flex items-center gap-1">
+                                🕒 <span className="font-medium">{appointment.appointment_time}</span>
+                              </p>
+                              <p className="flex items-center gap-1">
+                                🎯 <span className="font-medium">{appointment.session_type.replace('_', ' ').toUpperCase()}</span>
+                              </p>
+                              <p className="flex items-center gap-1">
+                                👤 <span className="font-mono text-xs">{appointment.user_id.slice(0, 8)}...</span>
+                              </p>
                             </div>
+                            {appointment.notes && (
+                              <p className="text-sm mt-2 p-2 bg-blue-50 rounded text-blue-800">
+                                📝 <strong>Notes:</strong> {appointment.notes}
+                              </p>
+                            )}
+                            {appointment.cancellation_reason && (
+                              <p className="text-sm mt-2 p-2 bg-red-50 rounded text-red-800">
+                                ❌ <strong>Cancellation:</strong> {appointment.cancellation_reason}
+                              </p>
+                            )}
+                            <p className="text-xs text-muted-foreground mt-2">
+                              Created: {new Date(appointment.created_at).toLocaleString()}
+                            </p>
                           </div>
-                          <div className="flex flex-col gap-2">
+                          <div className="flex flex-col gap-2 ml-4">
                             <Button
                               size="sm"
                               variant="outline"
@@ -461,6 +478,7 @@ const AdminDashboard: React.FC = () => {
                                   setStatusNotes('');
                                 }
                               }}
+                              className="min-w-[80px]"
                             >
                               {selectedAppointment === appointment.id ? 'Cancel' : 'Manage'}
                             </Button>
@@ -468,9 +486,9 @@ const AdminDashboard: React.FC = () => {
                         </div>
 
                         {selectedAppointment === appointment.id && (
-                          <div className="border-t pt-3 space-y-3">
+                          <div className="border-t pt-4 space-y-3 bg-muted/30 p-4 rounded-lg">
                             <Textarea
-                              placeholder="Add notes (optional)"
+                              placeholder="Add notes or cancellation reason (optional)"
                               value={statusNotes}
                               onChange={(e) => setStatusNotes(e.target.value)}
                               className="min-h-[80px]"
@@ -482,7 +500,7 @@ const AdminDashboard: React.FC = () => {
                                 disabled={updateStatusMutation.isPending || appointment.status === 'confirmed'}
                                 className="bg-green-600 hover:bg-green-700"
                               >
-                                {updateStatusMutation.isPending ? '⏳ Updating...' : '✅ Confirm'}
+                                {updateStatusMutation.isPending ? '⏳' : '✅'} Confirm
                               </Button>
                               <Button
                                 size="sm"
@@ -490,7 +508,7 @@ const AdminDashboard: React.FC = () => {
                                 onClick={() => handleStatusUpdate('cancelled')}
                                 disabled={updateStatusMutation.isPending || appointment.status === 'cancelled'}
                               >
-                                {updateStatusMutation.isPending ? '⏳ Updating...' : '❌ Cancel'}
+                                {updateStatusMutation.isPending ? '⏳' : '❌'} Cancel
                               </Button>
                               <Button
                                 size="sm"
@@ -498,7 +516,7 @@ const AdminDashboard: React.FC = () => {
                                 onClick={() => handleStatusUpdate('completed')}
                                 disabled={updateStatusMutation.isPending || appointment.status === 'completed'}
                               >
-                                {updateStatusMutation.isPending ? '⏳ Updating...' : '✅ Complete'}
+                                {updateStatusMutation.isPending ? '⏳' : '✅'} Complete
                               </Button>
                               <Button
                                 size="sm"
