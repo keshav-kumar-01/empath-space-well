@@ -35,18 +35,6 @@ interface Appointment {
   };
 }
 
-interface EmailNotification {
-  id: string;
-  appointment_id: string;
-  recipient_email: string;
-  email_type: string;
-  subject: string;
-  status: string;
-  sent_at?: string;
-  error_message?: string;
-  created_at: string;
-}
-
 const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -61,16 +49,25 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     const checkAdminStatus = async () => {
       if (!user?.id) {
+        console.log('No user found, setting admin to false');
         setIsAdmin(false);
         setIsCheckingAdmin(false);
         return;
       }
       
       try {
-        const { isAdmin: adminStatus } = await checkIsAdmin(user.id, user.email);
+        console.log('Checking admin status for user:', user.id, user.email);
+        const { isAdmin: adminStatus, error } = await checkIsAdmin(user.id, user.email);
+        console.log('Admin check result:', { adminStatus, error });
+        
+        if (error) {
+          console.error('Error checking admin status:', error);
+        }
+        
         setIsAdmin(adminStatus);
+        console.log('Admin status set to:', adminStatus);
       } catch (error) {
-        console.error('Error checking admin status:', error);
+        console.error('Exception while checking admin status:', error);
         setIsAdmin(false);
       } finally {
         setIsCheckingAdmin(false);
@@ -80,28 +77,54 @@ const AdminDashboard: React.FC = () => {
     checkAdminStatus();
   }, [user]);
 
-  // Fetch all appointments for admin
-  const { data: appointments = [], isLoading: appointmentsLoading } = useQuery({
+  // Fetch all appointments for admin with better error handling
+  const { data: appointments = [], isLoading: appointmentsLoading, error: appointmentsError } = useQuery({
     queryKey: ['admin-appointments'],
     queryFn: async () => {
-      console.log('Fetching appointments...');
-      const { data, error } = await supabase
-        .from('appointments')
-        .select(`
-          *,
-          therapist:therapists(name)
-        `)
-        .order('created_at', { ascending: false });
+      console.log('Fetching appointments for admin dashboard...');
       
-      if (error) {
-        console.error('Error fetching appointments:', error);
+      if (!user?.id) {
+        console.log('No user ID available');
+        return [];
+      }
+
+      try {
+        // First try with therapist join
+        const { data, error } = await supabase
+          .from('appointments')
+          .select(`
+            *,
+            therapist:therapists(name)
+          `)
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          console.error('Error fetching appointments with therapist join:', error);
+          // Fallback to basic appointment fetch without therapist join
+          const { data: basicData, error: basicError } = await supabase
+            .from('appointments')
+            .select('*')
+            .order('created_at', { ascending: false });
+          
+          if (basicError) {
+            console.error('Error fetching basic appointments:', basicError);
+            throw basicError;
+          }
+          
+          console.log('Fetched basic appointments:', basicData);
+          return basicData as Appointment[];
+        }
+        
+        console.log('Fetched appointments with therapist data:', data);
+        return data as Appointment[];
+      } catch (error) {
+        console.error('Exception while fetching appointments:', error);
         throw error;
       }
-      
-      console.log('Fetched appointments:', data);
-      return data as Appointment[];
     },
-    enabled: isAdmin
+    enabled: isAdmin && !isCheckingAdmin,
+    retry: 3,
+    retryDelay: 1000,
   });
 
   // Fetch therapists for admin
@@ -121,31 +144,6 @@ const AdminDashboard: React.FC = () => {
       
       console.log('Fetched therapists:', data);
       return data;
-    },
-    enabled: isAdmin
-  });
-
-  // Fetch email notifications
-  const { data: emailNotifications = [] } = useQuery({
-    queryKey: ['email-notifications'],
-    queryFn: async () => {
-      try {
-        const { data, error } = await supabase.functions.invoke('get-email-notifications');
-        
-        if (error) {
-          console.log('Email notifications query failed:', error);
-          return [] as EmailNotification[];
-        }
-        
-        if (Array.isArray(data)) {
-          return data as EmailNotification[];
-        }
-        
-        return [] as EmailNotification[];
-      } catch (error) {
-        console.log('Email notifications error:', error);
-        return [] as EmailNotification[];
-      }
     },
     enabled: isAdmin
   });
@@ -216,36 +214,6 @@ const AdminDashboard: React.FC = () => {
     }
   });
 
-  // Send email notification mutation
-  const sendEmailMutation = useMutation({
-    mutationFn: async ({ appointmentId, emailType }: { 
-      appointmentId: string; 
-      emailType: string; 
-    }) => {
-      const { data, error } = await supabase.functions.invoke('send-appointment-email', {
-        body: { appointmentId, emailType }
-      });
-      
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['email-notifications'] });
-      toast({
-        title: "Email sent! 📧",
-        description: "Email notification has been sent successfully",
-      });
-    },
-    onError: (error) => {
-      console.error('Email send error:', error);
-      toast({
-        title: "Email failed",
-        description: "Failed to send email notification",
-        variant: "destructive",
-      });
-    }
-  });
-
   const handleStatusUpdate = (newStatus: string) => {
     if (!selectedAppointment) {
       toast({
@@ -265,10 +233,6 @@ const AdminDashboard: React.FC = () => {
     });
   };
 
-  const handleSendEmail = (appointmentId: string, emailType: string) => {
-    sendEmailMutation.mutate({ appointmentId, emailType });
-  };
-
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
       case 'confirmed': return 'default';
@@ -286,6 +250,17 @@ const AdminDashboard: React.FC = () => {
       default: return <Clock className="h-4 w-4" />;
     }
   };
+
+  // Debug logging
+  console.log('AdminDashboard render state:', {
+    user: user?.id,
+    userEmail: user?.email,
+    isCheckingAdmin,
+    isAdmin,
+    appointmentsCount: appointments.length,
+    appointmentsLoading,
+    appointmentsError
+  });
 
   if (!user) {
     return (
@@ -328,6 +303,12 @@ const AdminDashboard: React.FC = () => {
             <p className="text-sm text-muted-foreground mt-2">
               Current user: {user.email} (ID: {user.id})
             </p>
+            <div className="mt-4 p-4 bg-muted rounded-lg text-left max-w-md mx-auto">
+              <p className="font-semibold mb-2">Debug Information:</p>
+              <p className="text-xs">User ID: {user.id}</p>
+              <p className="text-xs">User Email: {user.email}</p>
+              <p className="text-xs">Admin Status: {isAdmin ? 'Yes' : 'No'}</p>
+            </div>
           </div>
         </main>
         <Footer />
@@ -353,13 +334,21 @@ const AdminDashboard: React.FC = () => {
           <p className="text-lg text-muted-foreground">
             Manage appointments, therapists, and system notifications
           </p>
+          <div className="mt-2 text-sm text-muted-foreground">
+            Logged in as: {user.email} | Total appointments: {appointments.length}
+          </div>
         </div>
 
+        {appointmentsError && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-600">Error loading appointments: {appointmentsError.message}</p>
+          </div>
+        )}
+
         <Tabs defaultValue="appointments" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="appointments">Appointments</TabsTrigger>
-            <TabsTrigger value="therapists">Therapists</TabsTrigger>
-            <TabsTrigger value="emails">Email Notifications</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="appointments">Appointments ({appointments.length})</TabsTrigger>
+            <TabsTrigger value="therapists">Therapists ({therapists.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="appointments" className="space-y-6">
@@ -426,7 +415,7 @@ const AdminDashboard: React.FC = () => {
                   <div className="text-center py-8">Loading appointments...</div>
                 ) : appointments.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
-                    No appointments found
+                    No appointments found in the system
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -474,15 +463,6 @@ const AdminDashboard: React.FC = () => {
                               }}
                             >
                               {selectedAppointment === appointment.id ? 'Cancel' : 'Manage'}
-                            </Button>
-                            
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleSendEmail(appointment.id, 'status_update')}
-                              disabled={sendEmailMutation.isPending}
-                            >
-                              📧 Email
                             </Button>
                           </div>
                         </div>
@@ -638,51 +618,6 @@ const AdminDashboard: React.FC = () => {
                           </div>
                         </div>
                       </Card>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="emails" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Email Notifications</CardTitle>
-                <CardDescription>Track all system email notifications</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {emailNotifications.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Mail className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No email notifications yet</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {emailNotifications.map((email) => (
-                      <div key={email.id} className="p-4 border rounded-lg">
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <h4 className="font-semibold">{email.subject}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              To: {email.recipient_email}
-                            </p>
-                          </div>
-                          <Badge variant={email.status === 'sent' ? 'default' : 'destructive'}>
-                            {email.status.toUpperCase()}
-                          </Badge>
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          <p>Type: {email.email_type}</p>
-                          <p>Created: {new Date(email.created_at).toLocaleString()}</p>
-                          {email.sent_at && (
-                            <p>Sent: {new Date(email.sent_at).toLocaleString()}</p>
-                          )}
-                          {email.error_message && (
-                            <p className="text-red-500">Error: {email.error_message}</p>
-                          )}
-                        </div>
-                      </div>
                     ))}
                   </div>
                 )}
