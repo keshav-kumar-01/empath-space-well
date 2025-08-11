@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef, memo } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import FeatureCard from "@/components/FeatureCard";
 import ReviewsSection from "@/components/ReviewsSection";
 import BackgroundElements from "@/components/BackgroundElements";
 import LazySection from "@/components/LazySection";
+import SEO from "@/components/SEO";
 import { useTranslation } from 'react-i18next';
 
 // Memoized components for better performance
@@ -86,18 +88,26 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
+      <SEO
+        title="Chetna_AI - Your Mental Wellness Companion | AI-Powered Mental Health Support"
+        description="Get compassionate AI support for anxiety, depression, stress management, and mental health challenges. Start your wellness journey with Chetna_AI today - available 24/7."
+        keywords="mental health AI, anxiety support, depression help, stress management, emotional wellness, AI therapy, mental health companion, psychological support, wellness app, therapy chat"
+        url="https://chetna.live"
+        image="https://chetna.live/og-image.png"
+      />
+      
       <BackgroundElements />
       <Header />
       
-      <main className="relative z-10">
+      <main className="relative z-10" role="main">
         <IntroSection onStartChat={handleStartChat} />
 
         {/* Features Section with Lazy Loading */}
         <LazySection>
-          <section className="py-16 px-4 sm:px-6 lg:px-8">
+          <section className="py-16 px-4 sm:px-6 lg:px-8" aria-labelledby="features-heading">
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-16">
-                <h2 className="text-3xl font-bold text-foreground sm:text-4xl mb-4">
+                <h2 id="features-heading" className="text-3xl font-bold text-foreground sm:text-4xl mb-4">
                   {t('features.title')}
                 </h2>
                 <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -120,10 +130,11 @@ const Index = () => {
             id="chat-section" 
             ref={chatSectionRef}
             className="py-16 px-4 sm:px-6 lg:px-8"
+            aria-labelledby="chat-heading"
           >
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-foreground mb-4">
+                <h2 id="chat-heading" className="text-3xl font-bold text-foreground mb-4">
                   {t('chat.title')}
                 </h2>
                 <p className="text-xl text-muted-foreground">

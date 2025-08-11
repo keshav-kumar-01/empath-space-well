@@ -8,6 +8,8 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -78,6 +80,13 @@ const Blog: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-lavender via-white to-chetna-mint dark:from-chetna-dark dark:to-chetna-darker relative overflow-hidden">
+      <SEO
+        title="Mental Wellness Blog | Chetna_AI Community Stories"
+        description="Read inspiring mental health stories, tips, and experiences from the Chetna_AI community. Share your wellness journey and connect with others."
+        keywords="mental health blog, wellness stories, depression recovery, anxiety support, mental health tips, community stories, therapy experiences"
+        url="https://chetna.live/blog"
+      />
+
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-chetna-primary/8 to-chetna-accent/8 rounded-full blur-2xl floating" style={{ animationDelay: '0s' }}></div>
@@ -85,14 +94,11 @@ const Blog: React.FC = () => {
         <div className="absolute bottom-40 left-1/4 w-48 h-48 bg-gradient-to-br from-chetna-accent/6 to-chetna-peach/12 rounded-full blur-3xl floating" style={{ animationDelay: '6s' }}></div>
       </div>
 
-      <Helmet>
-        <title>Blog | Chetna_AI</title>
-        <meta name="description" content="Read and share thoughts on mental wellness in the Chetna_AI community blog." />
-      </Helmet>
-
       <Header />
 
       <main className="flex-grow container mx-auto px-4 py-8 relative z-10">
+        <Breadcrumbs />
+        
         {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-chetna-primary/10 to-chetna-accent/10 rounded-full px-4 py-2 mb-4">

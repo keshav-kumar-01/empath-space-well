@@ -8,6 +8,8 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { 
   AlertDialog, 
@@ -153,15 +155,30 @@ const BlogPost: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-white to-[#FDE1D3] dark:from-chetna-dark dark:to-chetna-darker">
-      <Helmet>
-        <title>{post.title} | Chetna_AI Blog</title>
-        <meta name="description" content={post.content.substring(0, 160)} />
-      </Helmet>
+      <SEO
+        title={`${post.title} | Chetna_AI Blog`}
+        description={post.content.substring(0, 160)}
+        url={`https://chetna.live/blog/post/${post.id}`}
+        type="article"
+        article={{
+          publishedTime: post.created_at,
+          modifiedTime: post.updated_at,
+          author: post.author_name,
+          section: "Mental Health",
+          tags: ["mental health", "wellness", "personal story"]
+        }}
+      />
 
       <Header />
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
+          <Breadcrumbs items={[
+            { label: 'Home', href: '/' },
+            { label: 'Blog', href: '/blog' },
+            { label: post.title }
+          ]} />
+
           <Button 
             variant="ghost" 
             onClick={() => navigate("/blog")}
@@ -171,16 +188,16 @@ const BlogPost: React.FC = () => {
             Back to Blog
           </Button>
 
-          <article className="bg-white/90 dark:bg-chetna-darker/90 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-sm">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">{post.title}</h1>
+          <article className="bg-white/90 dark:bg-chetna-darker/90 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-sm" itemScope itemType="https://schema.org/Article">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4" itemProp="headline">{post.title}</h1>
             
             <div className="flex items-center justify-between mb-6">
               <div className="text-sm text-muted-foreground">
-                <span>By {post.author_name}</span>
+                <span itemProp="author">By {post.author_name}</span>
                 <span className="mx-2">•</span>
-                <time dateTime={post.created_at}>{formatDate(post.created_at)}</time>
+                <time dateTime={post.created_at} itemProp="datePublished">{formatDate(post.created_at)}</time>
                 {post.updated_at !== post.created_at && (
-                  <span className="italic ml-2">(Updated: {formatDate(post.updated_at)})</span>
+                  <span className="italic ml-2" itemProp="dateModified">(Updated: {formatDate(post.updated_at)})</span>
                 )}
               </div>
 
@@ -208,7 +225,7 @@ const BlogPost: React.FC = () => {
 
             <Separator className="mb-6" />
 
-            <div className="prose dark:prose-invert max-w-none">
+            <div className="prose dark:prose-invert max-w-none" itemProp="articleBody">
               {post.content.split('\n').map((paragraph, index) => (
                 <p key={index} className="mb-4">{paragraph}</p>
               ))}
