@@ -113,8 +113,10 @@ const testCategories = [
 ];
 
 const PsychTests = () => {
+  console.log('PsychTests page rendered');
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-light via-white to-chetna-secondary/10">
       <Header />
       
       <main className="flex-1 container mx-auto px-4 py-8">
@@ -133,33 +135,33 @@ const PsychTests = () => {
             {testCategories.map((category) => {
               const IconComponent = category.icon;
               return (
-                <Card key={category.id} className="overflow-hidden">
-                  <CardHeader>
+                <Card key={category.id} className="overflow-hidden shadow-lg border-chetna-primary/20 hover:shadow-xl transition-shadow">
+                  <CardHeader className="bg-gradient-to-r from-chetna-primary/5 to-chetna-secondary/5">
                     <div className="flex items-center gap-3 mb-2">
                       <div className={`p-2 rounded-lg ${category.color}`}>
                         <IconComponent className="h-6 w-6" />
                       </div>
                       <div>
-                        <CardTitle className="text-xl">{category.title}</CardTitle>
+                        <CardTitle className="text-xl text-chetna-primary">{category.title}</CardTitle>
                         <CardDescription className="text-base">
                           {category.description}
                         </CardDescription>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-6">
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {category.tests.map((test) => (
-                        <Card key={test.id} className="border-2 hover:border-chetna-primary/30 transition-colors">
+                        <Card key={test.id} className="border-2 hover:border-chetna-primary/30 transition-all hover:shadow-md">
                           <CardHeader className="pb-3">
                             <div className="flex items-center justify-between">
-                              <Badge variant="secondary">{test.name}</Badge>
+                              <Badge variant="secondary" className="bg-chetna-primary/10 text-chetna-primary">{test.name}</Badge>
                               <div className="flex items-center gap-1 text-sm text-gray-500">
                                 <Clock className="h-4 w-4" />
                                 {test.duration}
                               </div>
                             </div>
-                            <CardTitle className="text-lg">{test.fullName}</CardTitle>
+                            <CardTitle className="text-lg text-gray-800">{test.fullName}</CardTitle>
                             <CardDescription>{test.description}</CardDescription>
                           </CardHeader>
                           <CardContent>
@@ -168,7 +170,11 @@ const PsychTests = () => {
                                 {typeof test.questions === 'number' ? `${test.questions} questions` : test.questions}
                               </span>
                               <Link to={`/psych-tests/${test.id}`}>
-                                <Button size="sm" className="chetna-button">
+                                <Button 
+                                  size="sm" 
+                                  className="bg-chetna-primary hover:bg-chetna-primary/90 text-white"
+                                  onClick={() => console.log('Navigating to test:', test.id)}
+                                >
                                   Take Test
                                 </Button>
                               </Link>
@@ -184,9 +190,9 @@ const PsychTests = () => {
           </div>
 
           <div className="mt-12 text-center">
-            <Card className="bg-chetna-primary/5 border-chetna-primary/20">
+            <Card className="bg-chetna-primary/5 border-chetna-primary/20 shadow-lg">
               <CardContent className="pt-6">
-                <h3 className="text-xl font-semibold mb-2">Important Note</h3>
+                <h3 className="text-xl font-semibold mb-2 text-chetna-primary">Important Note</h3>
                 <p className="text-gray-600 dark:text-gray-300">
                   These tests are for educational and self-assessment purposes only. 
                   They are not a substitute for professional mental health evaluation or diagnosis. 

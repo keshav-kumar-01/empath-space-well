@@ -35,7 +35,11 @@ const GAD7Test = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  console.log('GAD7Test rendered, user:', user?.id);
+  console.log('Current responses:', responses);
+
   const handleResponse = (value: number) => {
+    console.log('Response selected:', value, 'for question:', currentQuestion);
     const newResponses = [...responses];
     newResponses[currentQuestion] = value;
     setResponses(newResponses);
@@ -74,12 +78,25 @@ const GAD7Test = () => {
       return;
     }
 
+    // Check if all questions are answered
+    const unanswered = responses.filter(r => r === -1).length;
+    if (unanswered > 0) {
+      toast({
+        title: "Incomplete Test",
+        description: `Please answer all questions. ${unanswered} questions remaining.`,
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     const totalScore = calculateScore();
     const severityLevel = getSeverityLevel(totalScore);
 
+    console.log('Submitting GAD-7 test:', { totalScore, severityLevel, responses });
+
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('psychological_test_results')
         .insert({
           user_id: user.id,
@@ -88,9 +105,16 @@ const GAD7Test = () => {
           responses: responses,
           total_score: totalScore,
           severity_level: severityLevel
-        });
+        })
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+
+      console.log('Test results saved:', data);
 
       toast({
         title: "Test Completed",
@@ -123,20 +147,20 @@ const GAD7Test = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+      <Card className="shadow-lg border-chetna-primary/20">
+        <CardHeader className="bg-gradient-to-r from-chetna-primary/5 to-chetna-secondary/5">
+          <CardTitle className="flex items-center justify-between text-chetna-primary">
             GAD-7 Assessment
-            <span className="text-sm font-normal">
+            <span className="text-sm font-normal text-gray-600">
               {currentQuestion + 1} of {questions.length}
             </span>
           </CardTitle>
           <Progress value={progress} className="mt-2" />
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-medium mb-4">
+              <h3 className="text-lg font-medium mb-4 text-gray-800">
                 Over the last 2 weeks, how often have you been bothered by:
               </h3>
               <p className="text-xl font-medium text-chetna-primary mb-6">
@@ -145,24 +169,26 @@ const GAD7Test = () => {
             </div>
 
             <RadioGroup
-              value={responses[currentQuestion]?.toString()}
+              value={responses[currentQuestion] === -1 ? undefined : responses[currentQuestion].toString()}
               onValueChange={(value) => handleResponse(parseInt(value))}
+              className="space-y-3"
             >
               {responseOptions.map((option) => (
-                <div key={option.value} className="flex items-center space-x-2">
+                <div key={option.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                   <RadioGroupItem value={option.value.toString()} id={`option-${option.value}`} />
-                  <Label htmlFor={`option-${option.value}`} className="flex-1 cursor-pointer">
+                  <Label htmlFor={`option-${option.value}`} className="flex-1 cursor-pointer text-base">
                     {option.label}
                   </Label>
                 </div>
               ))}
             </RadioGroup>
 
-            <div className="flex justify-between pt-6">
+            <div className="flex justify-between pt-6 border-t">
               <Button
                 variant="outline"
                 onClick={prevQuestion}
                 disabled={currentQuestion === 0}
+                className="px-6"
               >
                 Previous
               </Button>
@@ -171,7 +197,7 @@ const GAD7Test = () => {
                 <Button
                   onClick={submitTest}
                   disabled={!canProceed || isSubmitting}
-                  className="chetna-button"
+                  className="bg-chetna-primary hover:bg-chetna-primary/90 text-white px-6"
                 >
                   {isSubmitting ? "Submitting..." : "Complete Test"}
                 </Button>
@@ -179,7 +205,7 @@ const GAD7Test = () => {
                 <Button
                   onClick={nextQuestion}
                   disabled={!canProceed}
-                  className="chetna-button"
+                  className="bg-chetna-primary hover:bg-chetna-primary/90 text-white px-6"
                 >
                   Next
                 </Button>
