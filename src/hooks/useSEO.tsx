@@ -10,6 +10,13 @@ interface SEOData {
   ogImage?: string;
 }
 
+// Declare gtag function for TypeScript
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+  }
+}
+
 export const useSEO = (data: SEOData) => {
   const location = useLocation();
 
@@ -45,9 +52,9 @@ export const useSEO = (data: SEOData) => {
       }
     }
 
-    // Track page views for analytics
-    if (typeof gtag !== 'undefined') {
-      gtag('config', 'GA_MEASUREMENT_ID', {
+    // Track page views for analytics (only if gtag is available)
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('config', 'GA_MEASUREMENT_ID', {
         page_path: location.pathname + location.search,
       });
     }
