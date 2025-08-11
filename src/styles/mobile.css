@@ -1,5 +1,5 @@
 
-/* Mobile-specific optimizations */
+/* Enhanced Mobile-specific optimizations */
 @media (max-width: 768px) {
   /* Safe area handling for iOS */
   .safe-area-inset-bottom {
@@ -10,94 +10,364 @@
   body {
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    position: relative;
   }
   
-  /* Fix viewport issues */
+  /* Fix viewport issues and prevent zoom */
   html {
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
+    touch-action: manipulation;
   }
   
-  /* Improve touch targets */
+  /* Prevent zoom on inputs for iOS */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px !important; /* Prevent zoom on iOS */
+    -webkit-appearance: none;
+    border-radius: 8px;
+    transform: translateZ(0); /* Force hardware acceleration */
+  }
+  
+  /* Improve touch targets - WCAG AA compliance */
   button, 
   [role="button"],
   input[type="submit"],
-  input[type="button"] {
+  input[type="button"],
+  .touch-target {
     min-height: 44px;
     min-width: 44px;
+    touch-action: manipulation;
   }
   
-  /* Chat container mobile optimizations */
+  /* Enhanced chat container mobile optimizations */
   .chat-container {
     height: calc(100vh - 8rem);
+    height: calc(100dvh - 8rem); /* Dynamic viewport height for better mobile support */
     margin: 0 0.5rem 5rem 0.5rem;
     border-radius: 0.75rem;
+    position: relative;
+    overflow: hidden;
   }
   
-  /* Message container scrolling */
+  /* Message container scrolling improvements */
   .message-container {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+    scroll-behavior: smooth;
+    transform: translateZ(0); /* Hardware acceleration */
   }
   
-  /* Breathing dots animation for typing indicator */
+  /* Enhanced breathing dots animation for typing indicator */
   .breathing-dot {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: #7C65E1;
     animation: breathing 1.5s infinite ease-in-out;
+    transform: translateZ(0);
   }
   
   @keyframes breathing {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
+    0%, 100% { 
+      opacity: 0.4; 
+      transform: scale(1);
+    }
+    50% { 
+      opacity: 1; 
+      transform: scale(1.1);
+    }
   }
   
-  /* Microphone pulse animation */
+  /* Enhanced microphone pulse animation */
   .mic-pulse {
     animation: pulse 2s infinite;
+    transform: translateZ(0);
   }
   
   @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    0% { 
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+      transform: scale(1);
+    }
+    70% { 
+      box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+      transform: scale(1.05);
+    }
+    100% { 
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+      transform: scale(1);
+    }
   }
   
-  /* Navigation improvements */
+  /* Enhanced navigation improvements */
   .fixed.bottom-0 {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-  }
-  
-  /* Text input improvements */
-  input[type="text"] {
-    font-size: 16px; /* Prevent zoom on iOS */
-    -webkit-appearance: none;
-    border-radius: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   /* Prevent pull-to-refresh on chat area */
   .touch-pan-y {
     overscroll-behavior-y: contain;
+    touch-action: pan-y;
   }
+  
+  /* Admin dashboard mobile optimizations */
+  .admin-dashboard-mobile {
+    padding: 0.5rem;
+  }
+  
+  .admin-card-mobile {
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  
+  /* Enhanced button styles for mobile */
+  .mobile-button {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    transform: translateZ(0);
+    transition: all 0.2s ease;
+  }
+  
+  .mobile-button:active {
+    transform: translateZ(0) scale(0.98);
+  }
+  
+  /* Loading states */
+  .mobile-loading {
+    animation: shimmer 1.5s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+  
+  /* Modal/Dialog improvements for mobile */
+  .mobile-dialog {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+    border-radius: 1rem;
+    overflow-y: auto;
+  }
+  
+  /* Tab improvements */
+  .mobile-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .mobile-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Form improvements */
+  .mobile-form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .mobile-form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .mobile-form-group input,
+  .mobile-form-group textarea,
+  .mobile-form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 16px;
+  }
+  
+  /* Card optimizations */
+  .mobile-appointment-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Status badges */
+  .mobile-status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  
+  /* Responsive text sizes */
+  .mobile-text-xs { font-size: 0.75rem; }
+  .mobile-text-sm { font-size: 0.875rem; }
+  .mobile-text-base { font-size: 1rem; }
+  .mobile-text-lg { font-size: 1.125rem; }
+  .mobile-text-xl { font-size: 1.25rem; }
+  
+  /* Spacing utilities */
+  .mobile-spacing-xs { padding: 0.25rem; }
+  .mobile-spacing-sm { padding: 0.5rem; }
+  .mobile-spacing-md { padding: 0.75rem; }
+  .mobile-spacing-lg { padding: 1rem; }
+  .mobile-spacing-xl { padding: 1.25rem; }
 }
 
 /* Landscape mobile optimizations */
 @media (max-width: 768px) and (orientation: landscape) {
   .chat-container {
     height: calc(100vh - 6rem);
+    height: calc(100dvh - 6rem);
+  }
+  
+  .admin-dashboard-mobile {
+    padding: 0.25rem;
+  }
+  
+  .mobile-header {
+    padding: 0.5rem 1rem;
   }
 }
 
-/* Very small screens */
-@media (max-width: 320px) {
+/* Very small screens (iPhone SE, etc.) */
+@media (max-width: 375px) {
   .chat-container {
     margin: 0 0.25rem 5rem 0.25rem;
+    border-radius: 0.5rem;
   }
   
   .message-container {
+    padding: 0.5rem;
+  }
+  
+  .admin-dashboard-mobile {
+    padding: 0.25rem;
+  }
+  
+  .admin-stats-grid {
+    gap: 0.25rem;
+  }
+  
+  .mobile-appointment-card {
     padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .mobile-button {
+    min-height: 40px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Large mobile screens */
+@media (min-width: 376px) and (max-width: 768px) {
+  .mobile-appointment-card {
+    padding: 1.25rem;
+  }
+  
+  .admin-stats-grid {
+    gap: 0.75rem;
+  }
+  
+  .mobile-button {
+    min-height: 48px;
+    padding: 1rem 1.25rem;
+  }
+}
+
+/* PWA specific styles */
+@media (display-mode: standalone) {
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  
+  .chat-container {
+    height: calc(100vh - 6rem);
+    height: calc(100dvh - 6rem);
+  }
+  
+  .admin-dashboard-mobile {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Dark mode mobile optimizations */
+@media (prefers-color-scheme: dark) and (max-width: 768px) {
+  .mobile-appointment-card {
+    background: #1f2937;
+    border-color: #374151;
+    color: #f9fafb;
+  }
+  
+  .mobile-form-group input,
+  .mobile-form-group textarea,
+  .mobile-form-group select {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
+  
+  .fixed.bottom-0 {
+    background: rgba(31, 41, 55, 0.9);
+    border-top-color: rgba(75, 85, 99, 0.3);
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .breathing-dot,
+  .mic-pulse,
+  .mobile-loading {
+    animation: none;
+  }
+  
+  .mobile-button:active {
+    transform: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .mobile-appointment-card {
+    border-width: 2px;
+    border-color: #000;
+  }
+  
+  .mobile-button {
+    border-width: 2px;
+    border-color: #000;
   }
 }

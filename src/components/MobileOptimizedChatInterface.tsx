@@ -74,7 +74,7 @@ const MobileOptimizedChatInterface: React.FC = () => {
         console.log('Auto-clearing chat after 20 minutes');
         clearChat();
         toast({
-          title: "Chat cleared",
+          title: "🔄 Chat cleared",
           description: "Your chat session has been automatically cleared for privacy",
         });
       }, AUTO_CLEAR_INTERVAL);
@@ -132,14 +132,14 @@ const MobileOptimizedChatInterface: React.FC = () => {
         await initModel();
         setModelLoaded(true);
         toast({
-          title: "Chetna_AI connected",
-          description: "AI assistant is now active",
+          title: "🤖 Chetna_AI connected",
+          description: "AI assistant is now active and ready to help",
         });
       } catch (error) {
         console.error("Failed to connect to Chetna_AI:", error);
         toast({
-          title: "Using basic responses",
-          description: "AI model couldn't be loaded",
+          title: "📱 Using basic responses",
+          description: "AI model couldn't be loaded, using fallback responses",
           variant: "destructive",
         });
       } finally {
@@ -210,8 +210,8 @@ const MobileOptimizedChatInterface: React.FC = () => {
     if (!user && messageCount >= 5) {
       setShowLoginPrompt(true);
       toast({
-        title: "Message limit reached",
-        description: "Please sign up to continue",
+        title: "📝 Message limit reached",
+        description: "Please sign up to continue chatting",
         variant: "destructive",
       });
       return;
@@ -281,7 +281,7 @@ const MobileOptimizedChatInterface: React.FC = () => {
         onStart: () => {
           setIsListening(true);
           toast({
-            title: t('chat.listening'),
+            title: "🎤 " + t('chat.listening'),
             description: t('chat.speakClearly'),
           });
         },
@@ -299,7 +299,7 @@ const MobileOptimizedChatInterface: React.FC = () => {
           console.error("Speech recognition error:", error);
           setIsListening(false);
           toast({
-            title: t('chat.speechError'),
+            title: "🚫 " + t('chat.speechError'),
             description: error,
             variant: "destructive",
           });
@@ -313,48 +313,62 @@ const MobileOptimizedChatInterface: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] bg-white dark:bg-chetna-dark/50 rounded-lg shadow-lg overflow-hidden border border-chetna-primary/10 dark:border-chetna-primary/30 mx-2 mb-20">
-      {/* Mobile-optimized chat header */}
+    <div className="flex flex-col h-[calc(100vh-8rem)] h-[calc(100dvh-8rem)] bg-white dark:bg-chetna-dark/50 rounded-lg shadow-lg overflow-hidden border border-chetna-primary/10 dark:border-chetna-primary/30 mx-2 mb-20 chat-container">
+      {/* Enhanced mobile-optimized chat header */}
       <div className="flex justify-between items-center p-3 border-b border-chetna-primary/10 dark:border-chetna-primary/30 bg-gradient-to-r from-chetna-primary/5 to-chetna-accent/5 shrink-0">
-        <h3 className="font-semibold text-chetna-primary dark:text-chetna-primary text-sm">
-          {t('chat.title')}
-        </h3>
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-chetna-primary flex items-center justify-center text-white font-bold text-sm">
+            🤖
+          </div>
+          <div>
+            <h3 className="font-semibold text-chetna-primary dark:text-chetna-primary text-sm">
+              {t('chat.title')}
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              {modelLoaded ? "✅ AI Active" : loadingModel ? "🔄 Connecting..." : "📱 Basic Mode"}
+            </p>
+          </div>
+        </div>
         <Button
           variant="ghost"
           size="sm"
           onClick={clearChat}
-          className="text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10 text-xs h-7 px-2"
+          className="text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10 text-xs h-8 px-3 rounded-full"
         >
-          {t('chat.clearChat')}
+          🗑️ {t('chat.clearChat')}
         </Button>
       </div>
 
-      {/* Messages container optimized for mobile */}
-      <div className="flex-1 p-3 overflow-y-auto space-y-3 bg-white/80 dark:bg-chetna-darker/80 touch-pan-y">
+      {/* Enhanced messages container with better mobile UX */}
+      <div className="flex-1 p-3 overflow-y-auto space-y-3 bg-white/80 dark:bg-chetna-darker/80 touch-pan-y message-container">
         {loadingModel && (
-          <div className="bg-amber-100 dark:bg-amber-900/50 rounded-lg p-2 text-xs text-center">
-            {t('chat.connecting')}
+          <div className="bg-amber-50 dark:bg-amber-900/50 rounded-lg p-3 text-xs text-center border border-amber-200 dark:border-amber-800">
+            <div className="flex items-center justify-center gap-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-amber-600 border-t-transparent"></div>
+              <span className="text-amber-800 dark:text-amber-200">🔄 {t('chat.connecting')}</span>
+            </div>
           </div>
         )}
         
         {!modelLoaded && !loadingModel && (
-          <div className="bg-orange-100 dark:bg-orange-900/50 rounded-lg p-2 text-xs text-center text-orange-800 dark:text-orange-100">
-            {t('chat.basicMode')}
+          <div className="bg-orange-50 dark:bg-orange-900/50 rounded-lg p-3 text-xs text-center text-orange-800 dark:text-orange-100 border border-orange-200 dark:border-orange-800">
+            📱 {t('chat.basicMode')}
           </div>
         )}
 
         {!user && !showLoginPrompt && messageCount > 0 && (
-          <div className="bg-blue-100 dark:bg-blue-900/50 rounded-lg p-2 text-xs text-center text-blue-800 dark:text-blue-100">
-            {t('chat.messageLimit', { current: messageCount, max: 5 })}
+          <div className="bg-blue-50 dark:bg-blue-900/50 rounded-lg p-3 text-xs text-center text-blue-800 dark:text-blue-100 border border-blue-200 dark:border-blue-800">
+            💬 {t('chat.messageLimit', { current: messageCount, max: 5 })}
           </div>
         )}
         
         {showLoginPrompt && !user && (
-          <div className="bg-red-100 dark:bg-red-900/50 rounded-lg p-3 text-center flex flex-col items-center gap-2 text-red-800 dark:text-red-100">
+          <div className="bg-red-50 dark:bg-red-900/50 rounded-lg p-4 text-center flex flex-col items-center gap-3 text-red-800 dark:text-red-100 border border-red-200 dark:border-red-800">
+            <div className="text-2xl">🔒</div>
             <p className="font-medium text-sm">{t('chat.limitReached')}</p>
             <p className="text-xs">{t('chat.signupPrompt')}</p>
-            <Button onClick={goToSignup} className="bg-chetna-primary hover:bg-chetna-primary/90 text-xs h-8">
-              <LogIn className="h-3 w-3 mr-1" />
+            <Button onClick={goToSignup} className="bg-chetna-primary hover:bg-chetna-primary/90 text-xs h-10 px-6 rounded-full mobile-button">
+              <LogIn className="h-4 w-4 mr-2" />
               {t('chat.signupNow')}
             </Button>
           </div>
@@ -371,10 +385,10 @@ const MobileOptimizedChatInterface: React.FC = () => {
         
         {isTyping && (
           <div className="flex items-end gap-2">
-            <div className="w-6 h-6 rounded-full bg-chetna-primary flex items-center justify-center text-white font-semibold text-xs">
-              C
+            <div className="w-8 h-8 rounded-full bg-chetna-primary flex items-center justify-center text-white font-semibold text-xs">
+              🤖
             </div>
-            <div className="bg-chetna-ai-bubble dark:bg-chetna-primary/30 p-3 rounded-2xl rounded-tl-none flex gap-1 items-center">
+            <div className="bg-chetna-ai-bubble dark:bg-chetna-primary/30 p-4 rounded-2xl rounded-tl-none flex gap-1 items-center shadow-sm">
               <div className="breathing-dot delay-0"></div>
               <div className="breathing-dot" style={{ animationDelay: "0.3s" }}></div>
               <div className="breathing-dot" style={{ animationDelay: "0.6s" }}></div>
@@ -385,7 +399,7 @@ const MobileOptimizedChatInterface: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
       
-      {/* Mobile-optimized input area */}
+      {/* Enhanced mobile-optimized input area */}
       <form onSubmit={handleSendMessage} className="p-3 border-t border-chetna-primary/10 dark:border-chetna-primary/30 bg-chetna-bubble/50 dark:bg-chetna-dark/70 shrink-0">
         <div className="flex items-center gap-2">
           <Input
@@ -393,19 +407,20 @@ const MobileOptimizedChatInterface: React.FC = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={showLoginPrompt && !user ? t('chat.placeholderSignup') : isTyping ? t('chat.placeholderTyping') : t('chat.placeholder')}
-            className="rounded-full bg-white dark:bg-chetna-darker/80 border-none focus-visible:ring-chetna-primary text-foreground dark:text-white/90 shadow-sm text-sm h-10"
+            className="rounded-full bg-white dark:bg-chetna-darker/80 border-none focus-visible:ring-chetna-primary text-foreground dark:text-white/90 shadow-sm text-sm h-12 px-4 mobile-button"
             disabled={isTyping || (showLoginPrompt && !user)}
+            style={{ fontSize: '16px' }} // Prevent zoom on iOS
           />
 
           {speechSupported && (
             <Button 
               type="button" 
               size="icon" 
-              className={`rounded-full w-10 h-10 shrink-0 ${isListening ? 'bg-red-500 hover:bg-red-600 mic-pulse' : 'bg-chetna-accent hover:bg-chetna-accent/90'}`}
+              className={`rounded-full w-12 h-12 shrink-0 mobile-button ${isListening ? 'bg-red-500 hover:bg-red-600 mic-pulse' : 'bg-chetna-accent hover:bg-chetna-accent/90'}`}
               onClick={toggleSpeechRecognition}
               disabled={(showLoginPrompt && !user) || isTyping}
             >
-              {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+              {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
             </Button>
           )}
           
@@ -413,19 +428,19 @@ const MobileOptimizedChatInterface: React.FC = () => {
             <Button 
               type="button" 
               size="icon" 
-              className="rounded-full bg-chetna-primary hover:bg-chetna-primary/90 w-10 h-10 shrink-0"
+              className="rounded-full bg-chetna-primary hover:bg-chetna-primary/90 w-12 h-12 shrink-0 mobile-button"
               onClick={goToSignup}
             >
-              <LogIn className="h-4 w-4" />
+              <LogIn className="h-5 w-5" />
             </Button>
           ) : (
             <Button 
               type="submit" 
               size="icon" 
-              className="rounded-full bg-chetna-primary hover:bg-chetna-primary/90 w-10 h-10 shrink-0"
+              className="rounded-full bg-chetna-primary hover:bg-chetna-primary/90 w-12 h-12 shrink-0 mobile-button shadow-lg"
               disabled={!input.trim() || isTyping || (showLoginPrompt && !user)}
             >
-              <Send className="h-4 w-4" />
+              <Send className="h-5 w-5" />
             </Button>
           )}
         </div>
