@@ -4,11 +4,21 @@
 User-agent: *
 Allow: /
 
-# Disallow certain paths
+# Disallow certain paths for privacy and security
 Disallow: /admin/
 Disallow: /private/
 Disallow: /temp/
 Disallow: /api/
+Disallow: /auth/
+Disallow: /_next/
+Disallow: /404
+
+# Allow important SEO paths
+Allow: /blog/
+Allow: /resources/
+Allow: /psych-tests/
+Allow: /about/
+Allow: /community/
 
 # Crawl-delay for better server performance
 Crawl-delay: 1
@@ -16,7 +26,7 @@ Crawl-delay: 1
 # Sitemap location
 Sitemap: https://chetna.live/sitemap.xml
 
-# Specific agent rules
+# Specific agent rules for better indexing
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 1
@@ -31,7 +41,13 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-# Block AI scrapers that don't respect robots.txt
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+# Block AI scrapers that don't respect content policies
 User-agent: GPTBot
 Disallow: /
 
@@ -45,4 +61,20 @@ User-agent: anthropic-ai
 Disallow: /
 
 User-agent: Claude-Web
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: YouBot
+Disallow: /
+
+# Block aggressive crawlers
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
 Disallow: /

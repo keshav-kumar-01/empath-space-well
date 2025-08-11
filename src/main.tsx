@@ -1,6 +1,7 @@
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
+import { HelmetProvider } from 'react-helmet-async'
 import App from './App.tsx'
 import './index.css'
 import './lib/i18n'
@@ -35,13 +36,15 @@ const root = createRoot(rootElement);
 
 root.render(
   <React.StrictMode>
-    <ThemeProvider 
-      attribute="class" 
-      defaultTheme="light"
-      enableSystem={false}
-      disableTransitionOnChange={true}
-    >
-      <App />
-    </ThemeProvider>
+    <HelmetProvider>
+      <ThemeProvider 
+        attribute="class" 
+        defaultTheme="light"
+        enableSystem={false}
+        disableTransitionOnChange={true}
+      >
+        <App />
+      </ThemeProvider>
+    </HelmetProvider>
   </React.StrictMode>
 );

@@ -8,12 +8,18 @@ export interface SitemapUrl {
 
 export const generateSitemap = (urls: SitemapUrl[]): string => {
   const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 ${urls.map(url => `  <url>
     <loc>${url.loc}</loc>${url.lastmod ? `
     <lastmod>${url.lastmod}</lastmod>` : ''}${url.changefreq ? `
     <changefreq>${url.changefreq}</changefreq>` : ''}${url.priority ? `
     <priority>${url.priority}</priority>` : ''}
+    <mobile:mobile/>
   </url>`).join('\n')}
 </urlset>`;
   
@@ -86,6 +92,30 @@ export const getStaticSitemapUrls = (): SitemapUrl[] => {
       priority: 0.7
     },
     {
+      loc: `${baseUrl}/psych-tests/gad7`,
+      lastmod: today,
+      changefreq: 'monthly',
+      priority: 0.8
+    },
+    {
+      loc: `${baseUrl}/psych-tests/phq9`,
+      lastmod: today,
+      changefreq: 'monthly',
+      priority: 0.8
+    },
+    {
+      loc: `${baseUrl}/psych-tests/bai`,
+      lastmod: today,
+      changefreq: 'monthly',
+      priority: 0.8
+    },
+    {
+      loc: `${baseUrl}/psych-tests/bdi2`,
+      lastmod: today,
+      changefreq: 'monthly',
+      priority: 0.8
+    },
+    {
       loc: `${baseUrl}/feedback`,
       lastmod: today,
       changefreq: 'monthly',
@@ -104,4 +134,18 @@ export const getStaticSitemapUrls = (): SitemapUrl[] => {
       priority: 0.3
     }
   ];
+};
+
+// Function to generate sitemap for blog posts
+export const generateBlogSitemap = async (blogPosts: any[]) => {
+  const baseUrl = 'https://chetna.live';
+  
+  const blogUrls: SitemapUrl[] = blogPosts.map(post => ({
+    loc: `${baseUrl}/blog/post/${post.id}`,
+    lastmod: post.updated_at || post.created_at,
+    changefreq: 'monthly' as const,
+    priority: 0.6
+  }));
+  
+  return blogUrls;
 };
