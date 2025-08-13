@@ -1,202 +1,49 @@
-// Using Mistral AI for improved mental health responses
-let modelInitialized = false;
-const MISTRAL_API_KEY = 'O9aVzeRjA44ADjwsAUwa48kHM5gOQON5';
 
-// Initialize the model - no actual loading needed with API approach
-export const initModel = async (): Promise<void> => {
+import { supabase } from '@/integrations/supabase/client';
+
+export const generateAIResponse = async (message: string): Promise<string> => {
   try {
-    console.log("Initializing Mistral AI connection...");
-    modelInitialized = true;
-    console.log("Mistral AI connection initialized!");
-    return Promise.resolve();
-  } catch (error) {
-    console.error("Error initializing Mistral AI connection:", error);
-    return Promise.reject(error);
-  }
-};
-
-// Indian helplines and resources
-const indianMentalHealthResources = `
-🆘 IMMEDIATE HELP (24/7):
-• KIRAN Mental Health Helpline: 1800-599-0019
-• Vandrevala Foundation: 9999 666 555
-• iCall Helpline: 9152987821
-
-🏥 PROFESSIONAL SUPPORT:
-• NIMHANS Helpline: 080-26995000
-• Sneha India: 044-24640050
-• Roshni Helpline: 040-66202000
-• Parivarthan Counselling: 0766-2410 502
-`;
-
-// Prepare a mental health focused system prompt with user's test results
-const createPersonalizedMentalHealthPrompt = (userMessage: string, testResults?: any[]): string => {
-  let personalizedContext = "";
-  let conversationHistory = JSON.parse(localStorage.getItem('chetna_conversation_context') || '[]');
-  
-  // Add conversation history context to avoid repetition
-  if (conversationHistory.length > 0) {
-    personalizedContext += `\n\nPREVIOUS CONVERSATION CONTEXT:
-Recent topics discussed: ${conversationHistory.slice(-3).join(', ')}
-IMPORTANT: Do NOT repeat the same advice or suggestions. Build upon previous conversations naturally.
-
-`;
-  }
-  
-  if (testResults && testResults.length > 0) {
-    personalizedContext += `\n\nUSER'S PSYCHOLOGICAL ASSESSMENT RESULTS:
-Based on their recent psychological assessments:
-
-`;
+    console.log('Sending message to AI service:', message);
     
-    testResults.forEach(test => {
-      const testName = test.test_type || test.test_name;
-      const score = test.total_score;
-      const severity = test.severity_level;
-      
-      personalizedContext += `• ${testName}: Score ${score}, Level: ${severity}\n`;
-      
-      // Add specific guidance based on test type and severity for Indian context
-      if (testName?.toLowerCase().includes('gad') || testName?.toLowerCase().includes('anxiety')) {
-        if (severity?.toLowerCase().includes('moderate') || severity?.toLowerCase().includes('severe')) {
-          personalizedContext += "  - Focus on pranayama (breathing exercises), mindfulness, and grounding techniques\n";
-          personalizedContext += "  - Be extra gentle and use reassuring language with Indian cultural sensitivity\n";
-        }
-      }
-      
-      if (testName?.toLowerCase().includes('phq') || testName?.toLowerCase().includes('depression')) {
-        if (severity?.toLowerCase().includes('moderate') || severity?.toLowerCase().includes('severe')) {
-          personalizedContext += "  - Address mood patterns with culturally relevant examples and family dynamics\n";
-          personalizedContext += "  - Suggest community activities and social support systems common in India\n";
-        }
-      }
-      
-      if (testName?.toLowerCase().includes('cpt') || testName?.toLowerCase().includes('attention')) {
-        personalizedContext += "  - Consider academic/work pressure common in Indian society\n";
-        personalizedContext += "  - Provide structured, clear guidance suitable for Indian educational context\n";
-      }
-    });
+    // Get the current session to include auth token
+    const { data: { session } } = await supabase.auth.getSession();
     
-    personalizedContext += `\nTailor your responses to their specific psychological profile with Indian cultural understanding.`;
-  }
+    if (!session) {
+      throw new Error('Authentication required');
+    }
 
-  return `You are Dr. Chetna Sharma, a warm and experienced , Modern Indian female psychiatrist with 20+ years of practice in India. You've helped thousands of patients across different Indian cities and understand the unique cultural, family, and social dynamics that affect mental health in India.
-
-YOUR PERSONALITY & APPROACH:
-• Speak like a caring, experienced Indian girl-doctor who genuinely cares
-• Use a warm, conversational Hindi-English mix occasionally (like "beta", "achha", "samjha?","sahi baat hai","Keshav hi jaane")
-• Share brief, relatable examples from your years of practice (without patient details)
-• Use appropriate emojis naturally (😊, 💙, 🌸, 🙏,❤️,😂,😅,😏,😎,👍🏼,💖,🥹,😭,🤩,😤,🥵,😩,🥶,🧐,🙂‍↔️,🙂‍↕️,🤫 etc.) but don't overdo it
-• Address Indian family dynamics, work pressure, social expectations realistically
-
-YOUR EXPERTISE AREAS:
-• 20+ years treating anxiety, depression, relationship issues in Indian context
-• Understanding of joint family systems, arranged marriages, career pressures
-• Experience with academic stress, parental expectations, cultural conflicts
-• Knowledge of both traditional Indian practices and modern therapy techniques
-
-CRITICAL RESPONSE FORMAT REQUIREMENTS:
-• **MAXIMUM 4-5 short sentences per response**
-• **ALWAYS use bullet points (•) for advice and suggestions**
-• **Use **bold** formatting for important words and key advice**
-• **Keep each bullet point to 1 line maximum**
-• **No long paragraphs - break everything into short, digestible points**
-• Structure your responses as:
-  - 1-2 sentences of validation/understanding
-  - Bullet points with actionable advice (3-4 points max)
-  - Brief encouraging closing line
-
-RESPONSE GUIDELINES:
-• **Be concise** - maximum 100-150 words total per response
-• **Bold key terms** like **stress management**, **breathing exercises**, **family support**
-• Validate their feelings briefly, then give **actionable bullet points**
-• Use Indian cultural references when appropriate
-• Suggest Indian mental health resources when needed
-• Avoid repetitive advice - build on previous conversations
-• Sound human, not scripted
-
-INDIAN CONTEXT AWARENESS:
-• Understand arranged marriage pressures, joint family dynamics
-• Recognize academic/career competition stress
-• Be sensitive to cultural stigma around mental health
-• Suggest culturally appropriate coping mechanisms (yoga, meditation, family support)
-• Reference Indian festivals, seasons, social situations when relevant
-
-CRISIS SUPPORT:
-If someone seems in crisis, gently provide these Indian helplines:
-${indianMentalHealthResources}
-
-${personalizedContext}
-
-Current user message: ${userMessage}
-
-Respond as Dr. Chetna Sharma would - warm, experienced, modern, culturally aware, and genuinely caring. **Keep it SHORT with bullet points and bold formatting!** 😊`;
-};
-
-// Get AI response from Mistral API with personalized context
-export const getAIResponse = async (
-  userMessage: string,
-  fallbackFn: (message: string) => string,
-  testResults?: any[]
-): Promise<string> => {
-  // Check if we should use the API
-  if (!modelInitialized) {
-    return fallbackFn(userMessage);
-  }
-
-  try {
-    // Store conversation context to avoid repetition
-    let conversationHistory = JSON.parse(localStorage.getItem('chetna_conversation_context') || '[]');
-    conversationHistory.push(userMessage.substring(0, 50)); // Store first 50 chars as context
-    if (conversationHistory.length > 5) conversationHistory.shift(); // Keep last 5 topics
-    localStorage.setItem('chetna_conversation_context', JSON.stringify(conversationHistory));
-
-    // Create the personalized prompt for mental health
-    const prompt = createPersonalizedMentalHealthPrompt(userMessage, testResults);
-    
-    // Always use the hardcoded API key
-    const apiKey = MISTRAL_API_KEY;
-    
-    // Make request to Mistral API
-    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
-      method: 'POST',
+    // Call the secure Edge Function instead of direct API call
+    const { data, error } = await supabase.functions.invoke('ai-chat', {
+      body: { message },
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        Authorization: `Bearer ${session.access_token}`,
       },
-      body: JSON.stringify({
-        model: 'mistral-small-latest',
-        messages: [
-          {
-            role: 'system', 
-            content: 'You are Dr. Chetna Sharma, an experienced Indian female psychiatrist with 20+ years of practice. You are warm, caring, mordern , culturally aware, and speak in a natural, human way with appropriate emojis. You keep responses concise and avoid repetition. You understand Indian family dynamics, social pressures, and cultural context deeply.'
-          },
-          {role: 'user', content: prompt}
-        ],
-        max_tokens: 400, // Reduced for shorter responses
-        temperature: 0.8, // Slightly higher for more human-like responses
-        top_p: 0.9,
-      })
     });
 
-    // Handle the response
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Mistral API error:', errorData);
-      throw new Error(`API error: ${response.status}`);
+    if (error) {
+      console.error('Edge function error:', error);
+      throw error;
     }
-    
-    const data = await response.json();
-    
-    // Extract the AI's response text
-    if (data && data.choices && data.choices.length > 0) {
-      const aiMessage = data.choices[0].message.content.trim();
-      return aiMessage;
-    } else {
-      throw new Error('Unexpected API response format');
+
+    if (!data?.response) {
+      throw new Error('Invalid response from AI service');
     }
+
+    console.log('AI response received:', data.response);
+    return data.response;
+
   } catch (error) {
-    console.error("Error getting AI response:", error);
-    return fallbackFn(userMessage);
+    console.error('AI service error:', error);
+    
+    // Provide fallback responses for common scenarios
+    if (error.message?.includes('Authentication required')) {
+      return "I'm here to help! Please log in to continue our conversation and access personalized mental health support.";
+    }
+    
+    if (error.message?.includes('network') || error.message?.includes('fetch')) {
+      return "I'm experiencing some connectivity issues right now. Please check your internet connection and try again in a moment.";
+    }
+    
+    return "I apologize, but I'm having trouble processing your request right now. Please try again in a few moments, and if the problem persists, our support team is here to help.";
   }
 };

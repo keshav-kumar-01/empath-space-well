@@ -741,6 +741,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      user_is_in_room: {
+        Args: { room_id_param: string; user_id_param: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
