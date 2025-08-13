@@ -1,6 +1,21 @@
 
 import { supabase } from '@/integrations/supabase/client';
 
+// Legacy function for backward compatibility
+export const initModel = async (): Promise<void> => {
+  console.log('AI model initialization (using Edge Function)');
+  return Promise.resolve();
+};
+
+// Legacy function for backward compatibility  
+export const getAIResponse = async (
+  message: string, 
+  fallbackFn?: (message: string) => string,
+  userTestResults?: any[]
+): Promise<string> => {
+  return generateAIResponse(message);
+};
+
 export const generateAIResponse = async (message: string): Promise<string> => {
   try {
     console.log('Sending message to AI service:', message);
