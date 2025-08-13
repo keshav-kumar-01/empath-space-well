@@ -90,6 +90,17 @@ const PHQ9Test = () => {
       return;
     }
 
+    // Check if all questions are answered
+    const unanswered = responses.filter(r => r === -1).length;
+    if (unanswered > 0 || !functionalResponse) {
+      toast({
+        title: "Incomplete Test",
+        description: "Please answer all questions including the functional assessment.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     const totalScore = calculateScore();
     const severityLevel = getSeverityLevel(totalScore);
@@ -114,7 +125,8 @@ const PHQ9Test = () => {
         description: "Your PHQ-9 results have been saved successfully."
       });
 
-      navigate('/psych-tests/results', { 
+      // Fix navigation path
+      navigate('/test-results', { 
         state: { 
           testType: 'PHQ-9',
           score: totalScore,
@@ -145,23 +157,25 @@ const PHQ9Test = () => {
     canProceed = responses[currentQuestion] !== -1;
   }
 
+  const currentResponse = responses[currentQuestion];
+
   return (
     <div className="max-w-2xl mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+      <Card className="shadow-lg border-chetna-primary/20">
+        <CardHeader className="bg-gradient-to-r from-chetna-primary/5 to-chetna-secondary/5">
+          <CardTitle className="flex items-center justify-between text-chetna-primary">
             PHQ-9 Assessment
-            <span className="text-sm font-normal">
+            <span className="text-sm font-normal text-gray-600">
               {currentQuestion + 1} of {totalQuestions}
             </span>
           </CardTitle>
           <Progress value={progress} className="mt-2" />
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           <div className="space-y-6">
             {isOnFunctionalQuestion ? (
               <div>
-                <h3 className="text-lg font-medium mb-4">
+                <h3 className="text-lg font-medium mb-4 text-gray-800">
                   Functional Assessment:
                 </h3>
                 <p className="text-xl font-medium text-chetna-primary mb-6">
@@ -171,11 +185,12 @@ const PHQ9Test = () => {
                 <RadioGroup
                   value={functionalResponse}
                   onValueChange={setFunctionalResponse}
+                  className="space-y-3"
                 >
                   {functionalOptions.map((option, index) => (
-                    <div key={index} className="flex items-center space-x-2">
+                    <div key={index} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                       <RadioGroupItem value={option} id={`functional-${index}`} />
-                      <Label htmlFor={`functional-${index}`} className="flex-1 cursor-pointer">
+                      <Label htmlFor={`functional-${index}`} className="flex-1 cursor-pointer text-base">
                         {option}
                       </Label>
                     </div>
@@ -184,7 +199,7 @@ const PHQ9Test = () => {
               </div>
             ) : (
               <div>
-                <h3 className="text-lg font-medium mb-4">
+                <h3 className="text-lg font-medium mb-4 text-gray-800">
                   Over the last 2 weeks, how often have you been bothered by:
                 </h3>
                 <p className="text-xl font-medium text-chetna-primary mb-6">
@@ -192,13 +207,14 @@ const PHQ9Test = () => {
                 </p>
 
                 <RadioGroup
-                  value={responses[currentQuestion]?.toString()}
+                  value={currentResponse === -1 ? undefined : currentResponse.toString()}
                   onValueChange={(value) => handleResponse(parseInt(value))}
+                  className="space-y-3"
                 >
                   {responseOptions.map((option) => (
-                    <div key={option.value} className="flex items-center space-x-2">
-                      <RadioGroupItem value={option.value.toString()} id={`option-${option.value}`} />
-                      <Label htmlFor={`option-${option.value}`} className="flex-1 cursor-pointer">
+                    <div key={option.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                      <RadioGroupItem value={option.value.toString()} id={`option-${currentQuestion}-${option.value}`} />
+                      <Label htmlFor={`option-${currentQuestion}-${option.value}`} className="flex-1 cursor-pointer text-base">
                         {option.label}
                       </Label>
                     </div>
@@ -207,11 +223,16 @@ const PHQ9Test = () => {
               </div>
             )}
 
-            <div className="flex justify-between pt-6">
+            {!canProceed && (
+              <p className="text-sm text-red-600 mt-2">Please select an option to continue.</p>
+            )}
+
+            <div className="flex justify-between pt-6 border-t">
               <Button
                 variant="outline"
                 onClick={prevQuestion}
                 disabled={currentQuestion === 0}
+                className="px-6"
               >
                 Previous
               </Button>
@@ -220,7 +241,7 @@ const PHQ9Test = () => {
                 <Button
                   onClick={submitTest}
                   disabled={!canProceed || isSubmitting}
-                  className="chetna-button"
+                  className="bg-chetna-primary hover:bg-chetna-primary/90 text-white px-6"
                 >
                   {isSubmitting ? "Submitting..." : "Complete Test"}
                 </Button>
@@ -228,7 +249,7 @@ const PHQ9Test = () => {
                 <Button
                   onClick={nextQuestion}
                   disabled={!canProceed}
-                  className="chetna-button"
+                  className="bg-chetna-primary hover:bg-chetna-primary/90 text-white px-6"
                 >
                   Next
                 </Button>

@@ -121,7 +121,8 @@ const GAD7Test = () => {
         description: "Your GAD-7 results have been saved successfully."
       });
 
-      navigate('/psych-tests/results', { 
+      // Fix navigation - use /test-results instead of /psych-tests/results
+      navigate('/test-results', { 
         state: { 
           testType: 'GAD-7',
           score: totalScore,
@@ -144,6 +145,7 @@ const GAD7Test = () => {
   const progress = ((currentQuestion + 1) / questions.length) * 100;
   const isLastQuestion = currentQuestion === questions.length - 1;
   const canProceed = responses[currentQuestion] !== -1;
+  const currentResponse = responses[currentQuestion];
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -169,19 +171,23 @@ const GAD7Test = () => {
             </div>
 
             <RadioGroup
-              value={responses[currentQuestion] === -1 ? undefined : responses[currentQuestion].toString()}
+              value={currentResponse === -1 ? undefined : currentResponse.toString()}
               onValueChange={(value) => handleResponse(parseInt(value))}
               className="space-y-3"
             >
               {responseOptions.map((option) => (
                 <div key={option.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <RadioGroupItem value={option.value.toString()} id={`option-${option.value}`} />
-                  <Label htmlFor={`option-${option.value}`} className="flex-1 cursor-pointer text-base">
+                  <RadioGroupItem value={option.value.toString()} id={`option-${currentQuestion}-${option.value}`} />
+                  <Label htmlFor={`option-${currentQuestion}-${option.value}`} className="flex-1 cursor-pointer text-base">
                     {option.label}
                   </Label>
                 </div>
               ))}
             </RadioGroup>
+
+            {!canProceed && (
+              <p className="text-sm text-red-600 mt-2">Please select an option to continue.</p>
+            )}
 
             <div className="flex justify-between pt-6 border-t">
               <Button

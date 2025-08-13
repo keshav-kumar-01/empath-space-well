@@ -87,6 +87,17 @@ const BAITest = () => {
       return;
     }
 
+    // Check if all questions are answered
+    const unanswered = responses.filter(r => r === -1).length;
+    if (unanswered > 0) {
+      toast({
+        title: "Incomplete Test",
+        description: `Please answer all questions. ${unanswered} questions remaining.`,
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     const totalScore = calculateScore();
     const severityLevel = getSeverityLevel(totalScore);
@@ -110,7 +121,8 @@ const BAITest = () => {
         description: "Your BAI results have been saved successfully."
       });
 
-      navigate('/psych-tests/results', { 
+      // Fix navigation path
+      navigate('/test-results', { 
         state: { 
           testType: 'BAI',
           score: totalScore,
@@ -133,23 +145,24 @@ const BAITest = () => {
   const progress = ((currentQuestion + 1) / questions.length) * 100;
   const isLastQuestion = currentQuestion === questions.length - 1;
   const canProceed = responses[currentQuestion] !== -1;
+  const currentResponse = responses[currentQuestion];
 
   return (
     <div className="max-w-2xl mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+      <Card className="shadow-lg border-chetna-primary/20">
+        <CardHeader className="bg-gradient-to-r from-chetna-primary/5 to-chetna-secondary/5">
+          <CardTitle className="flex items-center justify-between text-chetna-primary">
             Beck Anxiety Inventory (BAI)
-            <span className="text-sm font-normal">
+            <span className="text-sm font-normal text-gray-600">
               {currentQuestion + 1} of {questions.length}
             </span>
           </CardTitle>
           <Progress value={progress} className="mt-2" />
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-medium mb-4">
+              <h3 className="text-lg font-medium mb-4 text-gray-800">
                 Below is a list of common symptoms of anxiety. Please rate how much you have been bothered by each symptom during the past week, including today:
               </h3>
               <p className="text-xl font-medium text-chetna-primary mb-6">
@@ -158,24 +171,30 @@ const BAITest = () => {
             </div>
 
             <RadioGroup
-              value={responses[currentQuestion]?.toString()}
+              value={currentResponse === -1 ? undefined : currentResponse.toString()}
               onValueChange={(value) => handleResponse(parseInt(value))}
+              className="space-y-3"
             >
               {responseOptions.map((option) => (
-                <div key={option.value} className="flex items-center space-x-2">
-                  <RadioGroupItem value={option.value.toString()} id={`option-${option.value}`} />
-                  <Label htmlFor={`option-${option.value}`} className="flex-1 cursor-pointer">
+                <div key={option.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <RadioGroupItem value={option.value.toString()} id={`option-${currentQuestion}-${option.value}`} />
+                  <Label htmlFor={`option-${currentQuestion}-${option.value}`} className="flex-1 cursor-pointer text-base">
                     {option.label}
                   </Label>
                 </div>
               ))}
             </RadioGroup>
 
-            <div className="flex justify-between pt-6">
+            {!canProceed && (
+              <p className="text-sm text-red-600 mt-2">Please select an option to continue.</p>
+            )}
+
+            <div className="flex justify-between pt-6 border-t">
               <Button
                 variant="outline"
                 onClick={prevQuestion}
                 disabled={currentQuestion === 0}
+                className="px-6"
               >
                 Previous
               </Button>
@@ -184,7 +203,7 @@ const BAITest = () => {
                 <Button
                   onClick={submitTest}
                   disabled={!canProceed || isSubmitting}
-                  className="chetna-button"
+                  className="bg-chetna-primary hover:bg-chetna-primary/90 text-white px-6"
                 >
                   {isSubmitting ? "Submitting..." : "Complete Test"}
                 </Button>
@@ -192,7 +211,7 @@ const BAITest = () => {
                 <Button
                   onClick={nextQuestion}
                   disabled={!canProceed}
-                  className="chetna-button"
+                  className="bg-chetna-primary hover:bg-chetna-primary/90 text-white px-6"
                 >
                   Next
                 </Button>

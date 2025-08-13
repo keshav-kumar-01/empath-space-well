@@ -190,10 +190,10 @@ const CPTTest = () => {
           user_id: user.id,
           test_type: 'CPT',
           test_name: 'Continuous Performance Test',
-          responses: results as any, // Cast to any to satisfy Json type
+          responses: results as any,
           total_score: Math.round(metrics.hitRate),
           severity_level: performanceLevel,
-          additional_data: metrics as any // Cast to any to satisfy Json type
+          additional_data: metrics as any
         });
 
       if (error) throw error;
@@ -203,7 +203,8 @@ const CPTTest = () => {
         description: "Your CPT results have been saved successfully."
       });
 
-      navigate('/psych-tests/results', { 
+      // Fix navigation path
+      navigate('/test-results', { 
         state: { 
           testType: 'CPT',
           score: Math.round(metrics.hitRate),
