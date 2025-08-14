@@ -20,6 +20,8 @@ import AdminDashboard from '@/pages/AdminDashboard';
 import PsychTestRunner from '@/pages/PsychTestRunner';
 import TestResults from '@/pages/TestResults';
 import WellnessPlans from '@/pages/WellnessPlans';
+import AppointmentBooking from '@/pages/AppointmentBooking';
+import About from '@/pages/About';
 import AIFeaturesMenu from '@/components/AIFeaturesMenu';
 import SecurityMonitor from '@/components/SecurityMonitor';
 
@@ -51,7 +53,10 @@ function App() {
               <Route path="/voice-therapy" element={<VoiceTherapy />} />
               <Route path="/group-therapy" element={<GroupTherapy />} />
               <Route path="/admin-panel" element={<AdminDashboard />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/ai-features" element={<AIFeaturesMenu />} />
+              <Route path="/appointments" element={<AppointmentBooking />} />
+              <Route path="/about" element={<About />} />
             </Routes>
           </div>
         </Router>
