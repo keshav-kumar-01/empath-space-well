@@ -17,6 +17,9 @@ import Journal from '@/pages/Journal';
 import VoiceTherapy from '@/pages/VoiceTherapy';
 import GroupTherapy from '@/pages/GroupTherapy';
 import AdminDashboard from '@/pages/AdminDashboard';
+import PsychTestRunner from '@/pages/PsychTestRunner';
+import TestResults from '@/pages/TestResults';
+import WellnessPlans from '@/pages/WellnessPlans';
 import SecurityMonitor from '@/components/SecurityMonitor';
 
 const queryClient = new QueryClient();
@@ -39,6 +42,9 @@ function App() {
               <Route path="/resources" element={<ResourceLibrary />} />
               <Route path="/contact" element={<Feedback />} />
               <Route path="/tests" element={<PsychTests />} />
+              <Route path="/psych-tests/:testType" element={<PsychTestRunner />} />
+              <Route path="/test-results" element={<TestResults />} />
+              <Route path="/wellness-plans" element={<WellnessPlans />} />
               <Route path="/ai-journaling" element={<Journal />} />
               <Route path="/ai-therapy-chat" element={<VoiceTherapy />} />
               <Route path="/group-therapy" element={<GroupTherapy />} />
