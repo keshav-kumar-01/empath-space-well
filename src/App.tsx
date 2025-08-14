@@ -45,6 +45,7 @@ function App() {
               <Route path="/resources" element={<ResourceLibrary />} />
               <Route path="/contact" element={<Feedback />} />
               <Route path="/tests" element={<PsychTests />} />
+              <Route path="/psych-tests" element={<PsychTests />} />
               <Route path="/psych-tests/:testType" element={<PsychTestRunner />} />
               <Route path="/test-results" element={<TestResults />} />
               <Route path="/wellness-plans" element={<WellnessPlans />} />
