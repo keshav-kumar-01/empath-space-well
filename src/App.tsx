@@ -20,6 +20,7 @@ import AdminDashboard from '@/pages/AdminDashboard';
 import PsychTestRunner from '@/pages/PsychTestRunner';
 import TestResults from '@/pages/TestResults';
 import WellnessPlans from '@/pages/WellnessPlans';
+import AIFeaturesMenu from '@/components/AIFeaturesMenu';
 import SecurityMonitor from '@/components/SecurityMonitor';
 
 const queryClient = new QueryClient();
@@ -47,9 +48,10 @@ function App() {
               <Route path="/wellness-plans" element={<WellnessPlans />} />
               <Route path="/ai-journaling" element={<Journal />} />
               <Route path="/ai-therapy-chat" element={<VoiceTherapy />} />
+              <Route path="/voice-therapy" element={<VoiceTherapy />} />
               <Route path="/group-therapy" element={<GroupTherapy />} />
               <Route path="/admin-panel" element={<AdminDashboard />} />
-              <Route path="/ai-features" element={<VoiceTherapy />} />
+              <Route path="/ai-features" element={<AIFeaturesMenu />} />
             </Routes>
           </div>
         </Router>
