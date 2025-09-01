@@ -31,7 +31,6 @@ interface Appointment {
   cancellation_reason?: string;
   created_at: string;
   therapist_name?: string;
-  therapist_email?: string;
 }
 
 interface Therapist {
@@ -83,7 +82,7 @@ const AdminDashboard: React.FC = () => {
     checkAdminStatus();
   }, [user]);
 
-  // Fetch all appointments - simplified approach
+  // Fetch all appointments with therapist data
   const { data: appointments = [], isLoading: appointmentsLoading, error: appointmentsError, refetch: refetchAppointments } = useQuery({
     queryKey: ['admin-appointments'],
     queryFn: async () => {
@@ -102,42 +101,45 @@ const AdminDashboard: React.FC = () => {
 
       console.log('✅ User confirmed as admin, fetching appointments...');
 
-      // Fetch appointments with therapist data
-      const { data: appointmentsData, error: appointmentsError } = await supabase
-        .from('appointments')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (appointmentsError) {
-        console.error('❌ Appointments fetch error:', appointmentsError);
-        throw new Error(`Failed to fetch appointments: ${appointmentsError.message}`);
+      try {
+        // Fetch appointments
+        const { data: appointmentsData, error: appointmentsError } = await supabase
+          .from('appointments')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (appointmentsError) {
+          console.error('❌ Appointments fetch error:', appointmentsError);
+          throw new Error(`Failed to fetch appointments: ${appointmentsError.message}`);
+        }
+
+        // Fetch therapists data (without email field since it doesn't exist)
+        const { data: therapistsData, error: therapistsError } = await supabase
+          .from('therapists')
+          .select('id, name');
+        
+        if (therapistsError) {
+          console.error('⚠️ Therapists fetch error (continuing without names):', therapistsError);
+        }
+
+        // Create a therapist lookup map
+        const therapistMap = new Map();
+        therapistsData?.forEach(therapist => {
+          therapistMap.set(therapist.id, therapist);
+        });
+
+        // Combine appointments with therapist data
+        const enrichedAppointments: Appointment[] = appointmentsData.map(appointment => ({
+          ...appointment,
+          therapist_name: therapistMap.get(appointment.therapist_id)?.name || 'Unknown Therapist'
+        }));
+
+        console.log('✅ Appointments fetched successfully:', enrichedAppointments.length);
+        return enrichedAppointments;
+      } catch (error) {
+        console.error('❌ Error in appointments fetch:', error);
+        throw error;
       }
-
-      // Fetch therapists data separately
-      const { data: therapistsData, error: therapistsError } = await supabase
-        .from('therapists')
-        .select('id, name, email');
-      
-      if (therapistsError) {
-        console.error('❌ Therapists fetch error:', therapistsError);
-        // Continue without therapist names if this fails
-      }
-
-      // Create a therapist lookup map
-      const therapistMap = new Map();
-      therapistsData?.forEach(therapist => {
-        therapistMap.set(therapist.id, therapist);
-      });
-
-      // Combine appointments with therapist data
-      const enrichedAppointments: Appointment[] = appointmentsData.map(appointment => ({
-        ...appointment,
-        therapist_name: therapistMap.get(appointment.therapist_id)?.name || 'Unknown Therapist',
-        therapist_email: therapistMap.get(appointment.therapist_id)?.email
-      }));
-
-      console.log('✅ Appointments fetched successfully:', enrichedAppointments.length);
-      return enrichedAppointments;
     },
     enabled: isAdmin && !isCheckingAdmin && !!user?.id,
     retry: 3,
