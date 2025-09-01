@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -86,41 +85,73 @@ const AdminDashboard: React.FC = () => {
     checkAdminStatus();
   }, [user]);
 
-  // Fetch all appointments with better error handling and admin permissions
+  // Fetch all appointments with admin bypass for RLS
   const { data: appointments = [], isLoading: appointmentsLoading, error: appointmentsError, refetch: refetchAppointments } = useQuery({
     queryKey: ['admin-appointments'],
     queryFn: async () => {
-      console.log('🔍 Fetching appointments for admin...');
+      console.log('🔍 Fetching appointments for admin dashboard...');
       
       try {
-        // Check if user is admin first
         if (!user?.id) {
           throw new Error('User not authenticated');
         }
 
+        // Verify admin status first
         const { isAdmin: userIsAdmin } = await checkIsAdmin(user.id, user.email);
         if (!userIsAdmin) {
-          throw new Error('Admin access required');
+          console.log('❌ User is not admin, cannot fetch all appointments');
+          return [];
         }
 
-        // Admin query to get all appointments
+        console.log('✅ User confirmed as admin, fetching all appointments...');
+
+        // Use service role or admin bypass to get ALL appointments
         const { data: appointmentsData, error: appointmentsError } = await supabase
-          .from('appointments')
-          .select(`
-            *,
-            therapist:therapists!appointments_therapist_id_fkey(name, id)
-          `)
-          .order('created_at', { ascending: false });
+          .rpc('get_all_appointments_admin')
+          .select();
+        
+        // If the RPC doesn't exist, fall back to direct query with potential RLS bypass
+        if (appointmentsError && appointmentsError.message?.includes('function')) {
+          console.log('📋 RPC not found, using direct query...');
+          
+          // Direct query - this should work if admin has proper permissions
+          const { data: directData, error: directError } = await supabase
+            .from('appointments')
+            .select(`
+              *,
+              therapist:therapists!inner(id, name)
+            `)
+            .order('created_at', { ascending: false });
+          
+          if (directError) {
+            console.error('❌ Direct query error:', directError);
+            // Try without the join to see if that's the issue
+            const { data: simpleData, error: simpleError } = await supabase
+              .from('appointments')
+              .select('*')
+              .order('created_at', { ascending: false });
+              
+            if (simpleError) {
+              console.error('❌ Simple query error:', simpleError);
+              throw new Error(`Failed to fetch appointments: ${simpleError.message}`);
+            }
+            
+            console.log('✅ Simple query successful, appointments found:', simpleData?.length || 0);
+            return simpleData || [];
+          }
+          
+          console.log('✅ Direct query successful, appointments found:', directData?.length || 0);
+          return directData || [];
+        }
         
         if (appointmentsError) {
-          console.error('❌ Error fetching appointments:', appointmentsError);
+          console.error('❌ RPC error:', appointmentsError);
           throw new Error(`Failed to fetch appointments: ${appointmentsError.message}`);
         }
         
-        console.log('✅ Successfully fetched appointments:', appointmentsData?.length || 0);
-        console.log('📋 Sample appointment:', appointmentsData?.[0]);
+        console.log('✅ RPC successful, appointments found:', appointmentsData?.length || 0);
+        return appointmentsData || [];
         
-        return (appointmentsData || []) as Appointment[];
       } catch (error: any) {
         console.error('💥 Exception in appointment fetch:', error);
         throw error;
@@ -136,13 +167,18 @@ const AdminDashboard: React.FC = () => {
   const { data: therapists = [], isLoading: therapistsLoading } = useQuery({
     queryKey: ['admin-therapists'],
     queryFn: async () => {
-      // Admin can see all therapists (not just available ones)
+      console.log('🔍 Fetching therapists for admin...');
       const { data, error } = await supabase
         .from('therapists')
         .select('*')
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Therapist fetch error:', error);
+        throw error;
+      }
+      
+      console.log('✅ Therapists fetched:', data?.length || 0);
       return data || [];
     },
     enabled: isAdmin && !isCheckingAdmin
@@ -155,6 +191,8 @@ const AdminDashboard: React.FC = () => {
       newStatus: string; 
       notes?: string; 
     }) => {
+      console.log('🔄 Updating appointment status:', { appointmentId, newStatus, notes });
+      
       const updateData: any = { 
         status: newStatus,
         updated_at: new Date().toISOString()
@@ -180,7 +218,12 @@ const AdminDashboard: React.FC = () => {
         .select()
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Update error:', error);
+        throw error;
+      }
+      
+      console.log('✅ Appointment updated:', data);
       return data;
     },
     onSuccess: (data) => {
@@ -193,6 +236,7 @@ const AdminDashboard: React.FC = () => {
       setStatusNotes('');
     },
     onError: (error: any) => {
+      console.error('❌ Mutation error:', error);
       toast({
         title: "❌ Update Failed",
         description: error.message || 'Failed to update appointment',
@@ -319,6 +363,13 @@ const AdminDashboard: React.FC = () => {
           <div className="mb-6 p-3 md:p-4 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-600 font-semibold text-sm md:text-base">⚠️ Error loading appointments:</p>
             <p className="text-red-600 text-sm">{appointmentsError.message}</p>
+            <Button 
+              onClick={() => refetchAppointments()} 
+              className="mt-2 text-xs"
+              variant="outline"
+            >
+              🔄 Retry
+            </Button>
           </div>
         )}
 
@@ -399,6 +450,11 @@ const AdminDashboard: React.FC = () => {
                     <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p className="font-semibold">📭 No appointments found</p>
                     <p className="text-sm">Appointments will appear here once users start booking</p>
+                    {appointmentsError && (
+                      <div className="mt-4 p-2 bg-yellow-50 border border-yellow-200 rounded">
+                        <p className="text-yellow-800 text-sm">There might be a permission issue. Please check the console for details.</p>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="space-y-3 md:space-y-4">
@@ -419,13 +475,13 @@ const AdminDashboard: React.FC = () => {
                               </span>
                             </div>
                             <h4 className="font-semibold text-sm md:text-lg">
-                              🩺 {appointment.therapist?.name || 'Unknown Therapist'}
+                              🩺 {appointment.therapist?.name || 'Therapist ID: ' + appointment.therapist_id}
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-2 text-xs md:text-sm text-muted-foreground mt-2">
                               <p>📅 {appointment.appointment_date}</p>
                               <p>🕒 {appointment.appointment_time}</p>
                               <p>🎯 {appointment.session_type.replace('_', ' ').toUpperCase()}</p>
-                              <p>👤 {appointment.user_id.slice(0, 8)}...</p>
+                              <p>👤 User: {appointment.user_id.slice(0, 8)}...</p>
                             </div>
                             {appointment.notes && (
                               <p className="text-xs md:text-sm mt-2 p-2 bg-blue-50 rounded text-blue-800">
@@ -438,7 +494,7 @@ const AdminDashboard: React.FC = () => {
                               </p>
                             )}
                             <p className="text-xs text-muted-foreground mt-2">
-                              📅 {new Date(appointment.created_at).toLocaleString()}
+                              📅 Created: {new Date(appointment.created_at).toLocaleString()}
                             </p>
                           </div>
                           <div className="flex flex-row md:flex-col gap-2 w-full md:w-auto">
