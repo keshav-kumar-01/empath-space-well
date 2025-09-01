@@ -30,10 +30,8 @@ interface Appointment {
   cancelled_at?: string;
   cancellation_reason?: string;
   created_at: string;
-  therapist?: {
-    name: string;
-    email?: string;
-  };
+  therapist_name?: string;
+  therapist_email?: string;
 }
 
 interface Therapist {
@@ -85,77 +83,61 @@ const AdminDashboard: React.FC = () => {
     checkAdminStatus();
   }, [user]);
 
-  // Fetch all appointments with admin bypass for RLS
+  // Fetch all appointments - simplified approach
   const { data: appointments = [], isLoading: appointmentsLoading, error: appointmentsError, refetch: refetchAppointments } = useQuery({
     queryKey: ['admin-appointments'],
     queryFn: async () => {
       console.log('🔍 Fetching appointments for admin dashboard...');
       
-      try {
-        if (!user?.id) {
-          throw new Error('User not authenticated');
-        }
-
-        // Verify admin status first
-        const { isAdmin: userIsAdmin } = await checkIsAdmin(user.id, user.email);
-        if (!userIsAdmin) {
-          console.log('❌ User is not admin, cannot fetch all appointments');
-          return [];
-        }
-
-        console.log('✅ User confirmed as admin, fetching all appointments...');
-
-        // Use service role or admin bypass to get ALL appointments
-        const { data: appointmentsData, error: appointmentsError } = await supabase
-          .rpc('get_all_appointments_admin')
-          .select();
-        
-        // If the RPC doesn't exist, fall back to direct query with potential RLS bypass
-        if (appointmentsError && appointmentsError.message?.includes('function')) {
-          console.log('📋 RPC not found, using direct query...');
-          
-          // Direct query - this should work if admin has proper permissions
-          const { data: directData, error: directError } = await supabase
-            .from('appointments')
-            .select(`
-              *,
-              therapist:therapists!inner(id, name)
-            `)
-            .order('created_at', { ascending: false });
-          
-          if (directError) {
-            console.error('❌ Direct query error:', directError);
-            // Try without the join to see if that's the issue
-            const { data: simpleData, error: simpleError } = await supabase
-              .from('appointments')
-              .select('*')
-              .order('created_at', { ascending: false });
-              
-            if (simpleError) {
-              console.error('❌ Simple query error:', simpleError);
-              throw new Error(`Failed to fetch appointments: ${simpleError.message}`);
-            }
-            
-            console.log('✅ Simple query successful, appointments found:', simpleData?.length || 0);
-            return simpleData || [];
-          }
-          
-          console.log('✅ Direct query successful, appointments found:', directData?.length || 0);
-          return directData || [];
-        }
-        
-        if (appointmentsError) {
-          console.error('❌ RPC error:', appointmentsError);
-          throw new Error(`Failed to fetch appointments: ${appointmentsError.message}`);
-        }
-        
-        console.log('✅ RPC successful, appointments found:', appointmentsData?.length || 0);
-        return appointmentsData || [];
-        
-      } catch (error: any) {
-        console.error('💥 Exception in appointment fetch:', error);
-        throw error;
+      if (!user?.id) {
+        throw new Error('User not authenticated');
       }
+
+      // Verify admin status first
+      const { isAdmin: userIsAdmin } = await checkIsAdmin(user.id, user.email);
+      if (!userIsAdmin) {
+        console.log('❌ User is not admin, cannot fetch appointments');
+        return [];
+      }
+
+      console.log('✅ User confirmed as admin, fetching appointments...');
+
+      // Fetch appointments with therapist data
+      const { data: appointmentsData, error: appointmentsError } = await supabase
+        .from('appointments')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (appointmentsError) {
+        console.error('❌ Appointments fetch error:', appointmentsError);
+        throw new Error(`Failed to fetch appointments: ${appointmentsError.message}`);
+      }
+
+      // Fetch therapists data separately
+      const { data: therapistsData, error: therapistsError } = await supabase
+        .from('therapists')
+        .select('id, name, email');
+      
+      if (therapistsError) {
+        console.error('❌ Therapists fetch error:', therapistsError);
+        // Continue without therapist names if this fails
+      }
+
+      // Create a therapist lookup map
+      const therapistMap = new Map();
+      therapistsData?.forEach(therapist => {
+        therapistMap.set(therapist.id, therapist);
+      });
+
+      // Combine appointments with therapist data
+      const enrichedAppointments: Appointment[] = appointmentsData.map(appointment => ({
+        ...appointment,
+        therapist_name: therapistMap.get(appointment.therapist_id)?.name || 'Unknown Therapist',
+        therapist_email: therapistMap.get(appointment.therapist_id)?.email
+      }));
+
+      console.log('✅ Appointments fetched successfully:', enrichedAppointments.length);
+      return enrichedAppointments;
     },
     enabled: isAdmin && !isCheckingAdmin && !!user?.id,
     retry: 3,
@@ -475,7 +457,7 @@ const AdminDashboard: React.FC = () => {
                               </span>
                             </div>
                             <h4 className="font-semibold text-sm md:text-lg">
-                              🩺 {appointment.therapist?.name || 'Therapist ID: ' + appointment.therapist_id}
+                              🩺 {appointment.therapist_name || 'Therapist ID: ' + appointment.therapist_id}
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-2 text-xs md:text-sm text-muted-foreground mt-2">
                               <p>📅 {appointment.appointment_date}</p>
