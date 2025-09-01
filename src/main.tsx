@@ -7,6 +7,9 @@ import './index.css'
 import './lib/i18n'
 import { ThemeProvider } from 'next-themes'
 
+// Create a helmet context to ensure proper initialization
+const helmetContext = {};
+
 // Performance optimization: Preload critical resources
 const preloadCriticalResources = () => {
   // Preload fonts
@@ -36,7 +39,7 @@ const root = createRoot(rootElement);
 
 root.render(
   <React.StrictMode>
-    <HelmetProvider>
+    <HelmetProvider context={helmetContext}>
       <ThemeProvider 
         attribute="class" 
         defaultTheme="light"
