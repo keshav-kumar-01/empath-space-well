@@ -10,10 +10,11 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar, Clock, User, Shield, CheckCircle, XCircle, AlertCircle, Plus, RefreshCw } from 'lucide-react';
+import { Calendar, Clock, User, Shield, CheckCircle, XCircle, AlertCircle, Plus, RefreshCw, Edit } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import AddTherapistForm from '@/components/AddTherapistForm';
+import EditTherapistForm from '@/components/EditTherapistForm';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { checkIsAdmin } from '@/utils/adminSetup';
 
@@ -36,6 +37,20 @@ interface Appointment {
   };
 }
 
+interface Therapist {
+  id: string;
+  name: string;
+  specialties: string[];
+  rating: number;
+  experience: string;
+  languages: string[];
+  avatar_url?: string;
+  fee: string;
+  available: boolean;
+  bio?: string;
+  total_reviews?: number;
+}
+
 const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -45,6 +60,7 @@ const AdminDashboard: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isCheckingAdmin, setIsCheckingAdmin] = useState<boolean>(true);
   const [showAddTherapistDialog, setShowAddTherapistDialog] = useState<boolean>(false);
+  const [editingTherapist, setEditingTherapist] = useState<Therapist | null>(null);
 
   // Check if user is admin
   useEffect(() => {
@@ -70,19 +86,29 @@ const AdminDashboard: React.FC = () => {
     checkAdminStatus();
   }, [user]);
 
-  // Fetch all appointments - simplified and improved
+  // Fetch all appointments with better error handling and admin permissions
   const { data: appointments = [], isLoading: appointmentsLoading, error: appointmentsError, refetch: refetchAppointments } = useQuery({
     queryKey: ['admin-appointments'],
     queryFn: async () => {
       console.log('🔍 Fetching appointments for admin...');
       
       try {
-        // Direct query to appointments table
+        // Check if user is admin first
+        if (!user?.id) {
+          throw new Error('User not authenticated');
+        }
+
+        const { isAdmin: userIsAdmin } = await checkIsAdmin(user.id, user.email);
+        if (!userIsAdmin) {
+          throw new Error('Admin access required');
+        }
+
+        // Admin query to get all appointments
         const { data: appointmentsData, error: appointmentsError } = await supabase
           .from('appointments')
           .select(`
             *,
-            therapist:therapists(name, id)
+            therapist:therapists!appointments_therapist_id_fkey(name, id)
           `)
           .order('created_at', { ascending: false });
         
@@ -100,7 +126,7 @@ const AdminDashboard: React.FC = () => {
         throw error;
       }
     },
-    enabled: isAdmin && !isCheckingAdmin,
+    enabled: isAdmin && !isCheckingAdmin && !!user?.id,
     retry: 3,
     retryDelay: 1000,
     refetchInterval: 30000, // Auto-refresh every 30 seconds
@@ -110,6 +136,7 @@ const AdminDashboard: React.FC = () => {
   const { data: therapists = [], isLoading: therapistsLoading } = useQuery({
     queryKey: ['admin-therapists'],
     queryFn: async () => {
+      // Admin can see all therapists (not just available ones)
       const { data, error } = await supabase
         .from('therapists')
         .select('*')
@@ -507,6 +534,25 @@ const AdminDashboard: React.FC = () => {
               </Dialog>
             </div>
 
+            {/* Edit Therapist Dialog */}
+            <Dialog open={!!editingTherapist} onOpenChange={() => setEditingTherapist(null)}>
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto m-2">
+                <DialogHeader>
+                  <DialogTitle>Edit Therapist</DialogTitle>
+                  <DialogDescription>
+                    Update therapist information and availability
+                  </DialogDescription>
+                </DialogHeader>
+                {editingTherapist && (
+                  <EditTherapistForm
+                    therapist={editingTherapist}
+                    onCancel={() => setEditingTherapist(null)}
+                    onSuccess={() => setEditingTherapist(null)}
+                  />
+                )}
+              </DialogContent>
+            </Dialog>
+
             <Card>
               <CardHeader className="p-3 md:p-6">
                 <CardTitle className="text-lg md:text-xl">All Therapists</CardTitle>
@@ -567,6 +613,18 @@ const AdminDashboard: React.FC = () => {
                                   </Badge>
                                 )}
                               </div>
+                            </div>
+
+                            <div className="mt-3">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setEditingTherapist(therapist)}
+                                className="w-full text-xs"
+                              >
+                                <Edit className="h-3 w-3 mr-1" />
+                                Edit
+                              </Button>
                             </div>
                           </div>
                         </div>

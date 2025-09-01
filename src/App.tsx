@@ -24,6 +24,13 @@ import AppointmentBooking from '@/pages/AppointmentBooking';
 import About from '@/pages/About';
 import AIFeaturesMenu from '@/components/AIFeaturesMenu';
 import SecurityMonitor from '@/components/SecurityMonitor';
+import MoodTracker from '@/pages/MoodTracker';
+import CrisisSupport from '@/pages/CrisisSupport';
+import DreamAnalysis from '@/pages/DreamAnalysis';
+import EmotionRecognition from '@/pages/EmotionRecognition';
+import MentalHealthGoals from '@/pages/MentalHealthGoals';
+import MentalHealthInsights from '@/pages/MentalHealthInsights';
+import PeerSupport from '@/pages/PeerSupport';
 
 const queryClient = new QueryClient();
 
@@ -58,6 +65,15 @@ function App() {
               <Route path="/ai-features" element={<AIFeaturesMenu />} />
               <Route path="/appointments" element={<AppointmentBooking />} />
               <Route path="/about" element={<About />} />
+              
+              {/* New routes for missing pages */}
+              <Route path="/mood-tracker" element={<MoodTracker />} />
+              <Route path="/crisis-support" element={<CrisisSupport />} />
+              <Route path="/dream-analysis" element={<DreamAnalysis />} />
+              <Route path="/emotion-recognition" element={<EmotionRecognition />} />
+              <Route path="/mental-health-goals" element={<MentalHealthGoals />} />
+              <Route path="/mental-health-insights" element={<MentalHealthInsights />} />
+              <Route path="/peer-support" element={<PeerSupport />} />
             </Routes>
           </div>
         </Router>
