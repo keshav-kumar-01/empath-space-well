@@ -11,6 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { X, Plus } from 'lucide-react';
+import TherapistImageUpload from '@/components/TherapistImageUpload';
 
 interface Therapist {
   id: string;
@@ -161,26 +162,22 @@ const EditTherapistForm: React.FC<EditTherapistFormProps> = ({ therapist, onCanc
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="fee">Fee</Label>
-              <Input
-                id="fee"
-                value={formData.fee}
-                onChange={(e) => setFormData(prev => ({ ...prev, fee: e.target.value }))}
-                placeholder="e.g., $120/session"
-              />
-            </div>
-            <div>
-              <Label htmlFor="avatar_url">Avatar URL</Label>
-              <Input
-                id="avatar_url"
-                type="url"
-                value={formData.avatar_url}
-                onChange={(e) => setFormData(prev => ({ ...prev, avatar_url: e.target.value }))}
-                placeholder="https://example.com/avatar.jpg"
-              />
-            </div>
+          <div>
+            <Label htmlFor="fee">Fee</Label>
+            <Input
+              id="fee"
+              value={formData.fee}
+              onChange={(e) => setFormData(prev => ({ ...prev, fee: e.target.value }))}
+              placeholder="e.g., $120/session"
+            />
+          </div>
+
+          <div>
+            <TherapistImageUpload
+              value={formData.avatar_url}
+              onChange={(url) => setFormData(prev => ({ ...prev, avatar_url: url }))}
+              label="Therapist Image"
+            />
           </div>
 
           <div>

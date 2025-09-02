@@ -13,13 +13,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { X, Plus } from 'lucide-react';
+import TherapistImageUpload from '@/components/TherapistImageUpload';
 
 const therapistSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   experience: z.string().min(1, 'Experience is required'),
   fee: z.string().min(1, 'Fee is required'),
   bio: z.string().min(10, 'Bio must be at least 10 characters'),
-  avatar_url: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  avatar_url: z.string().optional().or(z.literal('')),
 });
 
 type TherapistFormData = z.infer<typeof therapistSchema>;
@@ -183,35 +184,34 @@ const AddTherapistForm: React.FC<AddTherapistFormProps> = ({ onSuccess }) => {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="fee"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Fee *</FormLabel>
-                <FormControl>
-                  <Input placeholder="₹1,500" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="fee"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Fee *</FormLabel>
+              <FormControl>
+                <Input placeholder="₹1,500" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="avatar_url"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Avatar URL</FormLabel>
-                <FormControl>
-                  <Input placeholder="https://example.com/avatar.jpg" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="avatar_url"
+          render={({ field }) => (
+            <FormItem>
+              <TherapistImageUpload
+                value={field.value}
+                onChange={field.onChange}
+                label="Therapist Image"
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
