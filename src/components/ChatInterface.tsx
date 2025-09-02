@@ -3,7 +3,8 @@ import { Send, LogIn, Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MessageBubble from "./MessageBubble";
-import { getResponse } from "@/utils/chatResponses";
+import { getTranslatedResponse } from "@/utils/translatedChatResponses";
+import { useTranslation } from "react-i18next";
 import { initModel, getAIResponse } from "@/services/aiService";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,7 +12,6 @@ import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import speechRecognition from "@/utils/speechRecognition";
 import { useQuery } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
 
 interface Message {
   text: string;
@@ -74,10 +74,10 @@ const ChatInterface: React.FC = () => {
       autoClearTimerRef.current = setInterval(() => {
         console.log('Auto-clearing chat after 20 minutes');
         clearChat();
-        toast({
-          title: "Chat cleared",
-          description: "Your chat session has been automatically cleared for privacy",
-        });
+      toast({
+        title: t('chat.cleared'),
+        description: t('chat.clearedDescription'),
+      });
       }, AUTO_CLEAR_INTERVAL);
     };
 
@@ -134,14 +134,14 @@ const ChatInterface: React.FC = () => {
         await initModel();
         setModelLoaded(true);
         toast({
-          title: "Chetna_AI connected",
-          description: "Advanced mental health AI assistant is now active",
+          title: t('chat.connecting.success'),
+          description: t('chat.connecting.successDescription'),
         });
       } catch (error) {
         console.error("Failed to connect to Chetna_AI:", error);
         toast({
-          title: "Using basic responses",
-          description: "AI model couldn't be loaded, using fallback mode",
+          title: t('chat.connecting.fallback'),
+          description: t('chat.connecting.fallbackDescription'),
           variant: "destructive",
         });
       } finally {
@@ -175,6 +175,30 @@ const ChatInterface: React.FC = () => {
       setMessages([updatedWelcomeMessage]);
     }
   }, [user, userTestResults, i18n.language, t]);
+
+  // Handle language changes - clear chat and start fresh
+  useEffect(() => {
+    // Clear existing messages and start with new translated welcome message
+    const newWelcomeMessage = {
+      text: t('chat.welcomeMessage'),
+      isUser: false,
+      timestamp: new Date()
+    };
+    
+    // Only update if it's a different language (not initial load)
+    if (messages.length > 0 && messages[0].text !== newWelcomeMessage.text) {
+      setMessages([newWelcomeMessage]);
+      setMessageCount(0);
+      setShowLoginPrompt(false);
+      
+      // Update localStorage
+      try {
+        localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify([newWelcomeMessage]));
+      } catch (error) {
+        console.error('Error updating chat language in localStorage:', error);
+      }
+    }
+  }, [i18n.language, t]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -244,8 +268,8 @@ const ChatInterface: React.FC = () => {
     if (!user && messageCount >= 5) {
       setShowLoginPrompt(true);
       toast({
-        title: "Message limit reached",
-        description: "Please sign up to continue chatting with Chetna_AI",
+        title: t('chat.limitReached'),
+        description: t('chat.signupPrompt'),
         variant: "destructive",
       });
       return;
@@ -271,7 +295,7 @@ const ChatInterface: React.FC = () => {
       // Pass user's test results to AI for personalized responses
       const aiResponseText = await getAIResponse(
         userMessage.text, 
-        getResponse, 
+        (msg) => getTranslatedResponse(msg, t), 
         userTestResults || []
       );
       
@@ -294,7 +318,7 @@ const ChatInterface: React.FC = () => {
       
       setTimeout(() => {
         const aiResponse: Message = {
-          text: getResponse(userMessage.text),
+          text: getTranslatedResponse(userMessage.text, t),
           isUser: false,
           timestamp: new Date()
         };
@@ -305,8 +329,8 @@ const ChatInterface: React.FC = () => {
         saveMessageToDatabase(aiResponse.text, false);
         
         toast({
-          title: "Using fallback response",
-          description: "There was an issue with the AI model",
+          title: t('chat.connecting.fallback'),
+          description: t('chat.connecting.error'),
           variant: "destructive",
         });
       }, 1000);

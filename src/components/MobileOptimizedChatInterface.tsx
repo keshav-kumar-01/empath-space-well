@@ -4,7 +4,7 @@ import { Send, LogIn, Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MessageBubble from "./MessageBubble";
-import { getResponse } from "@/utils/chatResponses";
+import { getTranslatedResponse } from "@/utils/translatedChatResponses";
 import { initModel, getAIResponse } from "@/services/aiService";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -74,8 +74,8 @@ const MobileOptimizedChatInterface: React.FC = () => {
         console.log('Auto-clearing chat after 20 minutes');
         clearChat();
         toast({
-          title: "🔄 Chat cleared",
-          description: "Your chat session has been automatically cleared for privacy",
+          title: "🔄 " + t('chat.cleared'),
+          description: t('chat.clearedDescription'),
         });
       }, AUTO_CLEAR_INTERVAL);
     };
@@ -132,14 +132,14 @@ const MobileOptimizedChatInterface: React.FC = () => {
         await initModel();
         setModelLoaded(true);
         toast({
-          title: "🤖 Chetna_AI connected",
-          description: "AI assistant is now active and ready to help",
+          title: "🤖 " + t('chat.connecting.success'),
+          description: t('chat.connecting.successDescription'),
         });
       } catch (error) {
         console.error("Failed to connect to Chetna_AI:", error);
         toast({
-          title: "📱 Using basic responses",
-          description: "AI model couldn't be loaded, using fallback responses",
+          title: "📱 " + t('chat.connecting.fallback'),
+          description: t('chat.connecting.fallbackDescription'),
           variant: "destructive",
         });
       } finally {
@@ -210,8 +210,8 @@ const MobileOptimizedChatInterface: React.FC = () => {
     if (!user && messageCount >= 5) {
       setShowLoginPrompt(true);
       toast({
-        title: "📝 Message limit reached",
-        description: "Please sign up to continue chatting",
+        title: "📝 " + t('chat.limitReached'),
+        description: t('chat.signupPrompt'),
         variant: "destructive",
       });
       return;
@@ -236,7 +236,7 @@ const MobileOptimizedChatInterface: React.FC = () => {
     try {
       const aiResponseText = await getAIResponse(
         userMessage.text, 
-        getResponse, 
+        (msg) => getTranslatedResponse(msg, t), 
         userTestResults || []
       );
       
@@ -259,7 +259,7 @@ const MobileOptimizedChatInterface: React.FC = () => {
       
       setTimeout(() => {
         const aiResponse: Message = {
-          text: getResponse(userMessage.text),
+          text: getTranslatedResponse(userMessage.text, t),
           isUser: false,
           timestamp: new Date()
         };
@@ -325,7 +325,7 @@ const MobileOptimizedChatInterface: React.FC = () => {
               {t('chat.title')}
             </h3>
             <p className="text-xs text-muted-foreground">
-              {modelLoaded ? "✅ AI Active" : loadingModel ? "🔄 Connecting..." : "📱 Basic Mode"}
+              {modelLoaded ? t('chat.status.aiActive') : loadingModel ? t('chat.connecting') : t('chat.basicMode')}
             </p>
           </div>
         </div>
