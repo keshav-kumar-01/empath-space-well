@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Session } from '@supabase/supabase-js';
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from 'react-router-dom';
 
 type User = {
   id: string;
@@ -33,11 +34,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, currentSession) => {
+      async (event, currentSession) => {
         console.log('Auth state changed:', event, currentSession);
         setSession(currentSession);
         
         if (currentSession?.user) {
+          // Check if user is a therapist
+          const { data: therapistData } = await supabase.rpc('get_therapist_by_user_id', {
+            _user_id: currentSession.user.id
+          });
+
           // Format user data from Supabase session
           const userData: User = {
             id: currentSession.user.id,
@@ -46,6 +52,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             photoURL: currentSession.user.user_metadata?.avatar_url,
           };
           setUser(userData);
+
+          // Redirect therapists to their dashboard
+          if (therapistData && therapistData.length > 0) {
+            // Use timeout to ensure component mounting is complete
+            setTimeout(() => {
+              window.location.href = '/therapist-dashboard';
+            }, 100);
+          }
         } else {
           setUser(null);
         }
@@ -55,11 +69,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 
     // Check for existing session
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+    supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
       console.log('Initial session check:', currentSession);
       setSession(currentSession);
       
       if (currentSession?.user) {
+        // Check if user is a therapist
+        const { data: therapistData } = await supabase.rpc('get_therapist_by_user_id', {
+          _user_id: currentSession.user.id
+        });
+
         const userData: User = {
           id: currentSession.user.id,
           name: currentSession.user.user_metadata?.name || currentSession.user.email?.split('@')[0] || 'User',
@@ -67,6 +86,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           photoURL: currentSession.user.user_metadata?.avatar_url,
         };
         setUser(userData);
+
+        // Redirect therapists to their dashboard on initial load
+        if (therapistData && therapistData.length > 0 && window.location.pathname === '/') {
+          window.location.href = '/therapist-dashboard';
+        }
       }
       
       setIsLoading(false);
