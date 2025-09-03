@@ -578,12 +578,61 @@ export type Database = {
         }
         Relationships: []
       }
+      session_reviews: {
+        Row: {
+          appointment_id: string | null
+          created_at: string | null
+          id: string
+          rating: number
+          review_text: string | null
+          therapist_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          appointment_id?: string | null
+          created_at?: string | null
+          id?: string
+          rating: number
+          review_text?: string | null
+          therapist_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          appointment_id?: string | null
+          created_at?: string | null
+          id?: string
+          rating?: number
+          review_text?: string | null
+          therapist_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_reviews_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_reviews_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       therapists: {
         Row: {
           available: boolean | null
           avatar_url: string | null
           bio: string | null
           created_at: string
+          email: string | null
           experience: string
           fee: string
           id: string
@@ -600,6 +649,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          email?: string | null
           experience: string
           fee: string
           id?: string
@@ -616,6 +666,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          email?: string | null
           experience?: string
           fee?: string
           id?: string
@@ -730,6 +781,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_therapist_by_user_id: {
+        Args: { _user_id: string }
+        Returns: {
+          available: boolean
+          avatar_url: string
+          bio: string
+          email: string
+          experience: string
+          fee: string
+          id: string
+          languages: string[]
+          name: string
+          rating: number
+          specialties: string[]
+          total_reviews: number
+        }[]
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -739,6 +807,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_therapist_user: {
+        Args: { _user_id: string }
         Returns: boolean
       }
       user_is_in_room: {
