@@ -92,7 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(userData);
 
         // Redirect therapists to their dashboard on initial load
-        if (therapistData && therapistData.length > 0 && window.location.pathname === '/') {
+        if (therapistData && therapistData.length > 0) {
           window.location.href = '/therapist-dashboard';
         }
       }

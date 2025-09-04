@@ -32,6 +32,7 @@ import MentalHealthGoals from '@/pages/MentalHealthGoals';
 import MentalHealthInsights from '@/pages/MentalHealthInsights';
 import PeerSupport from '@/pages/PeerSupport';
 import TherapistDashboard from '@/pages/TherapistDashboard';
+import TherapistProtected from '@/components/TherapistProtected';
 
 const queryClient = new QueryClient();
 
@@ -76,7 +77,14 @@ function App() {
                 <Route path="/mental-health-goals" element={<MentalHealthGoals />} />
                 <Route path="/mental-health-insights" element={<MentalHealthInsights />} />
                 <Route path="/peer-support" element={<PeerSupport />} />
-                <Route path="/therapist-dashboard" element={<TherapistDashboard />} />
+                <Route 
+                  path="/therapist-dashboard" 
+                  element={
+                    <TherapistProtected>
+                      <TherapistDashboard />
+                    </TherapistProtected>
+                  } 
+                />
               </Routes>
             </div>
           </Router>
