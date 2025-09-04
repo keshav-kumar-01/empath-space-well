@@ -96,13 +96,19 @@ export const TherapistAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
+      (event, currentSession) => {
         console.log('Therapist auth state changed:', event, currentSession);
         setSession(currentSession);
         
         if (currentSession?.user) {
-          // Check if user is a therapist
-          await checkTherapistStatus();
+          // Defer Supabase calls with setTimeout to prevent deadlock
+          setTimeout(async () => {
+            try {
+              await checkTherapistStatus();
+            } catch (error) {
+              console.error('Error checking therapist status:', error);
+            }
+          }, 0);
         } else {
           setTherapist(null);
           setIsTherapist(false);

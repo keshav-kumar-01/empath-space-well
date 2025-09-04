@@ -34,16 +34,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
+      (event, currentSession) => {
         console.log('Auth state changed:', event, currentSession);
         setSession(currentSession);
         
         if (currentSession?.user) {
-          // Check if user is a therapist
-          const { data: therapistData } = await supabase.rpc('get_therapist_by_user_id', {
-            _user_id: currentSession.user.id
-          });
-
           // Format user data from Supabase session
           const userData: User = {
             id: currentSession.user.id,
@@ -53,13 +48,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           };
           setUser(userData);
 
-          // Redirect therapists to their dashboard
-          if (therapistData && therapistData.length > 0) {
-            // Use timeout to ensure component mounting is complete
-            setTimeout(() => {
-              window.location.href = '/therapist-dashboard';
-            }, 100);
-          }
+          // Defer Supabase calls with setTimeout to prevent deadlock
+          setTimeout(async () => {
+            try {
+              // Check if user is a therapist
+              const { data: therapistData } = await supabase.rpc('get_therapist_by_user_id', {
+                _user_id: currentSession.user.id
+              });
+
+              // Redirect therapists to their dashboard
+              if (therapistData && therapistData.length > 0) {
+                window.location.href = '/therapist-dashboard';
+              }
+            } catch (error) {
+              console.error('Error checking therapist status:', error);
+            }
+          }, 0);
         } else {
           setUser(null);
         }
