@@ -40,9 +40,13 @@ export const TherapistAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!session?.user) return false;
 
     try {
+      console.log('Checking therapist status for user:', session.user.email);
+      
       const { data, error } = await supabase.rpc('get_therapist_by_user_id', {
         _user_id: session.user.id
       });
+
+      console.log('Therapist RPC result:', { data, error });
 
       if (error) {
         console.error('Error checking therapist status:', error);
@@ -51,11 +55,13 @@ export const TherapistAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (data && data.length > 0) {
         const therapistData = data[0];
+        console.log('Found therapist data:', therapistData);
         setTherapist(therapistData);
         setIsTherapist(true);
         return true;
       }
 
+      console.log('No therapist data found');
       setIsTherapist(false);
       return false;
     } catch (error) {
