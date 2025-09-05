@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTherapistAuth } from '@/context/TherapistAuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,6 +24,7 @@ const TherapistDashboard: React.FC = () => {
   const { therapist, isLoading } = useTherapistAuth();
   const [activeTab, setActiveTab] = useState('appointments');
   const [editingProfile, setEditingProfile] = useState(false);
+  const queryClient = useQueryClient();
 
   // Fetch therapist appointments
   const { data: appointments = [], isLoading: appointmentsLoading } = useQuery({
@@ -73,8 +74,8 @@ const TherapistDashboard: React.FC = () => {
 
       if (error) throw error;
       
-      // Refresh appointments
-      window.location.reload();
+      // Refresh appointments data
+      queryClient.invalidateQueries({ queryKey: ['therapist-appointments', therapist?.id] });
     } catch (error) {
       console.error('Error updating appointment:', error);
     }
