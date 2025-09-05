@@ -118,7 +118,7 @@ const TherapistDashboard: React.FC = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold">Welcome, Dr. {therapist.name}</h1>
+              <h1 className="text-3xl font-bold">Welcome, {therapist.name}</h1>
               <p className="text-muted-foreground">Manage your appointments and profile</p>
             </div>
             <Button
