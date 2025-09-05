@@ -17,7 +17,7 @@ const Navigation: React.FC = () => {
       ? { path: '/therapist-dashboard', label: 'Dashboard', icon: Stethoscope }
       : { path: '/appointments', label: 'Book', icon: Calendar },
     { path: '/resources', label: 'Help', icon: BookOpen },
-    { path: '/admin-dashboard', label: 'Admin', icon: Shield },
+    { path: '/settings', label: 'Settings', icon: Settings },
   ];
 
   return (

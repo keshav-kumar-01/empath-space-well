@@ -33,6 +33,10 @@ import MentalHealthInsights from '@/pages/MentalHealthInsights';
 import PeerSupport from '@/pages/PeerSupport';
 import TherapistDashboard from '@/pages/TherapistDashboard';
 import TherapistProtected from '@/components/TherapistProtected';
+import Settings from '@/pages/Settings';
+import Privacy from '@/pages/Privacy';
+import Terms from '@/pages/Terms';
+import Pricing from '@/pages/Pricing';
 
 const queryClient = new QueryClient();
 
@@ -85,6 +89,12 @@ function App() {
                     </TherapistProtected>
                   } 
                 />
+                
+                {/* Pages that were missing */}
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/pricing" element={<Pricing />} />
               </Routes>
             </div>
           </Router>

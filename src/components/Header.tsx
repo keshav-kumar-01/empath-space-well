@@ -143,6 +143,12 @@ const Header: React.FC = () => {
             >
               {t('nav.about')}
             </Link>
+            <Link
+              to="/pricing"
+              className="transition-colors hover:text-foreground/80 text-foreground/60"
+            >
+              Pricing
+            </Link>
             {isAdmin && (
               <Link
                 to="/admin"
@@ -215,6 +221,9 @@ const Header: React.FC = () => {
                 </MobileLink>
                 <MobileLink to="/about" onOpenChange={() => {}}>
                   {t('nav.about')}
+                </MobileLink>
+                <MobileLink to="/pricing" onOpenChange={() => {}}>
+                  Pricing
                 </MobileLink>
                 {isAdmin && (
                   <MobileLink to="/admin" onOpenChange={() => {}}>
