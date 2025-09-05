@@ -24,7 +24,7 @@ Allow: /community/
 Crawl-delay: 1
 
 # Sitemap location
-Sitemap: https://chetna.live/sitemap.xml
+Sitemap: https://chetna.life/sitemap.xml
 
 # Specific agent rules for better indexing
 User-agent: Googlebot
