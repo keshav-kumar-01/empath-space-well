@@ -2,16 +2,20 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Heart, MessageSquare, Calendar, BookOpen, Users, Shield, Brain, Settings } from 'lucide-react';
+import { Heart, MessageSquare, Calendar, BookOpen, Users, Shield, Brain, Settings, Stethoscope } from 'lucide-react';
+import { useTherapistAuth } from '@/context/TherapistAuthContext';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
+  const { isTherapist } = useTherapistAuth();
 
   const navigationItems = [
     { path: '/', label: 'Chat', icon: MessageSquare },
     { path: '/ai-features', label: 'AI', icon: Brain },
     { path: '/mood-tracker', label: 'Mood', icon: Heart },
-    { path: '/appointments', label: 'Book', icon: Calendar },
+    isTherapist 
+      ? { path: '/therapist-dashboard', label: 'Dashboard', icon: Stethoscope }
+      : { path: '/appointments', label: 'Book', icon: Calendar },
     { path: '/resources', label: 'Help', icon: BookOpen },
     { path: '/admin-dashboard', label: 'Admin', icon: Shield },
   ];

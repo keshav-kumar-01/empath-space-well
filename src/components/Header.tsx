@@ -24,6 +24,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import LanguageSelector from "./LanguageSelector";
 import ThemeToggle from "./ThemeToggle";
 import { useAuth } from "@/context/AuthContext";
+import { useTherapistAuth } from "@/context/TherapistAuthContext";
 
 interface MobileLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   to: string;
@@ -43,6 +44,7 @@ const MobileLink: React.FC<MobileLinkProps> = ({ to, onOpenChange, children, ...
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
+  const { isTherapist } = useTherapistAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -95,12 +97,22 @@ const Header: React.FC = () => {
             >
               Profile
             </Link>
-            <Link
-              to="/appointments"
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
-            >
-              Appointments
-            </Link>
+            {isTherapist ? (
+              <Link
+                to="/therapist-dashboard"
+                className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-1"
+              >
+                <Stethoscope className="h-4 w-4" />
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                to="/appointments"
+                className="transition-colors hover:text-foreground/80 text-foreground/60"
+              >
+                Appointments
+              </Link>
+            )}
             <Link
               to="/community"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
@@ -173,9 +185,16 @@ const Header: React.FC = () => {
                 <MobileLink to="/mood-tracker" onOpenChange={() => {}}>
                   Mood Tracker
                 </MobileLink>
-                <MobileLink to="/appointments" onOpenChange={() => {}}>
-                  Appointments
-                </MobileLink>
+                {isTherapist ? (
+                  <MobileLink to="/therapist-dashboard" onOpenChange={() => {}}>
+                    <Stethoscope className="h-4 w-4 inline mr-2" />
+                    Dashboard
+                  </MobileLink>
+                ) : (
+                  <MobileLink to="/appointments" onOpenChange={() => {}}>
+                    Appointments
+                  </MobileLink>
+                )}
                 <MobileLink to="/resources" onOpenChange={() => {}}>
                   Resources
                 </MobileLink>
@@ -257,12 +276,21 @@ const Header: React.FC = () => {
                       Mood Tracker
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/appointments">
-                      <Calendar className="mr-2 h-4 w-4" />
-                      Appointments
-                    </Link>
-                  </DropdownMenuItem>
+                  {isTherapist ? (
+                    <DropdownMenuItem asChild>
+                      <Link to="/therapist-dashboard">
+                        <Stethoscope className="mr-2 h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem asChild>
+                      <Link to="/appointments">
+                        <Calendar className="mr-2 h-4 w-4" />
+                        Appointments
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem asChild>
                     <Link to="/crisis-support">
                       <Shield className="mr-2 h-4 w-4" />
