@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { TherapistAuthProvider } from '@/context/TherapistAuthContext';
 import SecurityMonitor from '@/components/SecurityMonitor';
-import LoadingFallback from '@/components/LoadingFallback';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import Index from '@/pages/Index';
 import Login from '@/pages/Login';
 import Signup from '@/pages/Signup';
@@ -59,72 +59,72 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/profile" element={<UserProfile />} />
                 <Route path="/community" element={
-                  <Suspense fallback={<LoadingFallback text="Loading Community..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading Community..." />}>
                     <LazyCommunity />
                   </Suspense>
                 } />
                 <Route path="/blog" element={
-                  <Suspense fallback={<LoadingFallback text="Loading Blog..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading Blog..." />}>
                     <LazyBlog />
                   </Suspense>
                 } />
                 <Route path="/blog/:articleId" element={<BlogPost />} />
                 <Route path="/resources" element={
-                  <Suspense fallback={<LoadingFallback text="Loading Resources..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading Resources..." />}>
                     <LazyResourceLibrary />
                   </Suspense>
                 } />
                 <Route path="/contact" element={<Feedback />} />
                 <Route path="/tests" element={
-                  <Suspense fallback={<LoadingFallback text="Loading Tests..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading Tests..." />}>
                     <LazyPsychTests />
                   </Suspense>
                 } />
                 <Route path="/psych-tests" element={
-                  <Suspense fallback={<LoadingFallback text="Loading Tests..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading Tests..." />}>
                     <LazyPsychTests />
                   </Suspense>
                 } />
                 <Route path="/psych-tests/:testType" element={
-                  <Suspense fallback={<LoadingFallback text="Loading Test..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading Test..." />}>
                     <LazyPsychTestRunner />
                   </Suspense>
                 } />
                 <Route path="/test-results" element={<TestResults />} />
                 <Route path="/wellness-plans" element={
-                  <Suspense fallback={<LoadingFallback text="Loading Wellness Plans..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading Wellness Plans..." />}>
                     <LazyWellnessPlans />
                   </Suspense>
                 } />
                 <Route path="/ai-journaling" element={<Journal />} />
                 <Route path="/ai-therapy-chat" element={
-                  <Suspense fallback={<LoadingFallback text="Loading AI Therapy..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading AI Therapy..." />}>
                     <LazyVoiceTherapy />
                   </Suspense>
                 } />
                 <Route path="/voice-therapy" element={
-                  <Suspense fallback={<LoadingFallback text="Loading Voice Therapy..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading Voice Therapy..." />}>
                     <LazyVoiceTherapy />
                   </Suspense>
                 } />
                 <Route path="/group-therapy" element={
-                  <Suspense fallback={<LoadingFallback text="Loading Group Therapy..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading Group Therapy..." />}>
                     <LazyGroupTherapy />
                   </Suspense>
                 } />
                 <Route path="/admin-panel" element={
-                  <Suspense fallback={<LoadingFallback text="Loading Admin..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading Admin..." />}>
                     <LazyAdminDashboard />
                   </Suspense>
                 } />
                 <Route path="/admin" element={
-                  <Suspense fallback={<LoadingFallback text="Loading Admin..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading Admin..." />}>
                     <LazyAdminDashboard />
                   </Suspense>
                 } />
                 <Route path="/ai-features" element={<AIFeaturesMenu />} />
                 <Route path="/appointments" element={
-                  <Suspense fallback={<LoadingFallback text="Loading Appointments..." />}>
+                  <Suspense fallback={<LoadingSpinner text="Loading Appointments..." />}>
                     <LazyAppointmentBooking />
                   </Suspense>
                 } />
@@ -142,7 +142,7 @@ function App() {
                   path="/therapist-dashboard" 
                   element={
                     <TherapistProtected>
-                      <Suspense fallback={<LoadingFallback text="Loading Dashboard..." />}>
+                      <Suspense fallback={<LoadingSpinner text="Loading Dashboard..." />}>
                         <LazyTherapistDashboard />
                       </Suspense>
                     </TherapistProtected>

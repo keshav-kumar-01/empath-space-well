@@ -14,7 +14,7 @@ import ReviewsSection from "@/components/ReviewsSection";
 import BackgroundElements from "@/components/BackgroundElements";
 import LazySection from "@/components/LazySection";
 import SEO from "@/components/SEO";
-import LoadingFallback from "@/components/LoadingFallback";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { useTranslation } from 'react-i18next';
 import { LazyChatInterface } from '@/utils/lazyComponents';
 
@@ -142,7 +142,7 @@ const Index = () => {
                   {t('chat.subtitle')}
                 </p>
               </div>
-              <Suspense fallback={<LoadingFallback text="Starting chat..." />}>
+              <Suspense fallback={<LoadingSpinner text="Starting chat..." />}>
                 <LazyChatInterface />
               </Suspense>
             </div>
