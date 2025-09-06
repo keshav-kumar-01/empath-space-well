@@ -16,7 +16,7 @@ const IntroSection: React.FC<IntroSectionProps> = ({ onStartChat }) => {
   const features = [
     {
       icon: Heart,
-      title: "Compassionate Listening",
+      title: "Compassionate Support",
       description: "A supportive space to express your feelings without judgment, with AI that truly understands.",
       iconColor: "text-chetna-primary",
       backgroundGradient: "bg-gradient-to-br from-chetna-primary/20 to-chetna-primary/30 dark:from-chetna-primary/30 dark:to-chetna-primary/40"

@@ -1,27 +1,17 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { TherapistAuthProvider } from '@/context/TherapistAuthContext';
 import SecurityMonitor from '@/components/SecurityMonitor';
+import LoadingFallback from '@/components/LoadingFallback';
 import Index from '@/pages/Index';
 import Login from '@/pages/Login';
 import Signup from '@/pages/Signup';
 import UserProfile from '@/pages/UserProfile';
-import Community from '@/pages/Community';
-import Blog from '@/pages/Blog';
-import ResourceLibrary from '@/pages/ResourceLibrary';
-import Feedback from '@/pages/Feedback';
-import PsychTests from '@/pages/PsychTests';
 import BlogPost from '@/pages/BlogPost';
 import Journal from '@/pages/Journal';
-import VoiceTherapy from '@/pages/VoiceTherapy';
-import GroupTherapy from '@/pages/GroupTherapy';
-import AdminDashboard from '@/pages/AdminDashboard';
-import PsychTestRunner from '@/pages/PsychTestRunner';
 import TestResults from '@/pages/TestResults';
-import WellnessPlans from '@/pages/WellnessPlans';
-import AppointmentBooking from '@/pages/AppointmentBooking';
 import About from '@/pages/About';
 import AIFeaturesMenu from '@/components/AIFeaturesMenu';
 import MoodTracker from '@/pages/MoodTracker';
@@ -31,12 +21,27 @@ import EmotionRecognition from '@/pages/EmotionRecognition';
 import MentalHealthGoals from '@/pages/MentalHealthGoals';
 import MentalHealthInsights from '@/pages/MentalHealthInsights';
 import PeerSupport from '@/pages/PeerSupport';
-import TherapistDashboard from '@/pages/TherapistDashboard';
 import TherapistProtected from '@/components/TherapistProtected';
 import Settings from '@/pages/Settings';
 import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 import Pricing from '@/pages/Pricing';
+import Feedback from '@/pages/Feedback';
+
+// Lazy load heavy components
+import { 
+  LazyAdminDashboard,
+  LazyCommunity,
+  LazyBlog,
+  LazyResourceLibrary,
+  LazyPsychTests,
+  LazyPsychTestRunner,
+  LazyVoiceTherapy,
+  LazyGroupTherapy,
+  LazyWellnessPlans,
+  LazyAppointmentBooking,
+  LazyTherapistDashboard
+} from '@/utils/lazyComponents';
 
 const queryClient = new QueryClient();
 
@@ -53,24 +58,76 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/profile" element={<UserProfile />} />
-                <Route path="/community" element={<Community />} />
-                <Route path="/blog" element={<Blog />} />
+                <Route path="/community" element={
+                  <Suspense fallback={<LoadingFallback text="Loading Community..." />}>
+                    <LazyCommunity />
+                  </Suspense>
+                } />
+                <Route path="/blog" element={
+                  <Suspense fallback={<LoadingFallback text="Loading Blog..." />}>
+                    <LazyBlog />
+                  </Suspense>
+                } />
                 <Route path="/blog/:articleId" element={<BlogPost />} />
-                <Route path="/resources" element={<ResourceLibrary />} />
+                <Route path="/resources" element={
+                  <Suspense fallback={<LoadingFallback text="Loading Resources..." />}>
+                    <LazyResourceLibrary />
+                  </Suspense>
+                } />
                 <Route path="/contact" element={<Feedback />} />
-                <Route path="/tests" element={<PsychTests />} />
-                <Route path="/psych-tests" element={<PsychTests />} />
-                <Route path="/psych-tests/:testType" element={<PsychTestRunner />} />
+                <Route path="/tests" element={
+                  <Suspense fallback={<LoadingFallback text="Loading Tests..." />}>
+                    <LazyPsychTests />
+                  </Suspense>
+                } />
+                <Route path="/psych-tests" element={
+                  <Suspense fallback={<LoadingFallback text="Loading Tests..." />}>
+                    <LazyPsychTests />
+                  </Suspense>
+                } />
+                <Route path="/psych-tests/:testType" element={
+                  <Suspense fallback={<LoadingFallback text="Loading Test..." />}>
+                    <LazyPsychTestRunner />
+                  </Suspense>
+                } />
                 <Route path="/test-results" element={<TestResults />} />
-                <Route path="/wellness-plans" element={<WellnessPlans />} />
+                <Route path="/wellness-plans" element={
+                  <Suspense fallback={<LoadingFallback text="Loading Wellness Plans..." />}>
+                    <LazyWellnessPlans />
+                  </Suspense>
+                } />
                 <Route path="/ai-journaling" element={<Journal />} />
-                <Route path="/ai-therapy-chat" element={<VoiceTherapy />} />
-                <Route path="/voice-therapy" element={<VoiceTherapy />} />
-                <Route path="/group-therapy" element={<GroupTherapy />} />
-                <Route path="/admin-panel" element={<AdminDashboard />} />
-                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/ai-therapy-chat" element={
+                  <Suspense fallback={<LoadingFallback text="Loading AI Therapy..." />}>
+                    <LazyVoiceTherapy />
+                  </Suspense>
+                } />
+                <Route path="/voice-therapy" element={
+                  <Suspense fallback={<LoadingFallback text="Loading Voice Therapy..." />}>
+                    <LazyVoiceTherapy />
+                  </Suspense>
+                } />
+                <Route path="/group-therapy" element={
+                  <Suspense fallback={<LoadingFallback text="Loading Group Therapy..." />}>
+                    <LazyGroupTherapy />
+                  </Suspense>
+                } />
+                <Route path="/admin-panel" element={
+                  <Suspense fallback={<LoadingFallback text="Loading Admin..." />}>
+                    <LazyAdminDashboard />
+                  </Suspense>
+                } />
+                <Route path="/admin" element={
+                  <Suspense fallback={<LoadingFallback text="Loading Admin..." />}>
+                    <LazyAdminDashboard />
+                  </Suspense>
+                } />
                 <Route path="/ai-features" element={<AIFeaturesMenu />} />
-                <Route path="/appointments" element={<AppointmentBooking />} />
+                <Route path="/appointments" element={
+                  <Suspense fallback={<LoadingFallback text="Loading Appointments..." />}>
+                    <LazyAppointmentBooking />
+                  </Suspense>
+                } />
                 <Route path="/about" element={<About />} />
                 
                 {/* New routes for missing pages */}
@@ -85,7 +142,9 @@ function App() {
                   path="/therapist-dashboard" 
                   element={
                     <TherapistProtected>
-                      <TherapistDashboard />
+                      <Suspense fallback={<LoadingFallback text="Loading Dashboard..." />}>
+                        <LazyTherapistDashboard />
+                      </Suspense>
                     </TherapistProtected>
                   } 
                 />

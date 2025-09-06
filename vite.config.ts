@@ -19,4 +19,21 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['@radix-ui/react-select', '@radix-ui/react-dialog', '@radix-ui/react-toast'],
+          router: ['react-router-dom'],
+          i18n: ['react-i18next', 'i18next'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
+  },
+  css: {
+    devSourcemap: true,
+  },
 }));

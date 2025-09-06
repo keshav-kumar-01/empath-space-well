@@ -28,7 +28,10 @@ const LanguageSelector = () => {
 
   return (
     <Select value={i18n.language} onValueChange={handleLanguageChange}>
-      <SelectTrigger className="w-auto min-w-[120px] bg-white/50 dark:bg-chetna-darker/50 border-chetna-primary/30 hover:bg-chetna-primary/10 rounded-full transition-all duration-300">
+      <SelectTrigger 
+        className="w-auto min-w-[120px] bg-white/50 dark:bg-chetna-darker/50 border-chetna-primary/30 hover:bg-chetna-primary/10 rounded-full transition-all duration-300"
+        aria-label={t('language.selector', 'Language selector')}
+      >
         <div className="flex items-center gap-2">
           <Globe className="h-4 w-4 text-chetna-primary" />
           <SelectValue>

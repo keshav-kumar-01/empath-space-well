@@ -1,11 +1,10 @@
 
-import { useState, useEffect, useRef, memo } from "react";
+import { useState, useEffect, useRef, memo, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Mic, Send, Bot, User, Heart, Calendar, BookOpen, Users, Shield, MessageCircle } from "lucide-react";
-import ChatInterface from "@/components/ChatInterface";
 import CustomerServiceBot from "@/components/CustomerServiceBot";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -15,7 +14,9 @@ import ReviewsSection from "@/components/ReviewsSection";
 import BackgroundElements from "@/components/BackgroundElements";
 import LazySection from "@/components/LazySection";
 import SEO from "@/components/SEO";
+import LoadingFallback from "@/components/LoadingFallback";
 import { useTranslation } from 'react-i18next';
+import { LazyChatInterface } from '@/utils/lazyComponents';
 
 // Memoized components for better performance
 const MemoizedFeatureCard = memo(FeatureCard);
@@ -141,7 +142,9 @@ const Index = () => {
                   {t('chat.subtitle')}
                 </p>
               </div>
-              <ChatInterface />
+              <Suspense fallback={<LoadingFallback text="Starting chat..." />}>
+                <LazyChatInterface />
+              </Suspense>
             </div>
           </section>
         )}
