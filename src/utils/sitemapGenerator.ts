@@ -138,7 +138,7 @@ export const getStaticSitemapUrls = (): SitemapUrl[] => {
 
 // Function to generate sitemap for blog posts
 export const generateBlogSitemap = async (blogPosts: any[]) => {
-  const baseUrl = 'https://chetna.live';
+  const baseUrl = 'https://chetna.life';
   
   const blogUrls: SitemapUrl[] = blogPosts.map(post => ({
     loc: `${baseUrl}/blog/post/${post.id}`,
