@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "headers": [
         {
           "key": "X-Content-Type-Options",
@@ -18,7 +18,7 @@
       ]
     },
     {
-      "source": "/assets/(.*)",
+      "source": "/assets/:all*",
       "headers": [
         {
           "key": "Cache-Control",
@@ -27,7 +27,7 @@
       ]
     },
     {
-      "source": "/.*\\.(css|js|woff2|woff|ttf|eot)$",
+      "source": "/:all*(css|js|woff2|woff|ttf|eot)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -38,8 +38,8 @@
   ],
   "redirects": [
     {
-      "source": "/(.*)",
-      "destination": "https://chetna.life/$1",
+      "source": "/:path*",
+      "destination": "https://chetna.life/:path*",
       "has": [
         {
           "type": "host",
@@ -51,7 +51,7 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ]
