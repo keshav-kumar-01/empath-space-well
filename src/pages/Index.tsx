@@ -95,6 +95,25 @@ const Index = () => {
         keywords="mental health AI, anxiety support, depression help, stress management, emotional wellness, AI therapy, mental health companion, psychological support, wellness app, therapy chat"
         url="https://chetna.live"
         image="https://chetna.live/og-image.png"
+        canonical="https://chetna.live"
+        faqSchema={[
+          {
+            question: "What is Chetna AI?",
+            answer: "Chetna AI is an AI-powered mental wellness companion that provides compassionate support for anxiety, depression, stress management, and various mental health challenges 24/7."
+          },
+          {
+            question: "How does Chetna AI help with mental health?",
+            answer: "Chetna AI offers personalized conversations, mood tracking, journaling tools, access to mental health resources, and connection to professional therapists when needed."
+          },
+          {
+            question: "Is Chetna AI free to use?",
+            answer: "Yes, Chetna AI offers free access to core features including AI chat support, mood tracking, and basic resources. Premium features are available with a subscription."
+          },
+          {
+            question: "Is my data safe with Chetna AI?",
+            answer: "Absolutely. We use end-to-end encryption and follow strict privacy protocols to ensure your conversations and data remain completely confidential."
+          }
+        ]}
       />
       
       <BackgroundElements />

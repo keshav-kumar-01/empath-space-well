@@ -85,6 +85,11 @@ const Blog: React.FC = () => {
         description="Read inspiring mental health stories, tips, and experiences from the Chetna_AI community. Share your wellness journey and connect with others."
         keywords="mental health blog, wellness stories, depression recovery, anxiety support, mental health tips, community stories, therapy experiences"
         url="https://chetna.live/blog"
+        canonical="https://chetna.live/blog"
+        breadcrumbs={[
+          { name: "Home", url: "https://chetna.live" },
+          { name: "Blog", url: "https://chetna.live/blog" }
+        ]}
       />
 
       {/* Background elements */}

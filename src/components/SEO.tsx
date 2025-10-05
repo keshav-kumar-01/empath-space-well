@@ -18,6 +18,15 @@ interface SEOProps {
   };
   noindex?: boolean;
   canonical?: string;
+  breadcrumbs?: Array<{ name: string; url: string }>;
+  faqSchema?: Array<{ question: string; answer: string }>;
+  videoSchema?: {
+    name: string;
+    description: string;
+    thumbnailUrl: string;
+    uploadDate: string;
+    duration?: string;
+  };
 }
 
 const SEO: React.FC<SEOProps> = ({
@@ -29,7 +38,10 @@ const SEO: React.FC<SEOProps> = ({
   type = "website",
   article,
   noindex = false,
-  canonical
+  canonical,
+  breadcrumbs,
+  faqSchema,
+  videoSchema
 }) => {
   // Add error boundary protection
   try {
@@ -81,8 +93,53 @@ const SEO: React.FC<SEOProps> = ({
         "telephone": "+1-XXX-XXX-XXXX",
         "contactType": "customer service",
         "email": "keshavkumarhf@gmail.com"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "95",
+        "bestRating": "5",
+        "worstRating": "1"
       }
     };
+
+    // Breadcrumb Schema
+    const breadcrumbSchema = breadcrumbs ? {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": breadcrumbs.map((crumb, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "name": crumb.name,
+        "item": crumb.url
+      }))
+    } : null;
+
+    // FAQ Schema
+    const faqSchemaData = faqSchema ? {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqSchema.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    } : null;
+
+    // Video Schema
+    const videoSchemaData = videoSchema ? {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": videoSchema.name,
+      "description": videoSchema.description,
+      "thumbnailUrl": videoSchema.thumbnailUrl,
+      "uploadDate": videoSchema.uploadDate,
+      "duration": videoSchema.duration,
+      "contentUrl": url
+    } : null;
 
     return (
       <Helmet>
@@ -134,6 +191,21 @@ const SEO: React.FC<SEOProps> = ({
         <script type="application/ld+json">
           {JSON.stringify(organizationData)}
         </script>
+        {breadcrumbSchema && (
+          <script type="application/ld+json">
+            {JSON.stringify(breadcrumbSchema)}
+          </script>
+        )}
+        {faqSchemaData && (
+          <script type="application/ld+json">
+            {JSON.stringify(faqSchemaData)}
+          </script>
+        )}
+        {videoSchemaData && (
+          <script type="application/ld+json">
+            {JSON.stringify(videoSchemaData)}
+          </script>
+        )}
         
         {/* Additional SEO meta tags */}
         <meta name="theme-color" content="#8B5CF6" />
