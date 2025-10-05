@@ -68,6 +68,13 @@ export type Database = {
             referencedRelation: "therapists"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "appointments_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       blog_posts: {
@@ -75,8 +82,12 @@ export type Database = {
           author_name: string
           content: string
           created_at: string
+          display_name: string | null
           id: string
+          is_flagged: boolean | null
+          moderation_status: string | null
           published: boolean
+          show_real_name: boolean | null
           title: string
           updated_at: string
           user_id: string
@@ -85,8 +96,12 @@ export type Database = {
           author_name: string
           content: string
           created_at?: string
+          display_name?: string | null
           id?: string
+          is_flagged?: boolean | null
+          moderation_status?: string | null
           published?: boolean
+          show_real_name?: boolean | null
           title: string
           updated_at?: string
           user_id: string
@@ -95,8 +110,12 @@ export type Database = {
           author_name?: string
           content?: string
           created_at?: string
+          display_name?: string | null
           id?: string
+          is_flagged?: boolean | null
+          moderation_status?: string | null
           published?: boolean
+          show_real_name?: boolean | null
           title?: string
           updated_at?: string
           user_id?: string
@@ -108,7 +127,10 @@ export type Database = {
           category: string | null
           content: string
           created_at: string
+          flag_count: number | null
           id: string
+          is_approved: boolean | null
+          is_flagged: boolean | null
           mood: string | null
           title: string
           updated_at: string
@@ -119,7 +141,10 @@ export type Database = {
           category?: string | null
           content: string
           created_at?: string
+          flag_count?: number | null
           id?: string
+          is_approved?: boolean | null
+          is_flagged?: boolean | null
           mood?: string | null
           title: string
           updated_at?: string
@@ -130,7 +155,10 @@ export type Database = {
           category?: string | null
           content?: string
           created_at?: string
+          flag_count?: number | null
           id?: string
+          is_approved?: boolean | null
+          is_flagged?: boolean | null
           mood?: string | null
           title?: string
           updated_at?: string
@@ -578,6 +606,72 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          action: string
+          count: number | null
+          created_at: string | null
+          id: string
+          user_id: string
+          window_start: string | null
+        }
+        Insert: {
+          action: string
+          count?: number | null
+          created_at?: string | null
+          id?: string
+          user_id: string
+          window_start?: string | null
+        }
+        Update: {
+          action?: string
+          count?: number | null
+          created_at?: string | null
+          id?: string
+          user_id?: string
+          window_start?: string | null
+        }
+        Relationships: []
+      }
+      security_audit_log: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          new_data: Json | null
+          old_data: Json | null
+          record_id: string | null
+          table_name: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_data?: Json | null
+          old_data?: Json | null
+          record_id?: string | null
+          table_name: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_data?: Json | null
+          old_data?: Json | null
+          record_id?: string | null
+          table_name?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       session_reviews: {
         Row: {
           appointment_id: string | null
@@ -622,6 +716,13 @@ export type Database = {
             columns: ["therapist_id"]
             isOneToOne: false
             referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_reviews_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists_public"
             referencedColumns: ["id"]
           },
         ]
@@ -778,9 +879,67 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      therapists_public: {
+        Row: {
+          available: boolean | null
+          avatar_url: string | null
+          bio: string | null
+          created_at: string | null
+          experience: string | null
+          fee: string | null
+          id: string | null
+          languages: string[] | null
+          name: string | null
+          rating: number | null
+          session_types: string[] | null
+          specialties: string[] | null
+          total_reviews: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          available?: boolean | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          experience?: string | null
+          fee?: string | null
+          id?: string | null
+          languages?: string[] | null
+          name?: string | null
+          rating?: number | null
+          session_types?: string[] | null
+          specialties?: string[] | null
+          total_reviews?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          available?: boolean | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          experience?: string | null
+          fee?: string | null
+          id?: string | null
+          languages?: string[] | null
+          name?: string | null
+          rating?: number | null
+          session_types?: string[] | null
+          specialties?: string[] | null
+          total_reviews?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      get_safe_author_name: {
+        Args: {
+          _author_name: string
+          _display_name: string
+          _show_real_name: boolean
+        }
+        Returns: string
+      }
       get_therapist_by_user_id: {
         Args: { _user_id: string }
         Returns: {
