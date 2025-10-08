@@ -164,74 +164,76 @@ const Header: React.FC = () => {
           <SheetTrigger asChild>
             <Button
               variant="ghost"
-              className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+              className="mr-2 px-2 text-base hover:bg-transparent focus-visible:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:hidden min-h-[44px] min-w-[44px]"
+              aria-label="Open navigation menu"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-6 w-6" />
               <span className="sr-only">Toggle Menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="pr-0">
+          <SheetContent side="left" className="pr-0" aria-label="Mobile navigation menu">
             <MobileLink
               to="/"
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 min-h-[44px]"
               onOpenChange={() => {}}
+              aria-label="Go to home page"
             >
-              <Heart className="h-6 w-6 text-chetna-primary fill-chetna-primary" />
+              <Heart className="h-6 w-6 text-chetna-primary fill-chetna-primary" aria-hidden="true" />
               <span className="font-bold">Chetna_AI</span>
             </MobileLink>
             <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
-              <div className="flex flex-col space-y-3">
-                <MobileLink to="/ai-features" onOpenChange={() => {}}>
-                  <Brain className="h-4 w-4 inline mr-2" />
+              <nav className="flex flex-col space-y-3" aria-label="Main navigation">
+                <MobileLink to="/ai-features" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
+                  <Brain className="h-4 w-4 inline mr-2" aria-hidden="true" />
                   AI Features
                 </MobileLink>
-                <MobileLink to="/profile" onOpenChange={() => {}}>
+                <MobileLink to="/profile" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
                   Profile
                 </MobileLink>
-                <MobileLink to="/mood-tracker" onOpenChange={() => {}}>
+                <MobileLink to="/mood-tracker" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
                   Mood Tracker
                 </MobileLink>
                 {isTherapist ? (
-                  <MobileLink to="/therapist-dashboard" onOpenChange={() => {}}>
-                    <Stethoscope className="h-4 w-4 inline mr-2" />
+                  <MobileLink to="/therapist-dashboard" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
+                    <Stethoscope className="h-4 w-4 inline mr-2" aria-hidden="true" />
                     Dashboard
                   </MobileLink>
                 ) : (
-                  <MobileLink to="/appointments" onOpenChange={() => {}}>
+                  <MobileLink to="/appointments" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
                     Appointments
                   </MobileLink>
                 )}
-                <MobileLink to="/resources" onOpenChange={() => {}}>
+                <MobileLink to="/resources" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
                   Resources
                 </MobileLink>
-                <MobileLink to="/crisis-support" onOpenChange={() => {}}>
+                <MobileLink to="/crisis-support" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
                   Crisis Support
                 </MobileLink>
-                <MobileLink to="/community" onOpenChange={() => {}}>
+                <MobileLink to="/community" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
                   {t('nav.community')}
                 </MobileLink>
-                <MobileLink to="/blog" onOpenChange={() => {}}>
+                <MobileLink to="/blog" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
                   {t('nav.blog')}
                 </MobileLink>
-                <MobileLink to="/psych-tests" onOpenChange={() =>{}}>
+                <MobileLink to="/psych-tests" onOpenChange={() =>{}} className="min-h-[44px] flex items-center">
                   {t('nav.tests')}
                 </MobileLink>
-                <MobileLink to="/feedback" onOpenChange={() => {}}>
+                <MobileLink to="/feedback" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
                   {t('nav.feedback')}
                 </MobileLink>
-                <MobileLink to="/about" onOpenChange={() => {}}>
+                <MobileLink to="/about" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
                   {t('nav.about')}
                 </MobileLink>
-                <MobileLink to="/pricing" onOpenChange={() => {}}>
+                <MobileLink to="/pricing" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
                   Pricing
                 </MobileLink>
                 {isAdmin && (
-                  <MobileLink to="/admin" onOpenChange={() => {}}>
-                    <Shield className="h-4 w-4 inline mr-2" />
+                  <MobileLink to="/admin" onOpenChange={() => {}} className="min-h-[44px] flex items-center">
+                    <Shield className="h-4 w-4 inline mr-2" aria-hidden="true" />
                     Admin Dashboard
                   </MobileLink>
                 )}
-              </div>
+              </nav>
             </ScrollArea>
           </SheetContent>
         </Sheet>
@@ -244,7 +246,11 @@ const Header: React.FC = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Button 
+                    variant="ghost" 
+                    className="relative h-10 w-10 rounded-full min-h-[44px] min-w-[44px]"
+                    aria-label="Open user menu"
+                  >
                     <Avatar className="h-8 w-8">
                       <AvatarImage src="" alt={user.email || ""} />
                       <AvatarFallback>
