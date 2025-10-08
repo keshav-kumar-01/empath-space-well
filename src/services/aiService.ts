@@ -27,9 +27,30 @@ export const generateAIResponse = async (message: string): Promise<string> => {
       throw new Error('Authentication required');
     }
 
-    // Call the secure Edge Function instead of direct API call
+    // Fetch user's test results
+    const { data: testResults } = await supabase
+      .from('psychological_test_results')
+      .select('test_type, test_name, total_score, severity_level')
+      .eq('user_id', session.user.id)
+      .order('created_at', { ascending: false })
+      .limit(5);
+
+    // Get conversation history from localStorage
+    const conversationHistory = JSON.parse(
+      localStorage.getItem('chetna_conversation_context') || '[]'
+    );
+
+    // Update conversation history with current topic
+    const updatedHistory = [...conversationHistory, message].slice(-10); // Keep last 10 topics
+    localStorage.setItem('chetna_conversation_context', JSON.stringify(updatedHistory));
+
+    // Call the secure Edge Function with personalized data
     const { data, error } = await supabase.functions.invoke('ai-chat', {
-      body: { message },
+      body: { 
+        message,
+        testResults: testResults || [],
+        conversationHistory: updatedHistory
+      },
       headers: {
         Authorization: `Bearer ${session.access_token}`,
       },
