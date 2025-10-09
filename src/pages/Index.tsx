@@ -8,6 +8,7 @@ import { Mic, Send, Bot, User, Heart, Calendar, BookOpen, Users, Shield, Message
 import CustomerServiceBot from "@/components/CustomerServiceBot";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BackToTop from "@/components/BackToTop";
 import IntroSection from "@/components/IntroSection";
 import FeatureCard from "@/components/FeatureCard";
 import ReviewsSection from "@/components/ReviewsSection";
@@ -178,6 +179,7 @@ const Index = () => {
       </main>
       
       <Footer />
+      <BackToTop />
     </div>
   );
 };

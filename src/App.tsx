@@ -13,6 +13,8 @@ import BlogPost from '@/pages/BlogPost';
 import Journal from '@/pages/Journal';
 import TestResults from '@/pages/TestResults';
 import About from '@/pages/About';
+import PersonalityQuiz from '@/pages/PersonalityQuiz';
+import NotFound from '@/pages/NotFound';
 import AIFeaturesMenu from '@/components/AIFeaturesMenu';
 import MoodTracker from '@/pages/MoodTracker';
 import CrisisSupport from '@/pages/CrisisSupport';
@@ -75,6 +77,7 @@ function App() {
                   </Suspense>
                 } />
                 <Route path="/contact" element={<Feedback />} />
+                <Route path="/quiz" element={<PersonalityQuiz />} />
                 <Route path="/tests" element={
                   <Suspense fallback={<LoadingSpinner text="Loading Tests..." />}>
                     <LazyPsychTests />
@@ -117,11 +120,6 @@ function App() {
                     <LazyAdminDashboard />
                   </Suspense>
                 } />
-                <Route path="/admin" element={
-                  <Suspense fallback={<LoadingSpinner text="Loading Admin..." />}>
-                    <LazyAdminDashboard />
-                  </Suspense>
-                } />
                 <Route path="/ai-features" element={<AIFeaturesMenu />} />
                 <Route path="/appointments" element={
                   <Suspense fallback={<LoadingSpinner text="Loading Appointments..." />}>
@@ -154,6 +152,9 @@ function App() {
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/pricing" element={<Pricing />} />
+                
+                {/* 404 - Must be last */}
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </div>
           </Router>
