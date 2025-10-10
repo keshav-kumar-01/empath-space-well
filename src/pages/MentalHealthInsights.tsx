@@ -85,63 +85,75 @@ const MentalHealthInsights = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Mental Health Insights</h1>
-        <p className="text-gray-600">AI-powered analysis of your mental wellness patterns</p>
-      </div>
+    <div className="container mx-auto p-6 md:p-8 lg:p-10 space-y-10 max-w-7xl">
+      <header className="text-center mb-10 space-y-3">
+        <h1 id="insights-title" className="text-3xl md:text-4xl font-bold flex items-center justify-center gap-3">
+          <BarChart3 className="h-8 w-8 text-primary" aria-hidden="true" />
+          <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Mental Health Insights
+          </span>
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          AI-powered analysis of your mental wellness patterns and progress tracking
+        </p>
+      </header>
 
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Overall Wellness Score</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-600 mb-2">
-              {calculateOverallWellness().toFixed(0)}%
-            </div>
-            <Progress value={calculateOverallWellness()} className="h-2" />
-            <p className="text-xs text-gray-500 mt-2">Based on recent mood & activity data</p>
-          </CardContent>
-        </Card>
+      <section aria-labelledby="overview-heading">
+        <h2 id="overview-heading" className="sr-only">Wellness overview statistics</h2>
+        <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+          <Card className="hover:shadow-md transition-shadow">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base font-medium">Overall Wellness Score</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="text-4xl font-bold text-primary" aria-label={`Overall wellness score is ${calculateOverallWellness().toFixed(0)} percent`}>
+                {calculateOverallWellness().toFixed(0)}%
+              </div>
+              <Progress value={calculateOverallWellness()} className="h-3" aria-label="Wellness score progress bar" />
+              <p className="text-sm text-muted-foreground">Based on recent mood & activity data</p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Weekly Mood Average</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600 mb-2">
-              {moodData ? (moodData.reduce((sum, day) => sum + day.mood, 0) / moodData.length).toFixed(1) : '0'}/10
-            </div>
-            <div className="flex items-center text-sm text-gray-600">
-              <TrendingUp className="h-4 w-4 mr-1 text-green-500" />
-              Trending upward
-            </div>
-          </CardContent>
-        </Card>
+          <Card className="hover:shadow-md transition-shadow">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base font-medium">Weekly Mood Average</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="text-4xl font-bold text-green-600 dark:text-green-400" aria-label={`Weekly mood average is ${moodData ? (moodData.reduce((sum, day) => sum + day.mood, 0) / moodData.length).toFixed(1) : '0'} out of 10`}>
+                {moodData ? (moodData.reduce((sum, day) => sum + day.mood, 0) / moodData.length).toFixed(1) : '0'}/10
+              </div>
+              <div className="flex items-center gap-2 text-sm font-medium text-green-600 dark:text-green-400">
+                <TrendingUp className="h-5 w-5" aria-hidden="true" />
+                <span>Trending upward</span>
+              </div>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Active Insights</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-purple-600 mb-2">
-              {insights?.filter(i => !i.is_read).length || 0}
-            </div>
-            <p className="text-xs text-gray-500">New recommendations available</p>
-          </CardContent>
-        </Card>
-      </div>
+          <Card className="hover:shadow-md transition-shadow">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base font-medium">Active Insights</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="text-4xl font-bold text-purple-600 dark:text-purple-400" aria-label={`${insights?.filter(i => !i.is_read).length || 0} new recommendations available`}>
+                {insights?.filter(i => !i.is_read).length || 0}
+              </div>
+              <p className="text-sm text-muted-foreground">New recommendations available</p>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
 
-      <div className="grid lg:grid-cols-2 gap-6 mb-8">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Mood Trends (7 Days)
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+      <section aria-labelledby="trends-heading">
+        <h2 id="trends-heading" className="sr-only">Mood and test score trends</h2>
+        <div className="grid lg:grid-cols-2 gap-6 md:gap-8">
+          <Card>
+            <CardHeader className="space-y-2">
+              <CardTitle className="flex items-center gap-2 text-xl">
+                <TrendingUp className="h-5 w-5 text-primary" aria-hidden="true" />
+                Mood Trends (7 Days)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={moodData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -157,17 +169,17 @@ const MentalHealthInsights = () => {
                 <Line type="monotone" dataKey="energy" stroke="#10b981" strokeWidth={2} name="Energy" />
               </LineChart>
             </ResponsiveContainer>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5" />
-              Test Score Comparisons
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+          <Card>
+            <CardHeader className="space-y-2">
+              <CardTitle className="flex items-center gap-2 text-xl">
+                <BarChart3 className="h-5 w-5 text-primary" aria-hidden="true" />
+                Test Score Comparisons
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={testResults?.slice(0, 5)}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -177,21 +189,28 @@ const MentalHealthInsights = () => {
                 <Bar dataKey="total_score" fill="#8b5cf6" />
               </BarChart>
             </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Brain className="h-5 w-5" />
-            AI-Generated Insights
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {insights?.map((insight) => (
-              <div key={insight.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+      <section aria-labelledby="insights-heading">
+        <Card>
+          <CardHeader className="space-y-2">
+            <CardTitle className="flex items-center gap-2 text-xl" id="insights-heading">
+              <Brain className="h-5 w-5 text-primary" aria-hidden="true" />
+              AI-Generated Insights
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <ul className="space-y-5" role="list" aria-label="AI generated insights">
+              {insights?.map((insight) => (
+                <li 
+                  key={insight.id} 
+                  className="border rounded-lg p-5 hover:shadow-md transition-all focus-within:ring-2 focus-within:ring-primary"
+                  role="article"
+                  aria-label={`Insight: ${insight.title}`}
+                >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className="text-blue-600">
@@ -222,21 +241,22 @@ const MentalHealthInsights = () => {
                     </div>
                   </div>
                 )}
-              </div>
-            ))}
+                </li>
+              ))}
 
-            {(!insights || insights.length === 0) && (
-              <div className="text-center py-8">
-                <Brain className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No insights yet</h3>
-                <p className="text-gray-600">
-                  Keep using the app to generate personalized mental health insights!
-                </p>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+              {(!insights || insights.length === 0) && (
+                <div className="text-center py-12" role="status">
+                  <Brain className="h-16 w-16 text-muted-foreground mx-auto mb-4" aria-hidden="true" />
+                  <h3 className="text-xl font-semibold mb-2">No insights yet</h3>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Keep using the app to generate personalized mental health insights!
+                  </p>
+                </div>
+              )}
+            </ul>
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 };

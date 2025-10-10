@@ -402,100 +402,121 @@ const UserProfile: React.FC = () => {
   }
   
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-light via-white to-chetna-peach/20 dark:from-chetna-dark dark:to-chetna-dark/80">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-accent/10">
       <Header />
       
-      <main className="flex-grow container mx-auto px-4 py-6 space-y-6">
-        {/* Enhanced Profile Header */}
-        <Card className="bg-gradient-to-r from-white to-chetna-light/50 dark:from-card dark:to-chetna-dark/30 border-0 shadow-lg">
-          <CardContent className="p-8">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-              <div className="relative">
-                <Avatar className="w-24 h-24 text-xl border-4 border-white shadow-lg">
-                  {user.photoURL ? (
-                    <AvatarImage src={user.photoURL} alt={user.name} />
-                  ) : (
-                    <AvatarFallback className="bg-gradient-to-br from-chetna-primary to-chetna-secondary text-white">
-                      {getInitials(user.name)}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white"></div>
+      <main className="flex-grow container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 space-y-10 max-w-7xl" role="main">
+        {/* Enhanced Profile Header with better spacing */}
+        <header aria-labelledby="profile-heading">
+          <Card className="shadow-lg border-0 bg-gradient-to-r from-card to-accent/20">
+            <CardContent className="p-8 md:p-10">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-8">
+                <div className="relative">
+                  <Avatar className="w-28 h-28 text-2xl border-4 border-background shadow-xl" aria-label="Profile picture">
+                    {user.photoURL ? (
+                      <AvatarImage src={user.photoURL} alt={`${user.name}'s profile picture`} />
+                    ) : (
+                      <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground text-2xl">
+                        {getInitials(user.name)}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                  <div 
+                    className="absolute -bottom-1 -right-1 w-7 h-7 bg-green-500 rounded-full border-4 border-background"
+                    aria-label="Online status indicator"
+                    role="status"
+                  ></div>
+                </div>
+                
+                <div className="flex-grow space-y-2">
+                  <h1 id="profile-heading" className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    {user.name}
+                  </h1>
+                  <p className="text-muted-foreground text-lg">{user.email}</p>
+                  <p className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Clock className="h-4 w-4" aria-hidden="true" />
+                    <span>Member since {new Date().toLocaleDateString()}</span>
+                  </p>
+                </div>
+                
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  onClick={() => navigate("/settings")}
+                  className="gap-2 self-start md:self-center"
+                  aria-label="Go to settings page"
+                >
+                  <Settings className="h-5 w-5" aria-hidden="true" />
+                  Settings
+                </Button>
               </div>
-              
-              <div className="flex-grow">
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-secondary bg-clip-text text-transparent">
-                  {user.name}
-                </h1>
-                <p className="text-muted-foreground text-lg">{user.email}</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Member since {new Date().toLocaleDateString()}
-                </p>
-              </div>
-              
-              <Button 
-                variant="outline" 
-                size="lg" 
-                onClick={() => navigate("/settings")}
-                className="border-chetna-primary text-chetna-primary hover:bg-chetna-primary hover:text-white transition-all duration-300"
-              >
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
-              </Button>
-            </div>
             
-            {/* Enhanced Stats Cards */}
+            {/* Enhanced Stats Cards with better spacing */}
             {statsLoading ? (
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-8">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-5 mt-10">
                 {Array(5).fill(0).map((_, i) => (
-                  <Skeleton key={i} className="h-24 w-full" />
+                  <Skeleton key={i} className="h-28 w-full" />
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-8">
-                <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-                  <CardContent className="p-4 flex flex-col items-center justify-center">
-                    <MessageSquare className="h-6 w-6 text-blue-600 mb-2" />
-                    <p className="text-2xl font-bold text-blue-800">{stats?.totalPosts || 0}</p>
-                    <p className="text-xs text-blue-600">Posts</p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
-                  <CardContent className="p-4 flex flex-col items-center justify-center">
-                    <MessageSquare className="h-6 w-6 text-green-600 mb-2" />
-                    <p className="text-2xl font-bold text-green-800">{stats?.totalComments || 0}</p>
-                    <p className="text-xs text-green-600">Comments</p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-                  <CardContent className="p-4 flex flex-col items-center justify-center">
-                    <TrendingUp className="h-6 w-6 text-purple-600 mb-2" />
-                    <p className="text-2xl font-bold text-purple-800">{stats?.totalUpvotes || 0}</p>
-                    <p className="text-xs text-purple-600">Upvotes</p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
-                  <CardContent className="p-4 flex flex-col items-center justify-center">
-                    <Calendar className="h-6 w-6 text-orange-600 mb-2" />
-                    <p className="text-2xl font-bold text-orange-800">{stats?.journalStreak || 0}</p>
-                    <p className="text-xs text-orange-600">Streak</p>
-                  </CardContent>
-                </Card>
+              <section aria-labelledby="stats-heading">
+                <h2 id="stats-heading" className="sr-only">Your activity statistics</h2>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-5 mt-10">
+                  <Card className="hover:shadow-md transition-shadow bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-blue-200">
+                    <CardContent className="p-5 flex flex-col items-center justify-center space-y-2">
+                      <MessageSquare className="h-7 w-7 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                      <p className="text-3xl font-bold text-blue-800 dark:text-blue-200" aria-label={`${stats?.totalPosts || 0} posts created`}>
+                        {stats?.totalPosts || 0}
+                      </p>
+                      <p className="text-sm text-blue-600 dark:text-blue-300 font-medium">Posts</p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="hover:shadow-md transition-shadow bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-green-200">
+                    <CardContent className="p-5 flex flex-col items-center justify-center space-y-2">
+                      <MessageSquare className="h-7 w-7 text-green-600 dark:text-green-400" aria-hidden="true" />
+                      <p className="text-3xl font-bold text-green-800 dark:text-green-200" aria-label={`${stats?.totalComments || 0} comments posted`}>
+                        {stats?.totalComments || 0}
+                      </p>
+                      <p className="text-sm text-green-600 dark:text-green-300 font-medium">Comments</p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="hover:shadow-md transition-shadow bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-purple-200">
+                    <CardContent className="p-5 flex flex-col items-center justify-center space-y-2">
+                      <TrendingUp className="h-7 w-7 text-purple-600 dark:text-purple-400" aria-hidden="true" />
+                      <p className="text-3xl font-bold text-purple-800 dark:text-purple-200" aria-label={`${stats?.totalUpvotes || 0} upvotes received`}>
+                        {stats?.totalUpvotes || 0}
+                      </p>
+                      <p className="text-sm text-purple-600 dark:text-purple-300 font-medium">Upvotes</p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="hover:shadow-md transition-shadow bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950 dark:to-orange-900 border-orange-200">
+                    <CardContent className="p-5 flex flex-col items-center justify-center space-y-2">
+                      <Calendar className="h-7 w-7 text-orange-600 dark:text-orange-400" aria-hidden="true" />
+                      <p className="text-3xl font-bold text-orange-800 dark:text-orange-200" aria-label={`${stats?.journalStreak || 0} day journal streak`}>
+                        {stats?.journalStreak || 0}
+                      </p>
+                      <p className="text-sm text-orange-600 dark:text-orange-300 font-medium">Day Streak</p>
+                    </CardContent>
+                  </Card>
 
-                <Card className="bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200">
-                  <CardContent className="p-4 flex flex-col items-center justify-center">
-                    <Brain className="h-6 w-6 text-teal-600 mb-2" />
-                    <p className="text-2xl font-bold text-teal-800">{testResults?.length || 0}</p>
-                    <p className="text-xs text-teal-600">Tests</p>
-                  </CardContent>
-                </Card>
-              </div>
+                  <Card className="hover:shadow-md transition-shadow bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-950 dark:to-teal-900 border-teal-200">
+                    <CardContent className="p-5 flex flex-col items-center justify-center space-y-2">
+                      <Brain className="h-7 w-7 text-teal-600 dark:text-teal-400" aria-hidden="true" />
+                      <p className="text-3xl font-bold text-teal-800 dark:text-teal-200" aria-label={`${testResults?.length || 0} psychological tests completed`}>
+                        {testResults?.length || 0}
+                      </p>
+                      <p className="text-sm text-teal-600 dark:text-teal-300 font-medium">Tests Done</p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </section>
             )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </header>
         
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-5 max-w-3xl mx-auto bg-white dark:bg-card shadow-lg">

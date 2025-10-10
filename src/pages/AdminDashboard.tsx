@@ -306,42 +306,54 @@ const AdminDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5">
       <Helmet>
         <title>Admin Dashboard - Chetna_AI</title>
         <meta name="description" content="Admin dashboard for managing appointments and system" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Helmet>
       
       <Header />
       
-      <main className="flex-grow container mx-auto px-2 md:px-4 py-4 md:py-8 max-w-7xl">
-        <div className="text-center mb-6 md:mb-8">
-          <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-chetna-primary to-chetna-secondary bg-clip-text text-transparent mb-2 md:mb-4">
-            <Shield className="h-6 w-6 md:h-8 md:w-8 inline mr-2" />
-            Admin Dashboard
-          </h1>
-          <p className="text-sm md:text-lg text-muted-foreground">
-            Manage appointments and therapists
-          </p>
-          <div className="mt-2 text-xs md:text-sm text-muted-foreground flex items-center justify-center gap-2">
-            <span>👤 {user.email}</span>
-            <span>•</span>
-            <span>📅 {appointments.length} appointments</span>
+      <main className="flex-grow container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 max-w-7xl" role="main">
+        {/* Header Section with better spacing */}
+        <header className="mb-10 space-y-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl md:text-4xl font-bold flex items-center gap-3" id="dashboard-title">
+              <Shield className="h-8 w-8 text-primary" aria-hidden="true" />
+              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Admin Dashboard
+              </span>
+            </h1>
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={() => refetchAppointments()}
               disabled={appointmentsLoading}
-              className="ml-2 h-6 w-6 p-0"
+              aria-label="Refresh appointments data"
+              className="gap-2"
             >
-              <RefreshCw className={`h-3 w-3 ${appointmentsLoading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 ${appointmentsLoading ? 'animate-spin' : ''}`} aria-hidden="true" />
+              <span className="sr-only md:not-sr-only">Refresh</span>
             </Button>
           </div>
-        </div>
+          
+          <p className="text-lg text-muted-foreground max-w-2xl">
+            Manage appointments and therapist profiles from your admin panel
+          </p>
+          
+          <div className="flex items-center gap-4 text-sm text-muted-foreground pt-2 border-t">
+            <span className="flex items-center gap-2">
+              <User className="h-4 w-4" aria-hidden="true" />
+              <span className="font-medium">{user.email}</span>
+            </span>
+            <span aria-hidden="true">•</span>
+            <span className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" aria-hidden="true" />
+              <span>{appointments.length} total appointments</span>
+            </span>
+          </div>
+        </header>
 
         {appointmentsError && (
           <div className="mb-6 p-3 md:p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -357,73 +369,123 @@ const AdminDashboard: React.FC = () => {
           </div>
         )}
 
-        <Tabs defaultValue="appointments" className="space-y-4 md:space-y-6">
-          <TabsList className="grid w-full grid-cols-2 h-auto">
-            <TabsTrigger value="appointments" className="text-xs md:text-sm p-2 md:p-3">
-              📅 Appointments ({appointments.length})
+        <Tabs defaultValue="appointments" className="space-y-8" aria-labelledby="dashboard-title">
+          <TabsList className="grid w-full grid-cols-2 h-auto p-1" role="tablist">
+            <TabsTrigger 
+              value="appointments" 
+              className="text-sm md:text-base p-3 md:p-4"
+              role="tab"
+              aria-controls="appointments-panel"
+            >
+              <Calendar className="h-4 w-4 mr-2" aria-hidden="true" />
+              Appointments ({appointments.length})
             </TabsTrigger>
-            <TabsTrigger value="therapists" className="text-xs md:text-sm p-2 md:p-3">
-              👨‍⚕️ Therapists ({therapists.length})
+            <TabsTrigger 
+              value="therapists" 
+              className="text-sm md:text-base p-3 md:p-4"
+              role="tab"
+              aria-controls="therapists-panel"
+            >
+              <User className="h-4 w-4 mr-2" aria-hidden="true" />
+              Therapists ({therapists.length})
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="appointments" className="space-y-4 md:space-y-6">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-4 md:mb-6">
-              <Card className="p-2 md:p-4">
-                <div className="flex items-center gap-1 md:gap-2">
-                  <AlertCircle className="h-3 w-3 md:h-5 md:w-5 text-yellow-500" />
-                  <div>
-                    <p className="text-xs text-muted-foreground">Pending</p>
-                    <p className="text-lg md:text-2xl font-bold">
-                      {appointments.filter(a => a.status === 'pending').length}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-              <Card className="p-2 md:p-4">
-                <div className="flex items-center gap-1 md:gap-2">
-                  <CheckCircle className="h-3 w-3 md:h-5 md:w-5 text-green-500" />
-                  <div>
-                    <p className="text-xs text-muted-foreground">Confirmed</p>
-                    <p className="text-lg md:text-2xl font-bold">
-                      {appointments.filter(a => a.status === 'confirmed').length}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-              <Card className="p-2 md:p-4">
-                <div className="flex items-center gap-1 md:gap-2">
-                  <XCircle className="h-3 w-3 md:h-5 md:w-5 text-red-500" />
-                  <div>
-                    <p className="text-xs text-muted-foreground">Cancelled</p>
-                    <p className="text-lg md:text-2xl font-bold">
-                      {appointments.filter(a => a.status === 'cancelled').length}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-              <Card className="p-2 md:p-4">
-                <div className="flex items-center gap-1 md:gap-2">
-                  <Calendar className="h-3 w-3 md:h-5 md:w-5 text-blue-500" />
-                  <div>
-                    <p className="text-xs text-muted-foreground">Total</p>
-                    <p className="text-lg md:text-2xl font-bold">{appointments.length}</p>
-                  </div>
-                </div>
-              </Card>
-            </div>
+          <TabsContent 
+            value="appointments" 
+            className="space-y-8 focus:outline-none" 
+            id="appointments-panel"
+            role="tabpanel"
+            aria-labelledby="appointments-tab"
+          >
+            {/* Stats Cards with better spacing and accessibility */}
+            <section aria-labelledby="stats-heading">
+              <h2 id="stats-heading" className="text-xl font-semibold mb-6">Appointment Statistics</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <Card className="p-4 md:p-6 hover:shadow-md transition-shadow">
+                  <CardContent className="p-0">
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-yellow-100 dark:bg-yellow-900/20 rounded-lg">
+                        <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" aria-hidden="true" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm text-muted-foreground mb-1">Pending</p>
+                        <p className="text-2xl md:text-3xl font-bold" aria-label={`${appointments.filter(a => a.status === 'pending').length} pending appointments`}>
+                          {appointments.filter(a => a.status === 'pending').length}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="p-4 md:p-6 hover:shadow-md transition-shadow">
+                  <CardContent className="p-0">
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
+                        <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" aria-hidden="true" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm text-muted-foreground mb-1">Confirmed</p>
+                        <p className="text-2xl md:text-3xl font-bold" aria-label={`${appointments.filter(a => a.status === 'confirmed').length} confirmed appointments`}>
+                          {appointments.filter(a => a.status === 'confirmed').length}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="p-4 md:p-6 hover:shadow-md transition-shadow">
+                  <CardContent className="p-0">
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-red-100 dark:bg-red-900/20 rounded-lg">
+                        <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" aria-hidden="true" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm text-muted-foreground mb-1">Cancelled</p>
+                        <p className="text-2xl md:text-3xl font-bold" aria-label={`${appointments.filter(a => a.status === 'cancelled').length} cancelled appointments`}>
+                          {appointments.filter(a => a.status === 'cancelled').length}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="p-4 md:p-6 hover:shadow-md transition-shadow">
+                  <CardContent className="p-0">
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
+                        <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm text-muted-foreground mb-1">Total</p>
+                        <p className="text-2xl md:text-3xl font-bold" aria-label={`${appointments.length} total appointments`}>
+                          {appointments.length}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </section>
 
-            {/* Appointments List */}
-            <Card>
-              <CardHeader className="p-3 md:p-6">
-                <CardTitle className="text-lg md:text-xl">📋 All Appointments</CardTitle>
-                <CardDescription className="text-sm">
-                  Manage and track all appointments
-                  {appointmentsLoading && <span className="text-blue-600 ml-2">(🔄 Loading...)</span>}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-2 md:p-6">
+            {/* Appointments List with better spacing */}
+            <section aria-labelledby="appointments-list-heading">
+              <Card>
+                <CardHeader className="p-6 space-y-2">
+                  <CardTitle className="text-xl md:text-2xl flex items-center gap-2" id="appointments-list-heading">
+                    <Calendar className="h-5 w-5" aria-hidden="true" />
+                    All Appointments
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    Manage and track all appointment bookings
+                    {appointmentsLoading && (
+                      <span className="text-primary ml-2" role="status" aria-live="polite">
+                        (Loading...)
+                      </span>
+                    )}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-6">
                 {appointmentsLoading ? (
                   <div className="text-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-chetna-primary mx-auto mb-4"></div>
@@ -441,11 +503,13 @@ const AdminDashboard: React.FC = () => {
                     )}
                   </div>
                 ) : (
-                  <div className="space-y-3 md:space-y-4">
+                  <ul className="space-y-4" role="list" aria-label="Appointments list">
                     {appointments.map((appointment) => (
-                      <div
+                      <li
                         key={appointment.id}
-                        className="p-3 md:p-4 border rounded-lg space-y-2 md:space-y-3 hover:bg-muted/50 transition-colors"
+                        className="p-5 border rounded-lg space-y-4 hover:bg-accent/50 transition-all focus-within:ring-2 focus-within:ring-primary"
+                        role="article"
+                        aria-label={`Appointment with ${appointment.therapist_name} on ${appointment.appointment_date}`}
                       >
                         <div className="flex flex-col md:flex-row justify-between items-start gap-2 md:gap-4">
                           <div className="flex-1 w-full">
@@ -539,12 +603,13 @@ const AdminDashboard: React.FC = () => {
                             </div>
                           </div>
                         )}
-                      </div>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 )}
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </section>
           </TabsContent>
 
           <TabsContent value="therapists" className="space-y-4 md:space-y-6">
