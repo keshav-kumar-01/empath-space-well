@@ -105,17 +105,147 @@ const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center gap-6">
+        {/* Mobile Hamburger - Left Side */}
+        <div className="flex items-center lg:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="min-h-[44px] min-w-[44px]"
+                aria-label="Open navigation menu"
+              >
+                <Menu className="h-6 w-6" aria-hidden="true" />
+                <span className="sr-only">Toggle Menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[300px] sm:w-[400px]" aria-label="Mobile navigation menu">
+              <div className="flex items-center gap-2 mb-6">
+                <Heart className="h-6 w-6 text-[#8B5CF6] fill-[#8B5CF6]" aria-hidden="true" />
+                <span className="font-bold text-lg bg-gradient-to-r from-[#8B5CF6] to-[#3B82F6] bg-clip-text text-transparent">Chetna_AI</span>
+              </div>
+              
+              <ScrollArea className="h-[calc(100vh-8rem)] pb-10">
+                <nav className="flex flex-col space-y-1" aria-label="Main navigation">
+                  {/* Features Section */}
+                  <Collapsible className="space-y-1">
+                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent transition-colors">
+                      <span className="flex items-center gap-2">
+                        <Sparkles className="h-4 w-4" aria-hidden="true" />
+                        Features
+                      </span>
+                      <ChevronDown className="h-4 w-4 transition-transform" aria-hidden="true" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="pl-6 space-y-1">
+                      <MobileLink to="/ai-features" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
+                        <Brain className="h-4 w-4" aria-hidden="true" />
+                        AI Features
+                      </MobileLink>
+                      <MobileLink to="/mood-tracker" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
+                        <Heart className="h-4 w-4" aria-hidden="true" />
+                        Mood Tracker
+                      </MobileLink>
+                      <MobileLink to="/journal" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
+                        <BookOpen className="h-4 w-4" aria-hidden="true" />
+                        Journal
+                      </MobileLink>
+                      <MobileLink to="/psych-tests" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
+                        <TestTube className="h-4 w-4" aria-hidden="true" />
+                        Psychological Tests
+                      </MobileLink>
+                    </CollapsibleContent>
+                  </Collapsible>
+
+                  {/* Resources Section */}
+                  <Collapsible className="space-y-1">
+                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent transition-colors">
+                      <span className="flex items-center gap-2">
+                        <BookMarked className="h-4 w-4" aria-hidden="true" />
+                        Resources
+                      </span>
+                      <ChevronDown className="h-4 w-4 transition-transform" aria-hidden="true" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="pl-6 space-y-1">
+                      <MobileLink to="/resources" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
+                        <BookMarked className="h-4 w-4" aria-hidden="true" />
+                        Resource Library
+                      </MobileLink>
+                      <MobileLink to="/blog" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
+                        <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                        Blog
+                      </MobileLink>
+                      <MobileLink to="/crisis-support" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
+                        <LifeBuoy className="h-4 w-4" aria-hidden="true" />
+                        Crisis Support
+                      </MobileLink>
+                      <MobileLink to="/about" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
+                        <Users className="h-4 w-4" aria-hidden="true" />
+                        About Us
+                      </MobileLink>
+                    </CollapsibleContent>
+                  </Collapsible>
+
+                  {/* Main Links */}
+                  <MobileLink to="/community" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent">
+                    <Users className="h-4 w-4" aria-hidden="true" />
+                    {t('nav.community')}
+                  </MobileLink>
+
+                  {user && (
+                    <>
+                      {isTherapist ? (
+                        <MobileLink to="/therapist-dashboard" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent">
+                          <Stethoscope className="h-4 w-4" aria-hidden="true" />
+                          Dashboard
+                        </MobileLink>
+                      ) : (
+                        <MobileLink to="/appointments" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent">
+                          <Calendar className="h-4 w-4" aria-hidden="true" />
+                          Appointments
+                        </MobileLink>
+                      )}
+                      <MobileLink to="/profile" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent">
+                        <User className="h-4 w-4" aria-hidden="true" />
+                        Profile
+                      </MobileLink>
+                    </>
+                  )}
+
+                  <MobileLink to="/pricing" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent">
+                    <DollarSign className="h-4 w-4" aria-hidden="true" />
+                    Pricing
+                  </MobileLink>
+
+                  <MobileLink to="/feedback" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent">
+                    <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                    {t('nav.feedback')}
+                  </MobileLink>
+
+                  {isAdmin && (
+                    <MobileLink to="/admin" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent text-amber-600">
+                      <Shield className="h-4 w-4" aria-hidden="true" />
+                      Admin Dashboard
+                    </MobileLink>
+                  )}
+                </nav>
+              </ScrollArea>
+            </SheetContent>
+          </Sheet>
+        </div>
+
+        {/* Logo - Center */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 lg:relative lg:left-auto lg:transform-none">
           <Link to="/" className="flex items-center gap-2 min-h-[44px]" aria-label="Chetna AI Home">
-            <Heart className="h-7 w-7 text-primary fill-primary" aria-hidden="true" />
-            <span className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <Heart className="h-7 w-7 text-[#8B5CF6] fill-[#8B5CF6]" aria-hidden="true" />
+            <span className="font-bold text-lg bg-gradient-to-r from-[#8B5CF6] to-[#3B82F6] bg-clip-text text-transparent">
               Chetna_AI
             </span>
           </Link>
+        </div>
 
-          {/* Desktop Navigation with organized dropdowns */}
-          <NavigationMenu className="hidden lg:flex">
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center gap-6">
+          <NavigationMenu>
             <NavigationMenuList>
               {/* Features Dropdown */}
               <NavigationMenuItem>
@@ -233,131 +363,8 @@ const Header: React.FC = () => {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-        {/* Mobile Menu */}
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden min-h-[44px] min-w-[44px]"
-              aria-label="Open navigation menu"
-            >
-              <Menu className="h-6 w-6" aria-hidden="true" />
-              <span className="sr-only">Toggle Menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-[300px] sm:w-[400px]" aria-label="Mobile navigation menu">
-            <div className="flex items-center gap-2 mb-6">
-              <Heart className="h-6 w-6 text-primary fill-primary" aria-hidden="true" />
-              <span className="font-bold text-lg">Chetna_AI</span>
-            </div>
-            
-            <ScrollArea className="h-[calc(100vh-8rem)] pb-10">
-              <nav className="flex flex-col space-y-1" aria-label="Main navigation">
-                {/* Features Section */}
-                <Collapsible className="space-y-1">
-                  <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent transition-colors">
-                    <span className="flex items-center gap-2">
-                      <Sparkles className="h-4 w-4" aria-hidden="true" />
-                      Features
-                    </span>
-                    <ChevronDown className="h-4 w-4 transition-transform" aria-hidden="true" />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="pl-6 space-y-1">
-                    <MobileLink to="/ai-features" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
-                      <Brain className="h-4 w-4" aria-hidden="true" />
-                      AI Features
-                    </MobileLink>
-                    <MobileLink to="/mood-tracker" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
-                      <Heart className="h-4 w-4" aria-hidden="true" />
-                      Mood Tracker
-                    </MobileLink>
-                    <MobileLink to="/journal" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
-                      <BookOpen className="h-4 w-4" aria-hidden="true" />
-                      Journal
-                    </MobileLink>
-                    <MobileLink to="/psych-tests" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
-                      <TestTube className="h-4 w-4" aria-hidden="true" />
-                      Psychological Tests
-                    </MobileLink>
-                  </CollapsibleContent>
-                </Collapsible>
 
-                {/* Resources Section */}
-                <Collapsible className="space-y-1">
-                  <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent transition-colors">
-                    <span className="flex items-center gap-2">
-                      <BookMarked className="h-4 w-4" aria-hidden="true" />
-                      Resources
-                    </span>
-                    <ChevronDown className="h-4 w-4 transition-transform" aria-hidden="true" />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="pl-6 space-y-1">
-                    <MobileLink to="/resources" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
-                      <BookMarked className="h-4 w-4" aria-hidden="true" />
-                      Resource Library
-                    </MobileLink>
-                    <MobileLink to="/blog" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
-                      <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                      Blog
-                    </MobileLink>
-                    <MobileLink to="/crisis-support" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
-                      <LifeBuoy className="h-4 w-4" aria-hidden="true" />
-                      Crisis Support
-                    </MobileLink>
-                    <MobileLink to="/about" onOpenChange={() => {}} className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent">
-                      <Users className="h-4 w-4" aria-hidden="true" />
-                      About Us
-                    </MobileLink>
-                  </CollapsibleContent>
-                </Collapsible>
 
-                {/* Main Links */}
-                <MobileLink to="/community" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent">
-                  <Users className="h-4 w-4" aria-hidden="true" />
-                  {t('nav.community')}
-                </MobileLink>
-
-                {user && (
-                  <>
-                    {isTherapist ? (
-                      <MobileLink to="/therapist-dashboard" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent">
-                        <Stethoscope className="h-4 w-4" aria-hidden="true" />
-                        Dashboard
-                      </MobileLink>
-                    ) : (
-                      <MobileLink to="/appointments" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent">
-                        <Calendar className="h-4 w-4" aria-hidden="true" />
-                        Appointments
-                      </MobileLink>
-                    )}
-                    <MobileLink to="/profile" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent">
-                      <User className="h-4 w-4" aria-hidden="true" />
-                      Profile
-                    </MobileLink>
-                  </>
-                )}
-
-                <MobileLink to="/pricing" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent">
-                  <DollarSign className="h-4 w-4" aria-hidden="true" />
-                  Pricing
-                </MobileLink>
-
-                <MobileLink to="/feedback" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent">
-                  <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                  {t('nav.feedback')}
-                </MobileLink>
-
-                {isAdmin && (
-                  <MobileLink to="/admin" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent text-amber-600">
-                    <Shield className="h-4 w-4" aria-hidden="true" />
-                    Admin Dashboard
-                  </MobileLink>
-                )}
-              </nav>
-            </ScrollArea>
-          </SheetContent>
-        </Sheet>
         {/* Right Side Actions */}
         <div className="flex items-center gap-3">
           <div className="hidden sm:block">
