@@ -40,32 +40,24 @@ export const TherapistAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!session?.user) return false;
 
     try {
-      console.log('Checking therapist status for user:', session.user.email);
-      
       const { data, error } = await supabase.rpc('get_therapist_by_user_id', {
         _user_id: session.user.id
       });
 
-      console.log('Therapist RPC result:', { data, error });
-
       if (error) {
-        console.error('Error checking therapist status:', error);
         return false;
       }
 
       if (data && data.length > 0) {
         const therapistData = data[0];
-        console.log('Found therapist data:', therapistData);
         setTherapist(therapistData);
         setIsTherapist(true);
         return true;
       }
 
-      console.log('No therapist data found');
       setIsTherapist(false);
       return false;
     } catch (error) {
-      console.error('Unexpected error checking therapist status:', error);
       return false;
     }
   };
@@ -89,7 +81,6 @@ export const TherapistAuthProvider: React.FC<{ children: React.ReactNode }> = ({
         description: "Your therapist profile has been updated successfully.",
       });
     } catch (error) {
-      console.error('Error updating therapist profile:', error);
       toast({
         title: "Update failed",
         description: "Failed to update your profile. Please try again.",
@@ -103,7 +94,6 @@ export const TherapistAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
-        console.log('Therapist auth state changed:', event, currentSession);
         setSession(currentSession);
         
         if (currentSession?.user) {
@@ -112,7 +102,7 @@ export const TherapistAuthProvider: React.FC<{ children: React.ReactNode }> = ({
             try {
               await checkTherapistStatus();
             } catch (error) {
-              console.error('Error checking therapist status:', error);
+              // Silent error handling
             }
           }, 0);
         } else {
@@ -126,7 +116,6 @@ export const TherapistAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     // Check for existing session
     supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
-      console.log('Initial therapist session check:', currentSession);
       setSession(currentSession);
       
       if (currentSession?.user) {

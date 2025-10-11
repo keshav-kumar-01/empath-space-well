@@ -34,7 +34,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
-        console.log('Auth state changed:', event, currentSession);
         setSession(currentSession);
         
         if (currentSession?.user) {
@@ -56,7 +55,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-      console.log('Initial session check:', currentSession);
       setSession(currentSession);
       
       if (currentSession?.user) {
@@ -79,29 +77,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     try {
-      console.log('Logging in with email:', email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        console.error('Login error:', error);
         return { error };
       }
 
-      console.log('Login successful:', data);
       return { error: null };
     } catch (error) {
-      console.error('Unexpected login error:', error);
       return { error };
     }
   };
 
   const signup = async (email: string, password: string, userData: {name: string}) => {
     try {
-      console.log('Signing up with email:', email);
-      
       // Get the current origin for redirect
       const redirectUrl = `${window.location.origin}/`;
       
@@ -117,11 +109,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) {
-        console.error('Signup error:', error);
         return { error };
       }
-
-      console.log('Signup successful:', data);
       
       // Show success message
       if (data.user && !data.session) {
@@ -133,22 +122,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       return { error: null };
     } catch (error) {
-      console.error('Unexpected signup error:', error);
       return { error };
     }
   };
 
   const logout = async () => {
-    console.log('Logging out');
     await supabase.auth.signOut();
     setUser(null);
     setSession(null);
   };
 
-  const loginWithGoogle = async () => {
-    try {
-      console.log('Initiating Google login');
-      const { error } = await supabase.auth.signInWithOAuth({
+    const loginWithGoogle = async () => {
+      try {
+        const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: window.location.origin,
@@ -156,7 +142,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) {
-        console.error('Google login error:', error);
         toast({
           title: "Google login failed",
           description: error.message,
@@ -164,13 +149,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
       }
     } catch (error) {
-      console.error('Unexpected Google login error:', error);
+      // Silent error handling
     }
   };
 
   const updateProfile = async (userData: {name?: string; photoURL?: string}) => {
     try {
-      console.log('Updating profile:', userData);
       const { error } = await supabase.auth.updateUser({
         data: {
           name: userData.name,
@@ -179,7 +163,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) {
-        console.error('Profile update error:', error);
         throw error;
       }
 
@@ -191,10 +174,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           photoURL: userData.photoURL || user.photoURL,
         });
       }
-
-      console.log('Profile updated successfully');
     } catch (error) {
-      console.error('Unexpected profile update error:', error);
       throw error;
     }
   };

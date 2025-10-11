@@ -12,25 +12,10 @@ const SecurityMonitor: React.FC = () => {
       if (!user) return;
 
       try {
-        // Log security-relevant events
-        console.log('Security Monitor: User session active', {
-          userId: user.id,
-          email: user.email,
-          timestamp: new Date().toISOString(),
-        });
-
-        // You could extend this to log to a security_events table
-        // const { error } = await supabase
-        //   .from('security_events')
-        //   .insert({
-        //     user_id: user.id,
-        //     event_type: 'session_active',
-        //     metadata: { user_agent: navigator.userAgent },
-        //     timestamp: new Date().toISOString(),
-        //   });
-
+        // Security monitoring active - logs removed for security
+        // You could extend this to log to a security_events table if needed
       } catch (error) {
-        console.error('Security monitoring error:', error);
+        // Silent error handling for security monitor
       }
     };
 
