@@ -104,7 +104,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container relative flex h-16 items-center">
+      <div className="container flex h-16 items-center">
         {/* Mobile Hamburger - Left Side */}
         <div className="flex items-center lg:hidden">
           <Sheet>
@@ -234,10 +234,10 @@ const Header: React.FC = () => {
         </div>
 
         {/* Logo - Center on mobile, Left on desktop */}
-        <div className="absolute left-1/2 -translate-x-1/2 transform lg:relative lg:left-auto lg:translate-x-0 lg:transform-none lg:flex-initial lg:justify-start">
+        <div className="flex-1 flex justify-center lg:flex-initial lg:justify-start">
           <Link to="/" className="flex items-center gap-2 min-h-[44px]" aria-label="Chetna AI Home">
-            <Heart className="h-7 w-7 text-[hsl(var(--primary))] fill-[hsl(var(--primary))]" aria-hidden="true" />
-            <span className="font-bold text-xl bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(var(--primary))] to-[hsl(var(--background))] bg-clip-text text-transparent">
+            <Heart className="h-7 w-7 text-primary fill-primary" aria-hidden="true" />
+            <span className="font-bold text-xl bg-gradient-to-r from-primary via-primary to-chart-1 bg-clip-text text-transparent">
               Chetna_AI
             </span>
           </Link>
