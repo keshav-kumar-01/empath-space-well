@@ -104,7 +104,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-16 items-center">
         {/* Mobile Hamburger - Left Side */}
         <div className="flex items-center lg:hidden">
           <Sheet>
@@ -121,8 +121,8 @@ const Header: React.FC = () => {
             </SheetTrigger>
             <SheetContent side="left" className="w-[300px] sm:w-[400px]" aria-label="Mobile navigation menu">
               <div className="flex items-center gap-2 mb-6">
-                <Heart className="h-6 w-6 text-[#8B5CF6] fill-[#8B5CF6]" aria-hidden="true" />
-                <span className="font-bold text-lg bg-gradient-to-r from-[#8B5CF6] to-[#3B82F6] bg-clip-text text-transparent">Chetna_AI</span>
+                <Heart className="h-6 w-6 text-primary fill-primary" aria-hidden="true" />
+                <span className="font-bold text-lg bg-gradient-to-r from-primary via-primary to-chart-1 bg-clip-text text-transparent">Chetna_AI</span>
               </div>
               
               <ScrollArea className="h-[calc(100vh-8rem)] pb-10">
@@ -233,18 +233,18 @@ const Header: React.FC = () => {
           </Sheet>
         </div>
 
-        {/* Logo - Center */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 lg:relative lg:left-auto lg:transform-none">
+        {/* Logo - Center on mobile, Left on desktop */}
+        <div className="flex-1 flex justify-center lg:flex-initial lg:justify-start">
           <Link to="/" className="flex items-center gap-2 min-h-[44px]" aria-label="Chetna AI Home">
-            <Heart className="h-7 w-7 text-[#8B5CF6] fill-[#8B5CF6]" aria-hidden="true" />
-            <span className="font-bold text-lg bg-gradient-to-r from-[#8B5CF6] to-[#3B82F6] bg-clip-text text-transparent">
+            <Heart className="h-7 w-7 text-primary fill-primary" aria-hidden="true" />
+            <span className="font-bold text-xl bg-gradient-to-r from-primary via-primary to-chart-1 bg-clip-text text-transparent">
               Chetna_AI
             </span>
           </Link>
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-6">
+        <div className="hidden lg:flex items-center gap-6 flex-1">
           <NavigationMenu>
             <NavigationMenuList>
               {/* Features Dropdown */}
@@ -366,7 +366,7 @@ const Header: React.FC = () => {
 
 
         {/* Right Side Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 lg:flex-initial">
           <div className="hidden sm:block">
             <LanguageSelector />
           </div>
