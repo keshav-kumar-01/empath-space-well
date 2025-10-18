@@ -70,7 +70,6 @@ const AdminDashboard: React.FC = () => {
       try {
         const { isAdmin: adminStatus } = await checkIsAdmin(user.id, user.email);
         setIsAdmin(adminStatus);
-        console.log('Admin status:', adminStatus, 'for user:', user.email);
       } catch (error) {
         console.error('Error checking admin status:', error);
         setIsAdmin(false);
@@ -86,8 +85,6 @@ const AdminDashboard: React.FC = () => {
   const { data: appointments = [], isLoading: appointmentsLoading, error: appointmentsError, refetch: refetchAppointments } = useQuery({
     queryKey: ['admin-appointments'],
     queryFn: async () => {
-      console.log('🔍 Fetching appointments for admin dashboard...');
-      
       if (!user?.id) {
         throw new Error('User not authenticated');
       }
@@ -95,11 +92,8 @@ const AdminDashboard: React.FC = () => {
       // Verify admin status first
       const { isAdmin: userIsAdmin } = await checkIsAdmin(user.id, user.email);
       if (!userIsAdmin) {
-        console.log('❌ User is not admin, cannot fetch appointments');
         return [];
       }
-
-      console.log('✅ User confirmed as admin, fetching appointments...');
 
       try {
         // Fetch appointments
@@ -134,7 +128,6 @@ const AdminDashboard: React.FC = () => {
           therapist_name: therapistMap.get(appointment.therapist_id)?.name || 'Unknown Therapist'
         }));
 
-        console.log('✅ Appointments fetched successfully:', enrichedAppointments.length);
         return enrichedAppointments;
       } catch (error) {
         console.error('❌ Error in appointments fetch:', error);
@@ -151,7 +144,6 @@ const AdminDashboard: React.FC = () => {
   const { data: therapists = [], isLoading: therapistsLoading } = useQuery({
     queryKey: ['admin-therapists'],
     queryFn: async () => {
-      console.log('🔍 Fetching therapists for admin...');
       const { data, error } = await supabase
         .from('therapists')
         .select('*')
@@ -162,7 +154,6 @@ const AdminDashboard: React.FC = () => {
         throw error;
       }
       
-      console.log('✅ Therapists fetched:', data?.length || 0);
       return data || [];
     },
     enabled: isAdmin && !isCheckingAdmin
@@ -175,9 +166,7 @@ const AdminDashboard: React.FC = () => {
       newStatus: string; 
       notes?: string; 
     }) => {
-      console.log('🔄 Updating appointment status:', { appointmentId, newStatus, notes });
-      
-      const updateData: any = { 
+      const updateData: any = {
         status: newStatus,
         updated_at: new Date().toISOString()
       };
@@ -203,11 +192,10 @@ const AdminDashboard: React.FC = () => {
         .single();
       
       if (error) {
-        console.error('❌ Update error:', error);
+        console.error('Update error:', error);
         throw error;
       }
       
-      console.log('✅ Appointment updated:', data);
       return data;
     },
     onSuccess: (data) => {
@@ -220,7 +208,7 @@ const AdminDashboard: React.FC = () => {
       setStatusNotes('');
     },
     onError: (error: any) => {
-      console.error('❌ Mutation error:', error);
+      console.error('Mutation error:', error);
       toast({
         title: "❌ Update Failed",
         description: error.message || 'Failed to update appointment',

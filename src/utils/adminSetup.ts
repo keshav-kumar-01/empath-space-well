@@ -3,8 +3,6 @@ import { supabase } from '@/integrations/supabase/client';
 
 export const addUserAsAdmin = async (userId: string) => {
   try {
-    console.log('Adding user as admin:', userId);
-    
     // First check if current user is admin
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
@@ -33,8 +31,7 @@ export const addUserAsAdmin = async (userId: string) => {
       return { error: 'Failed to add admin role' };
     }
 
-    console.log('User successfully added as admin');
-    return { 
+    return {
       data: { message: 'User successfully added as admin' }, 
       error: null 
     };
@@ -47,10 +44,7 @@ export const addUserAsAdmin = async (userId: string) => {
 // Helper function to check if current user is admin
 export const checkIsAdmin = async (userId?: string, userEmail?: string) => {
   try {
-    console.log('Checking admin status for:', { userId, userEmail });
-    
     if (!userId) {
-      console.log('No user ID provided, returning false');
       return { isAdmin: false, error: null };
     }
 
@@ -68,7 +62,6 @@ export const checkIsAdmin = async (userId?: string, userEmail?: string) => {
     }
 
     const isAdmin = !!data;
-    console.log('User is admin:', isAdmin);
     
     return { isAdmin, error: null };
   } catch (error) {
@@ -80,7 +73,6 @@ export const checkIsAdmin = async (userId?: string, userEmail?: string) => {
 // Helper function to get user role
 export const getUserRole = async (userId: string) => {
   try {
-    console.log('Getting user role for:', userId);
     const { data, error } = await supabase
       .from('user_roles')
       .select('role')
@@ -94,7 +86,6 @@ export const getUserRole = async (userId: string) => {
       return { role: 'user', error };
     }
 
-    console.log('User role result:', data);
     return { role: data?.role || 'user', error: null };
   } catch (error) {
     console.error('Error in getUserRole:', error);

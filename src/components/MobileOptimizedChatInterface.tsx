@@ -71,7 +71,6 @@ const MobileOptimizedChatInterface: React.FC = () => {
       }
       
       autoClearTimerRef.current = setInterval(() => {
-        console.log('Auto-clearing chat after 20 minutes');
         clearChat();
         toast({
           title: "🔄 " + t('chat.cleared'),
@@ -162,7 +161,6 @@ const MobileOptimizedChatInterface: React.FC = () => {
 
   const saveMessageToDatabase = async (text: string, isUser: boolean) => {
     if (!user || !user.id) {
-      console.log("No user logged in, skipping database save");
       return;
     }
     

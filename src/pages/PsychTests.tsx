@@ -112,9 +112,7 @@ const testCategories = [
   }
 ];
 
-const PsychTests = () => {
-  console.log('PsychTests page rendered');
-
+const PsychTests: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-light via-white to-chetna-secondary/10">
       <Header />
@@ -173,7 +171,6 @@ const PsychTests = () => {
                                 <Button 
                                   size="sm" 
                                   className="bg-chetna-primary hover:bg-chetna-primary/90 text-white"
-                                  onClick={() => console.log('Navigating to test:', test.id)}
                                 >
                                   Take Test
                                 </Button>

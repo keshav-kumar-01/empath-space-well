@@ -3,7 +3,6 @@ import { supabase } from '@/integrations/supabase/client';
 
 // Legacy function for backward compatibility
 export const initModel = async (): Promise<void> => {
-  console.log('AI model initialization (using Edge Function)');
   return Promise.resolve();
 };
 
@@ -18,8 +17,6 @@ export const getAIResponse = async (
 
 export const generateAIResponse = async (message: string): Promise<string> => {
   try {
-    console.log('Sending message to AI service:', message);
-    
     // Get the current session to include auth token
     const { data: { session } } = await supabase.auth.getSession();
     
@@ -65,7 +62,6 @@ export const generateAIResponse = async (message: string): Promise<string> => {
       throw new Error('Invalid response from AI service');
     }
 
-    console.log('AI response received:', data.response);
     return data.response;
 
   } catch (error) {

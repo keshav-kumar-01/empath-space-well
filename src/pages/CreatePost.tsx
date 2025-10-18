@@ -113,16 +113,6 @@ const CreatePost: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Debug information
-      console.log("User ID being used:", user.id);
-      console.log("Form values:", values);
-      console.log("Creating post with values:", { 
-        ...values, 
-        mood, 
-        user_id: user.id 
-      });
-      console.log("Mood value:", mood); // Extra debug for mood value
-      
       // Additional validation
       if (!user.id) {
         throw new Error("User authentication issue. Please log out and log back in.");
@@ -141,8 +131,6 @@ const CreatePost: React.FC = () => {
         mood: mood, // This should now match the column in the database
       };
       
-      console.log("Final post data being inserted:", postData);
-      
       // Make sure to use proper error handling with Supabase
       const { data, error: supabaseError } = await supabase
         .from("community_posts")
@@ -157,8 +145,6 @@ const CreatePost: React.FC = () => {
       if (!data || data.length === 0) {
         throw new Error("No data returned from insert operation");
       }
-      
-      console.log("Post created successfully:", data);
       
       toast({
         title: "Post created",

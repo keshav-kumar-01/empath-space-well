@@ -40,7 +40,6 @@ const Journal: React.FC = () => {
     
     const fetchEntries = async () => {
       try {
-        console.log("Fetching journal entries for user:", user.id);
         const { data, error } = await supabase
           .from("journal_entries")
           .select("*")
@@ -96,7 +95,6 @@ const Journal: React.FC = () => {
     }
 
     try {
-      console.log("Saving journal entry for user:", user.id);
       if (isEditing) {
         const { error } = await supabase
           .from("journal_entries")
@@ -177,7 +175,6 @@ const Journal: React.FC = () => {
     if (!user) return;
     
     try {
-      console.log("Deleting journal entry for user:", user.id);
       const { error } = await supabase
         .from("journal_entries")
         .delete()

@@ -216,12 +216,10 @@ const ChatInterface: React.FC = () => {
 
   const saveMessageToDatabase = async (text: string, isUser: boolean) => {
     if (!user || !user.id) {
-      console.log("No user logged in, skipping database save");
       return;
     }
     
     try {
-      console.log("Saving message to database for user:", user.id);
       const { error } = await supabase
         .from('conversations')
         .insert([

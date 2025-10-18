@@ -28,7 +28,6 @@ const GroupTherapy = () => {
   const { data: rooms, isLoading, error } = useQuery({
     queryKey: ['group-therapy-rooms'],
     queryFn: async () => {
-      console.log('Fetching group therapy rooms...');
       const { data, error } = await supabase
         .from('group_therapy_rooms')
         .select('*')
@@ -39,7 +38,6 @@ const GroupTherapy = () => {
         console.error('Error fetching rooms:', error);
         throw error;
       }
-      console.log('Fetched rooms:', data);
       return data;
     },
   });
@@ -49,7 +47,6 @@ const GroupTherapy = () => {
     queryFn: async () => {
       if (!currentUser?.id) return [];
       
-      console.log('Fetching user participations for user:', currentUser.id);
       const { data, error } = await supabase
         .from('group_therapy_participants')
         .select('*')
@@ -60,7 +57,6 @@ const GroupTherapy = () => {
         console.error('Error fetching participations:', error);
         return [];
       }
-      console.log('User participations:', data);
       return data;
     },
     enabled: !!currentUser?.id,
@@ -69,7 +65,6 @@ const GroupTherapy = () => {
   const { data: allParticipants } = useQuery({
     queryKey: ['all-participants'],
     queryFn: async () => {
-      console.log('Fetching all participants...');
       const { data, error } = await supabase
         .from('group_therapy_participants')
         .select('*')
@@ -79,7 +74,6 @@ const GroupTherapy = () => {
         console.error('Error fetching all participants:', error);
         return [];
       }
-      console.log('All participants:', data);
       return data;
     },
   });
@@ -89,8 +83,6 @@ const GroupTherapy = () => {
       if (!currentUser?.id) {
         throw new Error('Please log in to join a therapy room');
       }
-
-      console.log('Joining room:', roomId, 'for user:', currentUser.id);
       
       const room = rooms?.find(r => r.id === roomId);
       if (!room) {
@@ -117,7 +109,6 @@ const GroupTherapy = () => {
         throw error;
       }
 
-      console.log('Successfully joined room:', data);
       return data;
     },
     onSuccess: (data) => {
@@ -138,8 +129,6 @@ const GroupTherapy = () => {
         throw new Error('User not authenticated');
       }
 
-      console.log('Leaving room:', roomId, 'for user:', currentUser.id);
-
       const { error } = await supabase
         .from('group_therapy_participants')
         .update({ is_active: false })
@@ -150,8 +139,6 @@ const GroupTherapy = () => {
         console.error('Error leaving room:', error);
         throw error;
       }
-
-      console.log('Successfully left room');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['group-therapy-rooms'] });

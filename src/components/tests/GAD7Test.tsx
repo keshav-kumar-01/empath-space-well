@@ -93,8 +93,6 @@ const GAD7Test = () => {
     const totalScore = calculateScore();
     const severityLevel = getSeverityLevel(totalScore);
 
-    console.log('Submitting GAD-7 test:', { totalScore, severityLevel, responses });
-
     try {
       const { data, error } = await supabase
         .from('psychological_test_results')
@@ -113,8 +111,6 @@ const GAD7Test = () => {
         console.error('Supabase error:', error);
         throw error;
       }
-
-      console.log('Test results saved:', data);
 
       toast({
         title: "Test Completed",

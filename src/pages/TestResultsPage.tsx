@@ -19,9 +19,6 @@ const TestResultsPage = () => {
 
   const currentResult = location.state;
 
-  console.log('TestResults page - location.state:', location.state);
-  console.log('User:', user?.id);
-
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -45,7 +42,6 @@ const TestResultsPage = () => {
         throw error;
       }
 
-      console.log('Fetched test results:', data);
       setAllResults(data || []);
     } catch (error) {
       console.error('Error:', error);
