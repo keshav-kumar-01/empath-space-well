@@ -71,7 +71,6 @@ const AdminDashboard: React.FC = () => {
         const { isAdmin: adminStatus } = await checkIsAdmin(user.id, user.email);
         setIsAdmin(adminStatus);
       } catch (error) {
-        console.error('Error checking admin status:', error);
         setIsAdmin(false);
       } finally {
         setIsCheckingAdmin(false);
@@ -103,7 +102,6 @@ const AdminDashboard: React.FC = () => {
           .order('created_at', { ascending: false });
         
         if (appointmentsError) {
-          console.error('❌ Appointments fetch error:', appointmentsError);
           throw new Error(`Failed to fetch appointments: ${appointmentsError.message}`);
         }
 
@@ -113,7 +111,7 @@ const AdminDashboard: React.FC = () => {
           .select('id, name');
         
         if (therapistsError) {
-          console.error('⚠️ Therapists fetch error (continuing without names):', therapistsError);
+          // Continue without therapist names if fetch fails
         }
 
         // Create a therapist lookup map
@@ -130,7 +128,6 @@ const AdminDashboard: React.FC = () => {
 
         return enrichedAppointments;
       } catch (error) {
-        console.error('❌ Error in appointments fetch:', error);
         throw error;
       }
     },
@@ -150,7 +147,6 @@ const AdminDashboard: React.FC = () => {
         .order('created_at', { ascending: false });
       
       if (error) {
-        console.error('❌ Therapist fetch error:', error);
         throw error;
       }
       
@@ -192,7 +188,6 @@ const AdminDashboard: React.FC = () => {
         .single();
       
       if (error) {
-        console.error('Update error:', error);
         throw error;
       }
       
@@ -208,7 +203,6 @@ const AdminDashboard: React.FC = () => {
       setStatusNotes('');
     },
     onError: (error: any) => {
-      console.error('Mutation error:', error);
       toast({
         title: "❌ Update Failed",
         description: error.message || 'Failed to update appointment',

@@ -28,22 +28,22 @@ const Navigation: React.FC = () => {
           const isActive = location.pathname === item.path;
           
           return (
-            <Link 
-              key={item.path} 
-              to={item.path} 
-              className="flex-1 max-w-[16.66%]"
-              aria-label={`Navigate to ${item.label}`}
-              aria-current={isActive ? 'page' : undefined}
+            <Button
+              key={item.path}
+              asChild
+              variant="ghost"
+              size="sm"
+              className={`flex-1 max-w-[16.66%] flex flex-col items-center justify-center gap-0.5 h-14 py-1 px-1 min-w-0 min-h-[56px] rounded-lg transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+                isActive 
+                  ? 'text-chetna-primary bg-chetna-primary/10 border-t-2 border-chetna-primary shadow-sm scale-105' 
+                  : 'text-slate-600 hover:text-chetna-primary dark:text-slate-400 dark:hover:text-chetna-primary hover:bg-chetna-primary/5 hover:scale-102'
+              }`}
             >
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`flex flex-col items-center justify-center gap-0.5 h-14 w-full py-1 px-1 min-w-0 min-h-[56px] rounded-lg transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
-                  isActive 
-                    ? 'text-chetna-primary bg-chetna-primary/10 border-t-2 border-chetna-primary shadow-sm scale-105' 
-                    : 'text-slate-600 hover:text-chetna-primary dark:text-slate-400 dark:hover:text-chetna-primary hover:bg-chetna-primary/5 hover:scale-102'
-                }`}
-                aria-label={`${item.label} ${isActive ? '(current page)' : ''}`}
+              <Link 
+                to={item.path}
+                aria-label={`Navigate to ${item.label}`}
+                aria-current={isActive ? 'page' : undefined}
+                className="flex flex-col items-center justify-center gap-0.5 w-full h-full"
               >
                 <IconComponent className={`h-5 w-5 shrink-0 ${isActive ? 'animate-pulse' : ''}`} aria-hidden="true" />
                 <span className={`text-xs font-medium leading-tight truncate w-full text-center ${
@@ -54,8 +54,8 @@ const Navigation: React.FC = () => {
                 {isActive && (
                   <div className="w-1 h-1 bg-chetna-primary rounded-full mt-0.5" aria-hidden="true"></div>
                 )}
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           );
         })}
       </div>

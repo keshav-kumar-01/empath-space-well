@@ -222,7 +222,7 @@ const Header: React.FC = () => {
                   </MobileLink>
 
                   {isAdmin && (
-                    <MobileLink to="/admin" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent text-amber-600">
+                    <MobileLink to="/admin-panel" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent text-amber-600">
                       <Shield className="h-4 w-4" aria-hidden="true" />
                       Admin Dashboard
                     </MobileLink>
@@ -310,43 +310,43 @@ const Header: React.FC = () => {
 
               {/* Community Link */}
               <NavigationMenuItem>
-                <Link to="/community">
-                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "h-10 gap-1")}>
+                <NavigationMenuLink asChild>
+                  <Link to="/community" className={cn(navigationMenuTriggerStyle(), "h-10 gap-1")}>
                     <Users className="h-4 w-4" aria-hidden="true" />
                     {t('nav.community')}
-                  </NavigationMenuLink>
-                </Link>
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
 
               {/* Dashboard/Appointments Link */}
               {user && (
                 <NavigationMenuItem>
                   {isTherapist ? (
-                    <Link to="/therapist-dashboard">
-                      <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "h-10 gap-1")}>
+                    <NavigationMenuLink asChild>
+                      <Link to="/therapist-dashboard" className={cn(navigationMenuTriggerStyle(), "h-10 gap-1")}>
                         <Stethoscope className="h-4 w-4" aria-hidden="true" />
                         Dashboard
-                      </NavigationMenuLink>
-                    </Link>
+                      </Link>
+                    </NavigationMenuLink>
                   ) : (
-                    <Link to="/appointments">
-                      <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "h-10 gap-1")}>
+                    <NavigationMenuLink asChild>
+                      <Link to="/appointments" className={cn(navigationMenuTriggerStyle(), "h-10 gap-1")}>
                         <Calendar className="h-4 w-4" aria-hidden="true" />
                         Appointments
-                      </NavigationMenuLink>
-                    </Link>
+                      </Link>
+                    </NavigationMenuLink>
                   )}
                 </NavigationMenuItem>
               )}
 
               {/* Pricing Link */}
               <NavigationMenuItem>
-                <Link to="/pricing">
-                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "h-10 gap-1")}>
+                <NavigationMenuLink asChild>
+                  <Link to="/pricing" className={cn(navigationMenuTriggerStyle(), "h-10 gap-1")}>
                     <DollarSign className="h-4 w-4" aria-hidden="true" />
                     Pricing
-                  </NavigationMenuLink>
-                </Link>
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
 
               {/* Admin Link - only for admins */}
@@ -459,7 +459,7 @@ const Header: React.FC = () => {
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link to="/admin" className="cursor-pointer text-amber-600 focus:text-amber-700">
+                      <Link to="/admin-panel" className="cursor-pointer text-amber-600 focus:text-amber-700">
                         <Shield className="mr-2 h-4 w-4" aria-hidden="true" />
                         Admin Dashboard
                       </Link>

@@ -8,10 +8,8 @@ const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
+    // Track 404 for analytics if needed
+    document.title = "404 - Page Not Found | Chetna_AI";
   }, [location.pathname]);
 
   return (
