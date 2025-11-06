@@ -160,6 +160,7 @@ const EditBlogPost: React.FC = () => {
       <Helmet>
         <title>Edit Blog Post | Chetna_AI</title>
         <meta name="description" content="Edit your blog post on Chetna_AI." />
+        <meta name="robots" content="noindex,nofollow" />
       </Helmet>
 
       <Header />

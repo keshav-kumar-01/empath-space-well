@@ -113,6 +113,7 @@ const CreateBlogPost: React.FC = () => {
       <Helmet>
         <title>Create Blog Post | Chetna_AI</title>
         <meta name="description" content="Share your thoughts and experiences with the Chetna_AI community." />
+        <meta name="robots" content="noindex,nofollow" />
       </Helmet>
 
       <Header />

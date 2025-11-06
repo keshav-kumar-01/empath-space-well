@@ -1,5 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { Home, Search, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +15,12 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5">
+      <Helmet>
+        <title>404 - Page Not Found | Chetna AI</title>
+        <meta name="description" content="The page you're looking for cannot be found." />
+        <meta name="robots" content="noindex,nofollow" />
+      </Helmet>
+
       <Card className="max-w-2xl mx-4 shadow-lg">
         <CardContent className="pt-12 pb-8 px-8 text-center">
           <div className="mb-8">

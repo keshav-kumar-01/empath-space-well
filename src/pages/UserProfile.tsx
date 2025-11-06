@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { formatDistanceToNow } from "date-fns";
 import { User, Settings, Book, MessageSquare, PenSquare, Calendar, Brain, TrendingUp, Award, Heart, Activity, Target, Clock, Star, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -403,6 +404,12 @@ const UserProfile: React.FC = () => {
   
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-accent/10">
+      <Helmet>
+        <title>My Profile - Chetna AI</title>
+        <meta name="description" content="View your Chetna AI profile, wellness stats, journal entries, and mental health progress." />
+        <meta name="robots" content="noindex,nofollow" />
+      </Helmet>
+
       <Header />
       
       <main className="flex-grow container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 space-y-10 max-w-7xl" role="main">

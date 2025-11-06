@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Star, Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -89,6 +90,12 @@ const Feedback: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-chetna-light to-white dark:from-chetna-dark dark:to-chetna-dark/80">
+      <Helmet>
+        <title>Feedback - Chetna AI</title>
+        <meta name="description" content="Share your feedback and help us improve Chetna AI mental wellness platform." />
+        <link rel="canonical" href="https://chetna.live/feedback" />
+      </Helmet>
+
       <Header />
       
       <main className="flex-grow container mx-auto px-4 py-6 flex flex-col items-center">

@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -104,6 +105,12 @@ const Signup: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-chetna-light to-white dark:from-chetna-dark dark:to-chetna-dark/80">
+      <Helmet>
+        <title>Sign Up - Chetna AI</title>
+        <meta name="description" content="Create your Chetna AI account to start your mental wellness journey with personalized AI support." />
+        <meta name="robots" content="noindex,nofollow" />
+      </Helmet>
+
       <Header />
       
       <main className="flex-grow container mx-auto px-4 py-12 flex items-center justify-center">

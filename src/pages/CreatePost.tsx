@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeft, Send, Smile, Meh, Frown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -197,6 +198,12 @@ const CreatePost: React.FC = () => {
   
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-chetna-light to-white dark:from-chetna-dark dark:to-chetna-darker">
+      <Helmet>
+        <title>Create Community Post - Chetna AI</title>
+        <meta name="description" content="Share your thoughts and experiences with the Chetna AI community." />
+        <meta name="robots" content="noindex,nofollow" />
+      </Helmet>
+
       <Header />
       
       <main className="flex-grow container mx-auto px-4 py-6 space-y-6">
