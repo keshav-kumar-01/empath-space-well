@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -115,6 +116,12 @@ const testCategories = [
 const PsychTests: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-light via-white to-chetna-secondary/10">
+      <Helmet>
+        <title>Psychological Tests - Chetna Quest | Chetna AI</title>
+        <meta name="description" content="Take scientifically validated psychological tests including GAD-7, PHQ-9, BAI, and BDI-2 to better understand your mental health." />
+        <link rel="canonical" href="https://chetna.live/psych-tests" />
+      </Helmet>
+
       <Header />
       
       <main className="flex-1 container mx-auto px-4 py-8">

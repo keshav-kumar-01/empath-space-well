@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Plus, Filter, Heart, MessageSquare, Search, RefreshCcw, Users, Sparkles } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -133,6 +134,12 @@ const Community: React.FC = () => {
   
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-lavender via-white to-chetna-mint dark:from-chetna-dark dark:to-chetna-darker relative overflow-hidden">
+      <Helmet>
+        <title>Community Support - Chetna AI</title>
+        <meta name="description" content="Join our supportive mental health community. Share experiences, connect with others, and find understanding in a safe space." />
+        <link rel="canonical" href="https://chetna.live/community" />
+      </Helmet>
+
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-chetna-secondary/8 to-chetna-primary/8 rounded-full blur-2xl floating" style={{ animationDelay: '1s' }}></div>

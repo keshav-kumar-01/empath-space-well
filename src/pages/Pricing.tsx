@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Check, Star, Phone, Mail, Users, Shield, Zap, Heart } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -117,6 +118,12 @@ const Pricing: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
+      <Helmet>
+        <title>Pricing Plans - Chetna AI | Mental Wellness Subscriptions</title>
+        <meta name="description" content="Choose the right mental wellness plan for you. Flexible subscription and per-session pricing for AI therapy, professional counseling, and mental health support." />
+        <link rel="canonical" href="https://chetna.live/pricing" />
+      </Helmet>
+
       <Header />
       
       <div className="container mx-auto px-4 py-12 mt-16">

@@ -293,6 +293,7 @@ const AdminDashboard: React.FC = () => {
         <title>Admin Dashboard - Chetna_AI</title>
         <meta name="description" content="Admin dashboard for managing appointments and system" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="canonical" href="https://chetna.live/admin-panel" />
       </Helmet>
       
       <Header />

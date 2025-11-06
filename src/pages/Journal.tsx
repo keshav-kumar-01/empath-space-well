@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Plus, Edit, Trash, Save, X, Smile, Frown, Meh, BookOpen, Calendar, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -257,6 +258,12 @@ const Journal: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-lavender via-white to-chetna-peach dark:from-chetna-dark dark:to-chetna-darker relative overflow-hidden">
+      <Helmet>
+        <title>My Journal - Chetna AI</title>
+        <meta name="description" content="Document your thoughts, track your moods, and reflect on your mental wellness journey with Chetna AI journal." />
+        <link rel="canonical" href="https://chetna.live/journal" />
+      </Helmet>
+
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-chetna-accent/8 to-chetna-primary/8 rounded-full blur-2xl floating" style={{ animationDelay: '2s' }}></div>

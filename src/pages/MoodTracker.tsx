@@ -71,6 +71,7 @@ const MoodTracker: React.FC = () => {
       <Helmet>
         <title>Mood Tracker - Chetna_AI</title>
         <meta name="description" content="Track your daily mood and emotional wellness with Chetna_AI" />
+        <link rel="canonical" href="https://chetna.live/mood-tracker" />
       </Helmet>
       
       <Header />

@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
 import { ArrowLeft, User, Bell, Shield, Globe, Palette, Save, Eye, EyeOff } from "lucide-react";
@@ -124,6 +125,12 @@ const Settings: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-light via-white to-chetna-peach/20 dark:from-chetna-dark dark:to-chetna-dark/80">
+      <Helmet>
+        <title>Settings - Chetna AI | Account & Preferences</title>
+        <meta name="description" content="Manage your Chetna AI account settings, preferences, notifications, and privacy options." />
+        <meta name="robots" content="noindex,nofollow" />
+      </Helmet>
+
       <Header />
       
       <main className="flex-grow container mx-auto px-4 py-6 space-y-6 max-w-4xl">
