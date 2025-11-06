@@ -25,7 +25,7 @@ const Privacy: React.FC = () => {
             </p>
             
             <p className="mb-4">
-              At Chetna AI, accessible from https://chetna.live, we are committed to protecting your privacy. 
+              At Chetna AI, accessible from https://chetna.life, we are committed to protecting your privacy. 
               This Privacy Policy explains how your personal information is collected, used, and disclosed when you use our services.
             </p>
             
