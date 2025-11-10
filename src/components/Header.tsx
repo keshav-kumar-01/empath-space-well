@@ -352,7 +352,7 @@ const Header: React.FC = () => {
               {/* Admin Link - only for admins */}
               {isAdmin && (
                 <NavigationMenuItem>
-                  <Link to="/admin">
+                  <Link to="/admin-panel">
                     <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "h-10 gap-1 text-amber-600 hover:text-amber-700")}>
                       <Shield className="h-4 w-4" aria-hidden="true" />
                       Admin
