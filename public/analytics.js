@@ -18,7 +18,7 @@
   gtag('js', new Date());
   
   // Configure Google Analytics
-  gtag('config', 'G-XXXXXXXXXX', {
+  gtag('config', 'G-NRVVV2J8FZ', {
     send_page_view: false, // We'll handle page views manually via React
     anonymize_ip: true,
     cookie_flags: 'SameSite=None;Secure'
