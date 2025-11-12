@@ -17,6 +17,11 @@ import PersonalityQuiz from '@/pages/PersonalityQuiz';
 import NotFound from '@/pages/NotFound';
 import AIFeaturesMenu from '@/components/AIFeaturesMenu';
 import MoodTracker from '@/pages/MoodTracker';
+import CreateBlogPost from '@/pages/CreateBlogPost';
+import EditBlogPost from '@/pages/EditBlogPost';
+import CreatePost from '@/pages/CreatePost';
+import PostDetail from '@/pages/PostDetail';
+import TestResultsPage from '@/pages/TestResultsPage';
 import CrisisSupport from '@/pages/CrisisSupport';
 import DreamAnalysis from '@/pages/DreamAnalysis';
 import EmotionRecognition from '@/pages/EmotionRecognition';
@@ -65,18 +70,23 @@ function App() {
                     <LazyCommunity />
                   </Suspense>
                 } />
+                <Route path="/community/create" element={<CreatePost />} />
+                <Route path="/community/post/:postId" element={<PostDetail />} />
                 <Route path="/blog" element={
                   <Suspense fallback={<LoadingSpinner text="Loading Blog..." />}>
                     <LazyBlog />
                   </Suspense>
                 } />
                 <Route path="/blog/:articleId" element={<BlogPost />} />
+                <Route path="/blog/create" element={<CreateBlogPost />} />
+                <Route path="/blog/edit/:articleId" element={<EditBlogPost />} />
                 <Route path="/resources" element={
                   <Suspense fallback={<LoadingSpinner text="Loading Resources..." />}>
                     <LazyResourceLibrary />
                   </Suspense>
                 } />
                 <Route path="/contact" element={<Feedback />} />
+                <Route path="/feedback" element={<Feedback />} />
                 <Route path="/quiz" element={<PersonalityQuiz />} />
                 <Route path="/tests" element={
                   <Suspense fallback={<LoadingSpinner text="Loading Tests..." />}>
@@ -94,11 +104,13 @@ function App() {
                   </Suspense>
                 } />
                 <Route path="/test-results" element={<TestResults />} />
+                <Route path="/test-results/:resultId" element={<TestResultsPage />} />
                 <Route path="/wellness-plans" element={
                   <Suspense fallback={<LoadingSpinner text="Loading Wellness Plans..." />}>
                     <LazyWellnessPlans />
                   </Suspense>
                 } />
+                <Route path="/journal" element={<Journal />} />
                 <Route path="/ai-journaling" element={<Journal />} />
                 <Route path="/ai-therapy-chat" element={
                   <Suspense fallback={<LoadingSpinner text="Loading AI Therapy..." />}>

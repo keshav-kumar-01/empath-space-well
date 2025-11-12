@@ -91,7 +91,7 @@ const AIFeaturesMenu = () => {
       title: 'Mental Health Goals',
       description: 'Set and track your mental wellness objectives',
       icon: Target,
-      path: '/goals',
+      path: '/mental-health-goals',
       color: 'bg-gradient-to-br from-orange-500/20 to-red-500/30 dark:from-orange-500/10 dark:to-red-500/20',
       iconColor: 'text-orange-600 dark:text-orange-400'
     },
@@ -107,7 +107,7 @@ const AIFeaturesMenu = () => {
       title: 'Mental Health Insights',
       description: 'AI-powered analysis of your mental health patterns',
       icon: BarChart3,
-      path: '/insights',
+      path: '/mental-health-insights',
       color: 'bg-gradient-to-br from-violet-500/20 to-purple-500/30 dark:from-violet-500/10 dark:to-purple-500/20',
       iconColor: 'text-violet-600 dark:text-violet-400'
     },
