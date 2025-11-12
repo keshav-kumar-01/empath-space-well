@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import { Helmet } from 'react-helmet-async';
+import PageLayout from '@/components/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -90,24 +90,32 @@ const TestResultsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1 container mx-auto px-4 py-8">
+      <PageLayout>
+        <Helmet>
+          <title>Loading Test Results | Chetna - Mental Health Assessment</title>
+        </Helmet>
+        <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <p>Loading your test results...</p>
           </div>
-        </main>
-        <Footer />
-      </div>
+        </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-chetna-light via-white to-chetna-secondary/10">
-      <Header />
+    <>
+      <Helmet>
+        <title>Your Test Results | Chetna - Mental Health Assessment</title>
+        <meta name="description" content="View your comprehensive psychological test results including anxiety, depression, and cognitive assessments on Chetna platform." />
+        <meta name="keywords" content="test results, psychological assessment, mental health tests, GAD-7, PHQ-9, BAI, BDI-II" />
+        <link rel="canonical" href="https://chetna.life/test-results" />
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       
-      <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+      <PageLayout>
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-chetna-primary to-chetna-accent bg-clip-text text-transparent">
             Your Test Results
           </h1>
@@ -210,11 +218,10 @@ const TestResultsPage = () => {
               Take Another Test
             </Button>
           </div>
+          </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </PageLayout>
+    </>
   );
 };
 

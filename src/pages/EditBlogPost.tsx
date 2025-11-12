@@ -9,8 +9,7 @@ import * as z from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { 
   Form, 
@@ -156,17 +155,18 @@ const EditBlogPost: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-white to-[#FDE1D3] dark:from-chetna-dark dark:to-chetna-darker">
+    <>
       <Helmet>
-        <title>Edit Blog Post | Chetna_AI</title>
-        <meta name="description" content="Edit your blog post on Chetna_AI." />
-        <meta name="robots" content="noindex,nofollow" />
+        <title>Edit Blog Post | Chetna - Mental Wellness Blog</title>
+        <meta name="description" content="Edit your blog post on Chetna mental health platform." />
+        <meta name="keywords" content="edit blog post, mental health blog, update article" />
+        <link rel="canonical" href={`https://chetna.life/blog/edit/${id}`} />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
-
-      <Header />
-
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
+      
+      <PageLayout>
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-3xl mx-auto">
           <Button 
             variant="ghost" 
             onClick={() => navigate("/blog")}
@@ -267,11 +267,10 @@ const EditBlogPost: React.FC = () => {
               </Form>
             )}
           </div>
+          </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </PageLayout>
+    </>
   );
 };
 

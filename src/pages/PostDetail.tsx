@@ -1,13 +1,14 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { formatDistanceToNow } from "date-fns";
 import { Heart, ArrowLeft, Send, Trash2, Smile, Meh, Frown } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import Header from "@/components/Header";
+import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -273,16 +274,29 @@ const PostDetail: React.FC = () => {
     };
   }, [id, refetchComments]);
   
+  const pageTitle = post ? `${post.title} - Community Discussion` : "Community Post";
+  const pageDescription = post ? post.content.substring(0, 155) : "Join the conversation on Chetna mental health community";
+
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-chetna-light to-white dark:from-chetna-dark dark:to-chetna-darker">
-      <Header />
+    <>
+      <Helmet>
+        <title>{pageTitle} | Chetna - Mental Wellness Community</title>
+        <meta name="description" content={pageDescription} />
+        <meta name="keywords" content="mental health community, support forum, peer support, mental wellness discussion" />
+        <link rel="canonical" href={`https://chetna.life/community/post/${id}`} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={`https://chetna.life/community/post/${id}`} />
+      </Helmet>
       
-      <main className="flex-grow container mx-auto px-4 py-6 space-y-6">
-        <Button
-          variant="ghost"
-          onClick={() => navigate("/community")}
-          className="group"
-        >
+      <PageLayout>
+        <div className="container mx-auto px-4 py-6 space-y-6">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/community")}
+            className="group"
+          >
           <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
           Back to Community
         </Button>
@@ -420,13 +434,9 @@ const PostDetail: React.FC = () => {
             )}
           </div>
         </div>
-      </main>
-      
-      <footer className="py-4 text-center text-xs text-muted-foreground">
-        <p>© {new Date().getFullYear()} Chetna_Ai - Your Mental Wellness Companion</p>
-      </footer>
-      
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          </div>
+        
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
@@ -442,7 +452,8 @@ const PostDetail: React.FC = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+      </PageLayout>
+    </>
   );
 };
 

@@ -54,8 +54,17 @@ export const useSEO = (data: SEOData) => {
 
     // Track page views for analytics (only if gtag is available)
     if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('config', 'GA_MEASUREMENT_ID', {
+      window.gtag('config', 'G-XXXXXXXXXX', {
         page_path: location.pathname + location.search,
+        page_title: data.title || document.title,
+      });
+    }
+    
+    // Track custom page view event
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'page_view', {
+        page_path: location.pathname + location.search,
+        page_title: data.title || document.title,
       });
     }
   }, [data, location]);

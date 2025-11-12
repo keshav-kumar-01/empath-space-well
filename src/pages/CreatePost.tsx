@@ -9,7 +9,7 @@ import * as z from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import Header from "@/components/Header";
+import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -197,16 +197,17 @@ const CreatePost: React.FC = () => {
   };
   
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-chetna-light to-white dark:from-chetna-dark dark:to-chetna-darker">
+    <>
       <Helmet>
-        <title>Create Community Post - Chetna AI</title>
-        <meta name="description" content="Share your thoughts and experiences with the Chetna AI community." />
-        <meta name="robots" content="noindex,nofollow" />
+        <title>Create Post - Community | Chetna - Mental Wellness</title>
+        <meta name="description" content="Share your thoughts and experiences with our supportive mental health community." />
+        <meta name="keywords" content="create post, community forum, mental health discussion, peer support" />
+        <link rel="canonical" href="https://chetna.life/community/create" />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
-
-      <Header />
       
-      <main className="flex-grow container mx-auto px-4 py-6 space-y-6">
+      <PageLayout>
+        <div className="container mx-auto px-4 py-6 space-y-6">
         <Button
           variant="ghost"
           onClick={() => navigate("/community")}
@@ -333,12 +334,9 @@ const CreatePost: React.FC = () => {
             </form>
           </Form>
         </Card>
-      </main>
-      
-      <footer className="py-4 text-center text-xs text-muted-foreground">
-        <p>© {new Date().getFullYear()} Chetna_Ai - Your Mental Wellness Companion</p>
-      </footer>
-    </div>
+        </div>
+      </PageLayout>
+    </>
   );
 };
 
