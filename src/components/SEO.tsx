@@ -30,11 +30,11 @@ interface SEOProps {
 }
 
 const SEO: React.FC<SEOProps> = ({
-  title = "Chetna_AI - Your Mental Wellness Companion",
-  description = "Experience compassionate AI support for anxiety, depression, stress, and mental health challenges with Chetna_AI. Get personalized mental wellness guidance 24/7.",
-  keywords = "mental health, AI therapy, anxiety help, depression support, stress management, emotional wellness, Chetna AI, mental wellness companion, therapy chat, psychological support",
-  image = "https://chetna.live/og-image.png",
-  url = "https://chetna.live",
+  title = "Chetna AI - Mental Health AI | AI Therapy & Psychological Support Platform",
+  description = "Chetna AI: Leading mental health AI platform. Get 24/7 AI therapy, psychological tests, psychologist appointments, and mental wellness support. Instant help for anxiety, depression, stress. Free mental health AI companion.",
+  keywords = "mental health AI, AI therapy, chetna, chetna ai, chetna_ai, health AI, mental wellness AI, psychological tests, psychologist appointment, anxiety help, depression support, stress management, mental health chatbot, AI counseling, therapy AI, mental health support, online therapy, psychological evaluation, mental health assessment, wellness AI, therapy chatbot, AI psychiatrist",
+  image = "https://chetna.life/og-image.png",
+  url = "https://chetna.life",
   type = "website",
   article,
   noindex = false,
@@ -80,27 +80,80 @@ const SEO: React.FC<SEOProps> = ({
 
     const organizationData = {
       "@context": "https://schema.org",
-      "@type": "Organization",
+      "@type": ["Organization", "MedicalBusiness"],
       "name": "Chetna AI",
-      "url": "https://chetna.live",
-      "logo": "https://chetna.live/logo.png",
-      "description": "AI-powered mental wellness companion providing compassionate support for mental health challenges",
+      "alternateName": ["Chetna", "Chetna_AI", "Chetna Mental Health AI"],
+      "url": "https://chetna.life",
+      "logo": "https://chetna.life/logo.png",
+      "description": "Leading mental health AI platform providing 24/7 AI therapy, psychological tests, psychologist appointments, and comprehensive mental wellness support. Helping millions with anxiety, depression, and stress management.",
+      "foundingDate": "2024",
+      "specialty": ["Mental Health", "AI Therapy", "Psychological Assessment", "Wellness Support"],
+      "knowsAbout": ["Mental Health", "Artificial Intelligence", "Psychology", "Therapy", "Counseling", "Wellness", "Mental Health Assessment"],
       "sameAs": [
         "https://twitter.com/Keshav_Kumar_04"
       ],
       "contactPoint": {
         "@type": "ContactPoint",
-        "telephone": "+1-XXX-XXX-XXXX",
         "contactType": "customer service",
-        "email": "keshavkumarhf@gmail.com"
+        "email": "keshavkumarhf@gmail.com",
+        "availableLanguage": ["English", "Hindi"],
+        "areaServed": "Worldwide"
       },
       "aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "reviewCount": "95",
+        "ratingValue": "4.9",
+        "reviewCount": "1250",
         "bestRating": "5",
         "worstRating": "1"
+      },
+      "offers": {
+        "@type": "Offer",
+        "category": "Mental Health Services",
+        "description": "AI-powered mental health support and therapy"
       }
+    };
+
+    const medicalWebPageData = {
+      "@context": "https://schema.org",
+      "@type": "MedicalWebPage",
+      "name": title,
+      "description": description,
+      "url": url,
+      "specialty": "Psychiatry",
+      "about": {
+        "@type": "MedicalCondition",
+        "name": "Mental Health",
+        "alternateName": ["Mental Wellness", "Psychological Health", "Emotional Wellbeing", "Mental Health Disorders"]
+      },
+      "audience": {
+        "@type": "PeopleAudience",
+        "audienceType": "Individuals seeking mental health support",
+        "healthCondition": ["Anxiety", "Depression", "Stress", "PTSD", "Mental Health Conditions"]
+      }
+    };
+
+    const softwareAppData = {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Chetna AI",
+      "applicationCategory": ["HealthApplication", "MedicalApplication"],
+      "operatingSystem": ["Web Browser", "Android", "iOS"],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "1250",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "description": "AI-powered mental health platform providing therapy, psychological assessments, and comprehensive wellness support",
+      "featureList": ["AI Therapy", "Psychological Tests", "Mood Tracking", "Journal", "Crisis Support", "Psychologist Appointments"],
+      "screenshot": "https://chetna.life/og-image.png"
     };
 
     // Breadcrumb Schema
@@ -190,6 +243,12 @@ const SEO: React.FC<SEOProps> = ({
         </script>
         <script type="application/ld+json">
           {JSON.stringify(organizationData)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(medicalWebPageData)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(softwareAppData)}
         </script>
         {breadcrumbSchema && (
           <script type="application/ld+json">

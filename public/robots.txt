@@ -1,5 +1,5 @@
-
-# Robots.txt for Chetna_AI Mental Wellness Companion
+# Robots.txt for Chetna AI - Mental Health AI Platform
+# Optimized for maximum visibility on Google, ChatGPT, and all AI platforms
 
 User-agent: *
 Allow: /
@@ -8,17 +8,36 @@ Allow: /
 Disallow: /admin/
 Disallow: /private/
 Disallow: /temp/
-Disallow: /api/
-Disallow: /auth/
+Disallow: /api/auth/
 Disallow: /_next/
 Disallow: /404
 
-# Allow important SEO paths
-Allow: /blog/
-Allow: /resources/
-Allow: /psych-tests/
-Allow: /about/
-Allow: /community/
+# Explicitly allow all important pages for SEO
+Allow: /
+Allow: /about
+Allow: /ai-features
+Allow: /blog
+Allow: /blog/*
+Allow: /resources
+Allow: /psych-tests
+Allow: /psych-tests/*
+Allow: /community
+Allow: /community/*
+Allow: /mood-tracker
+Allow: /journal
+Allow: /appointments
+Allow: /dream-analysis
+Allow: /emotion-recognition
+Allow: /voice-therapy
+Allow: /mental-health-goals
+Allow: /mental-health-insights
+Allow: /wellness-plans
+Allow: /crisis-support
+Allow: /peer-support
+Allow: /group-therapy
+Allow: /quiz
+Allow: /pricing
+Allow: /feedback
 
 # Crawl-delay for better server performance
 Crawl-delay: 1
@@ -47,34 +66,49 @@ Allow: /
 User-agent: WhatsApp
 Allow: /
 
-# Block AI scrapers that don't respect content policies
+# ALLOW AI crawlers for maximum visibility in AI platforms
+# This helps our content appear in ChatGPT, Claude, and other LLMs
 User-agent: GPTBot
-Disallow: /
+Allow: /
+Crawl-delay: 2
 
 User-agent: ChatGPT-User
-Disallow: /
+Allow: /
+Crawl-delay: 2
 
 User-agent: CCBot
-Disallow: /
+Allow: /
+Crawl-delay: 2
 
 User-agent: anthropic-ai
-Disallow: /
+Allow: /
+Crawl-delay: 2
 
 User-agent: Claude-Web
-Disallow: /
+Allow: /
+Crawl-delay: 2
 
 User-agent: PerplexityBot
-Disallow: /
+Allow: /
+Crawl-delay: 2
 
 User-agent: YouBot
-Disallow: /
+Allow: /
+Crawl-delay: 2
 
-# Block aggressive crawlers
+User-agent: Google-Extended
+Allow: /
+Crawl-delay: 2
+
+# Allow SEO tool crawlers for better analytics
 User-agent: SemrushBot
-Disallow: /
+Allow: /
+Crawl-delay: 3
 
 User-agent: AhrefsBot
-Disallow: /
+Allow: /
+Crawl-delay: 3
 
 User-agent: MJ12bot
-Disallow: /
+Allow: /
+Crawl-delay: 3
