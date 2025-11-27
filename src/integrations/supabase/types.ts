@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "13.0.5"
   }
   public: {
     Tables: {
@@ -638,7 +638,7 @@ export type Database = {
           action: string
           created_at: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           new_data: Json | null
           old_data: Json | null
           record_id: string | null
@@ -650,7 +650,7 @@ export type Database = {
           action: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           new_data?: Json | null
           old_data?: Json | null
           record_id?: string | null
@@ -662,7 +662,7 @@ export type Database = {
           action?: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           new_data?: Json | null
           old_data?: Json | null
           record_id?: string | null
@@ -957,10 +957,7 @@ export type Database = {
           total_reviews: number
         }[]
       }
-      get_therapist_id_by_user: {
-        Args: { _user_id: string }
-        Returns: string
-      }
+      get_therapist_id_by_user: { Args: { _user_id: string }; Returns: string }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -972,10 +969,7 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_therapist_user: {
-        Args: { _user_id: string }
-        Returns: boolean
-      }
+      is_therapist_user: { Args: { _user_id: string }; Returns: boolean }
       user_is_in_room: {
         Args: { room_id_param: string; user_id_param: string }
         Returns: boolean
