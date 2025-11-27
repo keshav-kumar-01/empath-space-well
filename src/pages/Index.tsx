@@ -91,28 +91,47 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
       <SEO
-        title="Chetna_AI - Your Mental Wellness Companion | AI-Powered Mental Health Support"
-        description="Get compassionate AI support for anxiety, depression, stress management, and mental health challenges. Start your wellness journey with Chetna_AI today - available 24/7."
-        keywords="mental health AI, anxiety support, depression help, stress management, emotional wellness, AI therapy, mental health companion, psychological support, wellness app, therapy chat"
-        url="https://chetna.live"
-        image="https://chetna.live/og-image.png"
-        canonical="https://chetna.live"
+        title="Chetna AI - Mental Health AI | AI Therapy & Psychological Support Platform"
+        description="Chetna AI: Leading mental health AI platform. Get 24/7 AI therapy, psychological tests, psychologist appointments, and mental wellness support. Instant help for anxiety, depression, stress. Free mental health AI companion."
+        keywords="mental health AI, AI therapy, chetna, chetna ai, chetna_ai, health AI, mental wellness AI, psychological tests, psychologist appointment, anxiety help AI, depression support AI, stress management, mental health chatbot, AI counseling, therapy AI, mental health support, online therapy, psychological evaluation, mental health assessment, wellness AI, therapy chatbot, AI psychiatrist, mental health screening, psychological tests online"
+        url="https://chetna.life"
+        image="https://chetna.life/og-image.png"
+        canonical="https://chetna.life"
+        breadcrumbs={[
+          { name: "Home", url: "https://chetna.life/" }
+        ]}
         faqSchema={[
           {
             question: "What is Chetna AI?",
-            answer: "Chetna AI is an AI-powered mental wellness companion that provides compassionate support for anxiety, depression, stress management, and various mental health challenges 24/7."
+            answer: "Chetna AI is a leading mental health AI platform that provides 24/7 AI therapy, psychological tests, and comprehensive mental wellness support. Our AI-powered platform helps millions with anxiety, depression, stress management, and various mental health challenges."
           },
           {
             question: "How does Chetna AI help with mental health?",
-            answer: "Chetna AI offers personalized conversations, mood tracking, journaling tools, access to mental health resources, and connection to professional therapists when needed."
+            answer: "Chetna AI offers AI therapy chatbot, mood tracking, psychological tests (GAD-7, PHQ-9, Beck tests), journaling tools, psychologist appointments, crisis support, and personalized wellness plans. Get instant mental health support anytime, anywhere."
+          },
+          {
+            question: "What psychological tests are available on Chetna AI?",
+            answer: "Chetna AI provides scientifically validated psychological tests including GAD-7 (anxiety test), PHQ-9 (depression test), Beck Anxiety Inventory, Beck Depression Inventory, MMPI-2, and cognitive performance tests. All tests are free and confidential."
+          },
+          {
+            question: "Can I book a psychologist appointment through Chetna AI?",
+            answer: "Yes! Chetna AI connects you with licensed psychologists and therapists. You can easily book online therapy sessions and counseling appointments through our platform."
           },
           {
             question: "Is Chetna AI free to use?",
-            answer: "Yes, Chetna AI offers free access to core features including AI chat support, mood tracking, and basic resources. Premium features are available with a subscription."
+            answer: "Yes, Chetna AI offers free access to core features including AI therapy chat, psychological tests, mood tracking, and basic resources. Premium features including unlimited AI sessions and priority psychologist appointments are available with a subscription."
           },
           {
-            question: "Is my data safe with Chetna AI?",
-            answer: "Absolutely. We use end-to-end encryption and follow strict privacy protocols to ensure your conversations and data remain completely confidential."
+            question: "Is my mental health data safe with Chetna AI?",
+            answer: "Absolutely. Chetna AI uses end-to-end encryption and follows strict HIPAA-compliant privacy protocols to ensure your conversations, psychological test results, and personal data remain completely confidential and secure."
+          },
+          {
+            question: "How is Chetna AI different from traditional therapy?",
+            answer: "Chetna AI provides instant 24/7 mental health support through AI therapy, while also connecting you to licensed therapists when needed. It's more accessible, affordable, and available anytime. Our AI complements traditional therapy, not replaces it."
+          },
+          {
+            question: "Does Chetna AI work with ChatGPT or other AI platforms?",
+            answer: "Chetna AI is a specialized mental health AI platform built specifically for psychological support. While it uses advanced AI technology, it's purpose-built for mental health care with specialized training in therapy, counseling, and psychological assessment."
           }
         ]}
       />
