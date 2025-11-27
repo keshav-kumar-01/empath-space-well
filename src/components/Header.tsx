@@ -19,7 +19,8 @@ import {
   Sparkles,
   LifeBuoy,
   TrendingUp,
-  DollarSign
+  DollarSign,
+  Smartphone
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -221,6 +222,15 @@ const Header: React.FC = () => {
                     {t('nav.feedback')}
                   </MobileLink>
 
+                  <a 
+                    href="/Chetna_AI.apk" 
+                    download 
+                    className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent text-primary"
+                  >
+                    <Smartphone className="h-4 w-4" aria-hidden="true" />
+                    Download Android App
+                  </a>
+
                   {isAdmin && (
                     <MobileLink to="/admin-panel" onOpenChange={() => {}} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium hover:bg-accent text-amber-600">
                       <Shield className="h-4 w-4" aria-hidden="true" />
@@ -367,6 +377,17 @@ const Header: React.FC = () => {
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-3 lg:flex-initial">
+          <Button 
+            variant="outline" 
+            size="sm"
+            asChild
+            className="hidden lg:flex gap-2"
+          >
+            <a href="/Chetna_AI.apk" download>
+              <Smartphone className="h-4 w-4" aria-hidden="true" />
+              Download App
+            </a>
+          </Button>
           <div className="hidden sm:block">
             <LanguageSelector />
           </div>
