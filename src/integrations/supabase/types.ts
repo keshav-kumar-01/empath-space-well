@@ -978,6 +978,10 @@ export type Database = {
       }
     }
     Functions: {
+      get_community_post_owner_id: {
+        Args: { _post_user_id: string }
+        Returns: string
+      }
       get_safe_author_name: {
         Args: {
           _author_name: string
