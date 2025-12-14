@@ -34,6 +34,7 @@ import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 import Pricing from '@/pages/Pricing';
 import Feedback from '@/pages/Feedback';
+import ContactTeam from '@/pages/ContactTeam';
 
 // Lazy load heavy components
 import { 
@@ -164,7 +165,7 @@ function App() {
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/pricing" element={<Pricing />} />
-                
+                <Route path="/contact-team" element={<ContactTeam />} />
                 {/* 404 - Must be last */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

@@ -240,4 +240,11 @@
     <priority>0.3</priority>
     <mobile:mobile/>
   </url>
+  <url>
+    <loc>https://chetna.life/contact-team</loc>
+    <lastmod>2025-12-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile/>
+  </url>
 </urlset>
