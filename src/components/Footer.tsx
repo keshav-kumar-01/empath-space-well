@@ -56,6 +56,12 @@ const Footer: React.FC = () => {
             >
               Terms of Service
             </Link>
+            <Link 
+              to="/contact-team" 
+              className="text-sm text-chetna-dark/70 dark:text-white/70 hover:text-chetna-primary dark:hover:text-chetna-primary transition-all duration-300 hover:scale-105 px-3 py-2 rounded-full hover:bg-gradient-to-r hover:from-chetna-primary/10 hover:to-chetna-accent/10 hover:shadow-soft"
+            >
+              Contact Team
+            </Link>
           </div>
         </div>
       </div>
