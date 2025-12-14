@@ -529,6 +529,13 @@ export type Database = {
             referencedRelation: "community_posts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       psychological_test_results: {
@@ -879,6 +886,45 @@ export type Database = {
       }
     }
     Views: {
+      community_posts_public: {
+        Row: {
+          category: string | null
+          content: string | null
+          created_at: string | null
+          id: string | null
+          is_owner: boolean | null
+          mood: string | null
+          title: string | null
+          updated_at: string | null
+          upvotes: number | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_owner?: never
+          mood?: string | null
+          title?: string | null
+          updated_at?: string | null
+          upvotes?: number | null
+          user_id?: never
+        }
+        Update: {
+          category?: string | null
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_owner?: never
+          mood?: string | null
+          title?: string | null
+          updated_at?: string | null
+          upvotes?: number | null
+          user_id?: never
+        }
+        Relationships: []
+      }
       therapists_public: {
         Row: {
           available: boolean | null
