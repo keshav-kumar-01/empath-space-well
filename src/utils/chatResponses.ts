@@ -131,10 +131,12 @@ export const sampleResponses: ChatResponse[] = [
     ]
   },
   {
-    trigger:["creator","developer","builder","owner","CEO","Founder"],
-      responses:[
-      "Keshav Kumar is my creator he developed it all by himself only , he is our current CEO and he is our Founder with Anchal and Ashuotsh by his side ."
-      ]
+    trigger: ["creator", "developer", "builder", "owner", "ceo", "founder", "who made", "who created", "who built", "who developed", "made you", "created you", "built you", "developed you", "made chetna", "created chetna", "keshav", "keshav kumar"],
+    responses: [
+      "Chetna AI was created by **Keshav Kumar**, our Founder, CEO & CTO. He developed the entire platform with his vision to make mental health support accessible to everyone. Alongside him are co-founders Ashutosh Pratap Singh (Business Head) and Anchal Singh (CMO). 🙏",
+      "I was created by **Keshav Kumar**! He is the Founder, CEO & CTO of Chetna AI. He built this platform from scratch with a passion for mental wellness technology. Our amazing team also includes Ashutosh Pratap Singh and Anchal Singh as co-founders. 💙",
+      "**Keshav Kumar** is my creator! He's the visionary Founder, CEO & CTO behind Chetna AI. Together with co-founders Ashutosh Pratap Singh (Business Head) and Anchal Singh (Marketing Head), they're working to revolutionize mental health support in India. 🌸"
+    ]
   }
 ];
 
