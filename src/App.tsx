@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
@@ -36,6 +36,8 @@ import Pricing from '@/pages/Pricing';
 import Feedback from '@/pages/Feedback';
 import ContactTeam from '@/pages/ContactTeam';
 
+const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'));
+
 // Lazy load heavy components
 import { 
   LazyAdminDashboard,
@@ -63,8 +65,9 @@ function App() {
             <div className="App">
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<Suspense fallback={<LoadingSpinner />}><ForgotPassword /></Suspense>} />
                 <Route path="/profile" element={<UserProfile />} />
                 <Route path="/community" element={
                   <Suspense fallback={<LoadingSpinner text="Loading Community..." />}>

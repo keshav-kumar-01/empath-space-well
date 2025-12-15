@@ -56,7 +56,7 @@ const Community: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   
   const fetchPosts = async (): Promise<Post[]> => {
-    let query = supabase.from("community_posts").select("*");
+    let query = supabase.from("community_posts_public").select("*");
     
     if (selectedCategory !== "All") {
       query = query.eq("category", selectedCategory);

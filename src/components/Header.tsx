@@ -54,6 +54,7 @@ import LanguageSelector from "./LanguageSelector";
 import ThemeToggle from "./ThemeToggle";
 import { useAuth } from "@/context/AuthContext";
 import { useTherapistAuth } from "@/context/TherapistAuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
 interface MobileLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -79,7 +80,7 @@ const Header: React.FC = () => {
   const { t } = useTranslation();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
-  // Check if user is admin (simplified approach for now)
+  // Check if user is admin using secure RPC function
   useEffect(() => {
     const checkAdminStatus = async () => {
       if (!user?.id) {
@@ -87,10 +88,19 @@ const Header: React.FC = () => {
         return;
       }
       
-      // Check if the current user is you (the admin)
-      if (user.id === '62529ac4-eaf2-4fa8-bca1-b6c0938478f1' || user.email === 'keshavkumarhf@gmail.com') {
-        setIsAdmin(true);
-      } else {
+      try {
+        const { data, error } = await supabase.rpc('has_role', {
+          _user_id: user.id,
+          _role: 'admin'
+        });
+        
+        if (error) {
+          setIsAdmin(false);
+          return;
+        }
+        
+        setIsAdmin(data === true);
+      } catch {
         setIsAdmin(false);
       }
     };

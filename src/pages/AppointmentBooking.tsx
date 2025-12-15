@@ -50,12 +50,12 @@ const AppointmentBooking: React.FC = () => {
   const [selectedTherapist, setSelectedTherapist] = useState<string>('');
   const [sessionType, setSessionType] = useState<string>('');
 
-  // Fetch therapists from Supabase
+  // Fetch therapists from Supabase (using public view for RLS compatibility)
   const { data: therapists = [], isLoading: therapistsLoading } = useQuery({
-    queryKey: ['therapists'],
+    queryKey: ['therapists-public'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('therapists')
+        .from('therapists_public')
         .select('*')
         .eq('available', true)
         .order('rating', { ascending: false });
