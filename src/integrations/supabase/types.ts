@@ -460,6 +460,30 @@ export type Database = {
         }
         Relationships: []
       }
+      mood_entries: {
+        Row: {
+          created_at: string
+          id: string
+          mood: number
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mood: number
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mood?: number
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       peer_support_matches: {
         Row: {
           accepted_at: string | null

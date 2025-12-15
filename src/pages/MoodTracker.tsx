@@ -1,25 +1,30 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Calendar } from '@/components/ui/calendar';
 import { useAuth } from '@/context/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { Heart, Smile, Meh, Frown, Angry, TrendingUp, Calendar as CalendarIcon } from 'lucide-react';
+import { toast } from 'sonner';
+import { Heart, Smile, Meh, Frown, Angry, TrendingUp, Calendar as CalendarIcon, Loader2 } from 'lucide-react';
+
+interface MoodEntry {
+  id: string;
+  mood: number;
+  notes: string | null;
+  created_at: string;
+}
 
 const MoodTracker: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [selectedMood, setSelectedMood] = useState<number | null>(null);
   const [moodNote, setMoodNote] = useState('');
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [moodHistory, setMoodHistory] = useState<any[]>([]);
 
   const moods = [
     { value: 5, icon: Heart, label: 'Excellent', color: 'text-green-500', bgColor: 'bg-green-50 dark:bg-green-900/20' },
@@ -29,42 +34,68 @@ const MoodTracker: React.FC = () => {
     { value: 1, icon: Angry, label: 'Difficult', color: 'text-red-500', bgColor: 'bg-red-50 dark:bg-red-900/20' },
   ];
 
+  // Fetch mood entries from database
+  const { data: moodHistory, isLoading } = useQuery({
+    queryKey: ['mood-entries', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      
+      const { data, error } = await supabase
+        .from('mood_entries')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (error) throw error;
+      return data as MoodEntry[];
+    },
+    enabled: !!user,
+  });
+
+  // Create mood entry mutation
+  const createMoodMutation = useMutation({
+    mutationFn: async () => {
+      if (!user || !selectedMood) throw new Error('Missing data');
+
+      const { data, error } = await supabase
+        .from('mood_entries')
+        .insert({
+          user_id: user.id,
+          mood: selectedMood,
+          notes: moodNote || null,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['mood-entries'] });
+      toast.success('Mood recorded! 💙');
+      setSelectedMood(null);
+      setMoodNote('');
+    },
+    onError: (error) => {
+      toast.error('Failed to save mood. Please try again.');
+      console.error('Mood save error:', error);
+    },
+  });
+
   const handleMoodSubmit = () => {
     if (!selectedMood) {
-      toast({
-        title: "Please select a mood",
-        description: "Choose how you're feeling today",
-        variant: "destructive",
-      });
+      toast.error('Please select a mood');
       return;
     }
 
-    const moodEntry = {
-      date: selectedDate.toDateString(),
-      mood: selectedMood,
-      note: moodNote,
-      timestamp: new Date().toISOString(),
-    };
+    if (!user) {
+      toast.error('Please sign in to track your mood');
+      return;
+    }
 
-    // Store in localStorage for now (will be moved to Supabase later)
-    const existingMoods = JSON.parse(localStorage.getItem('mood_history') || '[]');
-    const updatedMoods = [moodEntry, ...existingMoods];
-    localStorage.setItem('mood_history', JSON.stringify(updatedMoods));
-    setMoodHistory(updatedMoods);
-
-    toast({
-      title: "Mood recorded! 💙",
-      description: "Thank you for tracking your emotional wellness",
-    });
-
-    setSelectedMood(null);
-    setMoodNote('');
+    createMoodMutation.mutate();
   };
-
-  useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem('mood_history') || '[]');
-    setMoodHistory(stored);
-  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
@@ -85,6 +116,16 @@ const MoodTracker: React.FC = () => {
             Track your daily emotional wellness and identify patterns in your mental health journey
           </p>
         </div>
+
+        {!user && (
+          <Card className="mb-6 border-amber-200 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-800">
+            <CardContent className="pt-6">
+              <p className="text-amber-800 dark:text-amber-200 text-center">
+                Please <a href="/login" className="underline font-medium">sign in</a> to track and save your mood history.
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Mood Entry */}
@@ -111,6 +152,7 @@ const MoodTracker: React.FC = () => {
                           ? `${mood.bgColor} ring-2 ring-chetna-primary scale-105`
                           : 'hover:bg-gray-50 dark:hover:bg-slate-700/50'
                       }`}
+                      aria-label={`Select mood: ${mood.label}`}
                     >
                       <IconComponent className={`h-8 w-8 mx-auto ${mood.color}`} />
                       <p className="text-xs mt-2 font-medium">{mood.label}</p>
@@ -131,9 +173,17 @@ const MoodTracker: React.FC = () => {
 
               <Button 
                 onClick={handleMoodSubmit}
+                disabled={!selectedMood || createMoodMutation.isPending || !user}
                 className="w-full bg-gradient-to-r from-chetna-primary to-chetna-secondary hover:opacity-90 transition-opacity"
               >
-                Record Mood
+                {createMoodMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  'Record Mood'
+                )}
               </Button>
             </CardContent>
           </Card>
@@ -150,26 +200,32 @@ const MoodTracker: React.FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {moodHistory.length === 0 ? (
+              {isLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                </div>
+              ) : !moodHistory || moodHistory.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <CalendarIcon className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p>Start tracking your mood to see patterns here</p>
                 </div>
               ) : (
                 <div className="space-y-3 max-h-64 overflow-y-auto">
-                  {moodHistory.slice(0, 10).map((entry, index) => {
+                  {moodHistory.map((entry) => {
                     const mood = moods.find(m => m.value === entry.mood);
                     const IconComponent = mood?.icon || Meh;
                     return (
-                      <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-white/50 dark:bg-slate-700/50">
+                      <div key={entry.id} className="flex items-start gap-3 p-3 rounded-lg bg-white/50 dark:bg-slate-700/50">
                         <IconComponent className={`h-5 w-5 ${mood?.color} mt-0.5`} />
                         <div className="flex-1">
                           <div className="flex justify-between items-start">
                             <p className="font-medium text-sm">{mood?.label}</p>
-                            <span className="text-xs text-muted-foreground">{entry.date}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(entry.created_at).toLocaleDateString()}
+                            </span>
                           </div>
-                          {entry.note && (
-                            <p className="text-sm text-muted-foreground mt-1">{entry.note}</p>
+                          {entry.notes && (
+                            <p className="text-sm text-muted-foreground mt-1">{entry.notes}</p>
                           )}
                         </div>
                       </div>
