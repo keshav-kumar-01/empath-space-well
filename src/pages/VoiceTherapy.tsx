@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Mic, MicOff, Play, Square, Heart, Brain, Info } from 'lucide-react';
+import { Mic, Square, Heart, Brain, Info, Volume2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getAIResponse } from '@/services/aiService';
 import Header from '@/components/Header';
@@ -20,13 +20,14 @@ const VoiceTherapy = () => {
   const [moodBefore, setMoodBefore] = useState([5]);
   const [moodAfter, setMoodAfter] = useState([5]);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [playingResponseId, setPlayingResponseId] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const { data: sessions } = useQuery({
+  const { data: sessions, refetch: refetchSessions } = useQuery({
     queryKey: ['voice-therapy-sessions'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -70,10 +71,60 @@ const VoiceTherapy = () => {
       if (error) throw error;
       return { data, aiResponse };
     },
-    onSuccess: ({ aiResponse }) => {
+    onSuccess: () => {
       toast.success('Session completed! Here\'s your personalized guidance 🌸');
+      refetchSessions();
     },
   });
+
+  const playResponse = async (text: string, sessionId: string) => {
+    try {
+      setPlayingResponseId(sessionId);
+      
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ text }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`TTS request failed: ${response.status}`);
+      }
+
+      const audioBlob = await response.blob();
+      const audioUrlObj = URL.createObjectURL(audioBlob);
+      
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      
+      const audio = new Audio(audioUrlObj);
+      audioRef.current = audio;
+      
+      audio.onended = () => {
+        setPlayingResponseId(null);
+        URL.revokeObjectURL(audioUrlObj);
+      };
+      
+      audio.onerror = () => {
+        setPlayingResponseId(null);
+        toast.error('Failed to play audio');
+      };
+      
+      await audio.play();
+    } catch (error) {
+      console.error('TTS error:', error);
+      setPlayingResponseId(null);
+      toast.error('Failed to generate speech');
+    }
+  };
 
   const startRecording = async () => {
     try {
@@ -279,7 +330,28 @@ const VoiceTherapy = () => {
                 
                 {session.ai_response && (
                   <div className="bg-primary/5 p-4 rounded-lg">
-                    <h4 className="font-medium mb-2">🌸 Dr. Chetna's Response:</h4>
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-medium">🌸 Dr. Chetna's Response:</h4>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => playResponse(session.ai_response!, session.id)}
+                        disabled={playingResponseId === session.id}
+                        className="gap-2"
+                      >
+                        {playingResponseId === session.id ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            Playing...
+                          </>
+                        ) : (
+                          <>
+                            <Volume2 className="h-4 w-4" />
+                            Listen
+                          </>
+                        )}
+                      </Button>
+                    </div>
                     <p className="text-sm">{session.ai_response}</p>
                   </div>
                 )}
