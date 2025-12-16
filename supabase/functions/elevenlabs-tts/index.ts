@@ -6,7 +6,6 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -16,7 +15,6 @@ serve(async (req) => {
     const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
 
     if (!ELEVENLABS_API_KEY) {
-      console.error("ELEVENLABS_API_KEY is not configured");
       throw new Error("ElevenLabs API key not configured");
     }
 
@@ -24,13 +22,12 @@ serve(async (req) => {
       throw new Error("Text is required");
     }
 
-    console.log(`Generating TTS for text of length: ${text.length}`);
-
-    // Use Sarah voice by default - warm and friendly female voice
+    // Use Sarah voice - warm female voice
     const selectedVoiceId = voiceId || "EXAVITQu4vr4xnSDxMaL";
 
+    // Use turbo model for faster response
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${selectedVoiceId}`,
+      `https://api.elevenlabs.io/v1/text-to-speech/${selectedVoiceId}/stream`,
       {
         method: "POST",
         headers: {
@@ -39,13 +36,11 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           text,
-          model_id: "eleven_multilingual_v2",
-          output_format: "mp3_44100_128",
+          model_id: "eleven_turbo_v2_5",
+          output_format: "mp3_22050_32",
           voice_settings: {
             stability: 0.5,
             similarity_boost: 0.75,
-            style: 0.4,
-            use_speaker_boost: true,
           },
         }),
       }
@@ -53,21 +48,19 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`ElevenLabs API error: ${response.status} - ${errorText}`);
+      console.error(`ElevenLabs error: ${response.status} - ${errorText}`);
       throw new Error(`ElevenLabs API error: ${response.status}`);
     }
 
-    const audioBuffer = await response.arrayBuffer();
-    console.log(`Generated audio of size: ${audioBuffer.byteLength} bytes`);
-
-    return new Response(audioBuffer, {
+    return new Response(response.body, {
       headers: {
         ...corsHeaders,
         "Content-Type": "audio/mpeg",
+        "Transfer-Encoding": "chunked",
       },
     });
   } catch (error) {
-    console.error("Error in elevenlabs-tts function:", error);
+    console.error("TTS error:", error);
     return new Response(
       JSON.stringify({ error: error.message }),
       {
