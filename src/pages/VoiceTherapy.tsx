@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Mic, Square, Heart, Brain, Info, Volume2, Loader2 } from 'lucide-react';
+import { Mic, Square, Heart, Brain, Info, Volume2, Loader2, Pause, Play } from 'lucide-react';
 import { toast } from 'sonner';
 import { getAIResponse } from '@/services/aiService';
 import Header from '@/components/Header';
@@ -21,6 +21,8 @@ const VoiceTherapy = () => {
   const [moodAfter, setMoodAfter] = useState([5]);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [playingResponseId, setPlayingResponseId] = useState<string | null>(null);
+  const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const [recordingDuration, setRecordingDuration] = useState(0);
@@ -80,15 +82,17 @@ const VoiceTherapy = () => {
   const playResponse = async (text: string, sessionId: string) => {
     try {
       setPlayingResponseId(sessionId);
+      setIsLoadingAudio(true);
+      setIsPaused(false);
       
       const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+        `https://fqqnbpgoqtnrzjgzllja.supabase.co/functions/v1/elevenlabs-tts`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxcW5icGdvcXRucnpqZ3psbGphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwMDg4NTQsImV4cCI6MjA1OTU4NDg1NH0.7pNJ3hmrED_BM1qB9Z-_KNYPdjAnnRm4cpQYWeEXlTk",
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxcW5icGdvcXRucnpqZ3psbGphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwMDg4NTQsImV4cCI6MjA1OTU4NDg1NH0.7pNJ3hmrED_BM1qB9Z-_KNYPdjAnnRm4cpQYWeEXlTk`,
           },
           body: JSON.stringify({ text }),
         }
@@ -108,13 +112,18 @@ const VoiceTherapy = () => {
       const audio = new Audio(audioUrlObj);
       audioRef.current = audio;
       
+      setIsLoadingAudio(false);
+      
       audio.onended = () => {
         setPlayingResponseId(null);
+        setIsPaused(false);
         URL.revokeObjectURL(audioUrlObj);
       };
       
       audio.onerror = () => {
         setPlayingResponseId(null);
+        setIsPaused(false);
+        setIsLoadingAudio(false);
         toast.error('Failed to play audio');
       };
       
@@ -122,7 +131,30 @@ const VoiceTherapy = () => {
     } catch (error) {
       console.error('TTS error:', error);
       setPlayingResponseId(null);
+      setIsPaused(false);
+      setIsLoadingAudio(false);
       toast.error('Failed to generate speech');
+    }
+  };
+
+  const togglePause = () => {
+    if (audioRef.current) {
+      if (isPaused) {
+        audioRef.current.play();
+        setIsPaused(false);
+      } else {
+        audioRef.current.pause();
+        setIsPaused(true);
+      }
+    }
+  };
+
+  const stopPlayback = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setPlayingResponseId(null);
+      setIsPaused(false);
     }
   };
 
@@ -332,25 +364,49 @@ const VoiceTherapy = () => {
                   <div className="bg-primary/5 p-4 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium">🌸 Dr. Chetna's Response:</h4>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => playResponse(session.ai_response!, session.id)}
-                        disabled={playingResponseId === session.id}
-                        className="gap-2"
-                      >
+                      <div className="flex gap-2">
                         {playingResponseId === session.id ? (
-                          <>
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            Playing...
-                          </>
+                          isLoadingAudio ? (
+                            <Button variant="outline" size="sm" disabled className="gap-2">
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              Loading...
+                            </Button>
+                          ) : (
+                            <>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={togglePause}
+                                className="gap-1"
+                              >
+                                {isPaused ? (
+                                  <><Play className="h-4 w-4" /> Resume</>
+                                ) : (
+                                  <><Pause className="h-4 w-4" /> Pause</>
+                                )}
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={stopPlayback}
+                                className="gap-1"
+                              >
+                                <Square className="h-4 w-4" /> Stop
+                              </Button>
+                            </>
+                          )
                         ) : (
-                          <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => playResponse(session.ai_response!, session.id)}
+                            className="gap-2"
+                          >
                             <Volume2 className="h-4 w-4" />
                             Listen
-                          </>
+                          </Button>
                         )}
-                      </Button>
+                      </div>
                     </div>
                     <p className="text-sm">{session.ai_response}</p>
                   </div>
