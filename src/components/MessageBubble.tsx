@@ -1,7 +1,9 @@
-
-import React from "react";
+import React, { useState, useRef } from "react";
 import { format } from "date-fns";
 import ReactMarkdown from 'react-markdown';
+import { Volume2, Pause, Square, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 interface MessageBubbleProps {
   message: string;
@@ -10,6 +12,78 @@ interface MessageBubbleProps {
 }
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isUser, timestamp }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const playTTS = async () => {
+    if (isPaused && audioRef.current) {
+      audioRef.current.play();
+      setIsPaused(false);
+      setIsPlaying(true);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ text: message }),
+        }
+      );
+
+      if (!response.ok) throw new Error("TTS request failed");
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      
+      if (audioRef.current) {
+        audioRef.current.pause();
+        URL.revokeObjectURL(audioRef.current.src);
+      }
+      
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      
+      audio.onended = () => {
+        setIsPlaying(false);
+        setIsPaused(false);
+      };
+      
+      await audio.play();
+      setIsPlaying(true);
+    } catch (error) {
+      console.error("TTS error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const pauseTTS = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPaused(true);
+      setIsPlaying(false);
+    }
+  };
+
+  const stopTTS = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+      setIsPaused(false);
+    }
+  };
+
   if (isUser) {
     return (
       <div className="flex items-end gap-2 justify-end">
@@ -58,8 +132,44 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isUser, timestam
             {message}
           </ReactMarkdown>
         </div>
-        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-          {format(timestamp, "HH:mm")}
+        <div className="flex items-center justify-between mt-2">
+          <div className="text-xs text-gray-500 dark:text-gray-400">
+            {format(timestamp, "HH:mm")}
+          </div>
+          <div className="flex items-center gap-1">
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-chetna-primary" />
+            ) : isPlaying ? (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 text-chetna-primary hover:bg-chetna-primary/10"
+                  onClick={pauseTTS}
+                >
+                  <Pause className="h-3 w-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 text-chetna-primary hover:bg-chetna-primary/10"
+                  onClick={stopTTS}
+                >
+                  <Square className="h-3 w-3" />
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-chetna-primary hover:bg-chetna-primary/10"
+                onClick={playTTS}
+                title={isPaused ? "Resume" : "Listen"}
+              >
+                <Volume2 className="h-3 w-3" />
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>
