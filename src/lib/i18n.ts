@@ -85,6 +85,8 @@ const resources = {
       "chat.autoPlayOff": "Auto-play off",
       "chat.autoPlayOnDesc": "Dr. Chetna will speak responses aloud",
       "chat.autoPlayOffDesc": "Responses will not be spoken automatically",
+      "chat.speedControl": "Voice speed",
+      "chat.voiceSpeed": "Voice Speed",
       // Chat Response Templates (fallback responses when AI is not available)
       "chat.responses.hello1": "Hello! I'm Chetna, your mental wellness companion. How are you feeling today?",
       "chat.responses.hello2": "Hi there! I'm here to listen and support you. How has your day been so far?",
@@ -211,6 +213,8 @@ const resources = {
       "chat.autoPlayOff": "ऑटो-प्ले बंद",
       "chat.autoPlayOnDesc": "डॉ. चेतना जवाब बोलेंगी",
       "chat.autoPlayOffDesc": "जवाब स्वचालित रूप से नहीं बोले जाएंगे",
+      "chat.speedControl": "आवाज़ की गति",
+      "chat.voiceSpeed": "आवाज़ की गति",
       // Chat Response Templates (fallback responses when AI is not available)
       "chat.responses.hello1": "नमस्ते! मैं चेतना हूं, आपकी मानसिक कल्याण साथी। आज आप कैसा महसूस कर रहे हैं?",
       "chat.responses.hello2": "नमस्ते! मैं यहां सुनने और आपका समर्थन करने के लिए हूं। आपका दिन कैसा रहा है?",
@@ -324,6 +328,8 @@ const resources = {
       "chat.autoPlayOff": "ઓટો-પ્લે બંધ",
       "chat.autoPlayOnDesc": "ડૉ. ચેતના જવાબો બોલશે",
       "chat.autoPlayOffDesc": "જવાબો આપોઆપ બોલાશે નહીં",
+      "chat.speedControl": "અવાજની ગતિ",
+      "chat.voiceSpeed": "અવાજની ગતિ",
       // Chat Response Templates (fallback responses when AI is not available)
       "chat.responses.hello1": "નમસ્તે! હું ચેતના છું, તમારી માનસિક કલ્યાણ સાથી. આજે તમે કેવું અનુભવો છો?",
       "chat.responses.hello2": "નમસ્તે! હું અહીં સાંભળવા અને તમારો ટેકો આપવા માટે છું. તમારો દિવસ કેવો રહ્યો?",

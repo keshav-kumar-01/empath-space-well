@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { text, voiceId } = await req.json();
+    const { text, voiceId, speed } = await req.json();
     const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
 
     if (!ELEVENLABS_API_KEY) {
@@ -24,6 +24,11 @@ serve(async (req) => {
 
     // Use Lily voice - warm, smooth Indian-style female voice
     const selectedVoiceId = voiceId || "pFZP5JQG7iQjIQuC4Bku";
+    
+    // Clamp speed between 0.5 and 1.5, default to 0.85
+    const playbackSpeed = Math.max(0.5, Math.min(1.5, speed || 0.85));
+
+    console.log(`TTS request - speed: ${playbackSpeed}, text length: ${text.length}`);
 
     // Use turbo model for faster response with smooth voice settings
     const response = await fetch(
@@ -43,7 +48,7 @@ serve(async (req) => {
             similarity_boost: 0.8,
             style: 0.3,
             use_speaker_boost: true,
-            speed: 0.85,
+            speed: playbackSpeed,
           },
         }),
       }

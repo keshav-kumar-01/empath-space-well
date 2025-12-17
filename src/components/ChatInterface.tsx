@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, LogIn, Mic, MicOff, Volume2, VolumeX } from "lucide-react";
+import { Send, LogIn, Mic, MicOff, Volume2, VolumeX, Gauge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Slider } from "@/components/ui/slider";
 import MessageBubble from "./MessageBubble";
 import { getTranslatedResponse } from "@/utils/translatedChatResponses";
 import { useTranslation } from "react-i18next";
@@ -62,6 +64,13 @@ const ChatInterface: React.FC = () => {
       return localStorage.getItem('chetna_autoplay') === 'true';
     } catch {
       return false;
+    }
+  });
+  const [playbackSpeed, setPlaybackSpeed] = useState(() => {
+    try {
+      return parseFloat(localStorage.getItem('chetna_playback_speed') || '0.85');
+    } catch {
+      return 0.85;
     }
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -392,10 +401,48 @@ const ChatInterface: React.FC = () => {
 
   return (
     <div className="chat-container flex flex-col h-[60vh] sm:h-[65vh] md:h-[75vh] bg-white dark:bg-chetna-dark/50 rounded-xl shadow-lg overflow-hidden border border-chetna-primary/10 dark:border-chetna-primary/30 w-full max-w-full mx-auto">
-      {/* Chat header with clear button and auto-play toggle */}
+      {/* Chat header with clear button, auto-play toggle, and speed control */}
       <div className="flex justify-between items-center p-3 border-b border-chetna-primary/10 dark:border-chetna-primary/30 bg-gradient-to-r from-chetna-primary/5 to-chetna-accent/5">
         <h3 className="font-semibold text-chetna-primary dark:text-chetna-primary">{t('chat.title')}</h3>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10 gap-1 px-2"
+                title={t('chat.speedControl')}
+              >
+                <Gauge className="h-4 w-4" />
+                <span className="text-xs">{playbackSpeed}x</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-64 p-4" align="end">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">{t('chat.voiceSpeed')}</span>
+                  <span className="text-sm text-muted-foreground">{playbackSpeed}x</span>
+                </div>
+                <Slider
+                  value={[playbackSpeed]}
+                  min={0.5}
+                  max={1.5}
+                  step={0.05}
+                  onValueChange={(value) => {
+                    const newSpeed = value[0];
+                    setPlaybackSpeed(newSpeed);
+                    localStorage.setItem('chetna_playback_speed', String(newSpeed));
+                  }}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>0.5x</span>
+                  <span>1.0x</span>
+                  <span>1.5x</span>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
           <Button
             variant="ghost"
             size="sm"
@@ -473,6 +520,7 @@ const ChatInterface: React.FC = () => {
             timestamp={message.timestamp}
             autoPlay={autoPlayEnabled}
             isLatest={index === messages.length - 1 && !isTyping}
+            playbackSpeed={playbackSpeed}
           />
         ))}
         
