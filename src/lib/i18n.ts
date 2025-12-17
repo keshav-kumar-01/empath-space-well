@@ -81,7 +81,10 @@ const resources = {
       "chat.cleared": "Chat cleared",
       "chat.clearedDescription": "Your chat session has been automatically cleared for privacy",
       "chat.status.aiActive": "✅ AI Active",
-      
+      "chat.autoPlayOn": "Auto-play on",
+      "chat.autoPlayOff": "Auto-play off",
+      "chat.autoPlayOnDesc": "Dr. Chetna will speak responses aloud",
+      "chat.autoPlayOffDesc": "Responses will not be spoken automatically",
       // Chat Response Templates (fallback responses when AI is not available)
       "chat.responses.hello1": "Hello! I'm Chetna, your mental wellness companion. How are you feeling today?",
       "chat.responses.hello2": "Hi there! I'm here to listen and support you. How has your day been so far?",
@@ -204,7 +207,10 @@ const resources = {
       "chat.cleared": "चैट साफ़ किया गया",
       "chat.clearedDescription": "गोपनीयता के लिए आपका चैट सत्र स्वचालित रूप से साफ़ कर दिया गया है",
       "chat.status.aiActive": "✅ AI सक्रिय",
-      
+      "chat.autoPlayOn": "ऑटो-प्ले चालू",
+      "chat.autoPlayOff": "ऑटो-प्ले बंद",
+      "chat.autoPlayOnDesc": "डॉ. चेतना जवाब बोलेंगी",
+      "chat.autoPlayOffDesc": "जवाब स्वचालित रूप से नहीं बोले जाएंगे",
       // Chat Response Templates (fallback responses when AI is not available)
       "chat.responses.hello1": "नमस्ते! मैं चेतना हूं, आपकी मानसिक कल्याण साथी। आज आप कैसा महसूस कर रहे हैं?",
       "chat.responses.hello2": "नमस्ते! मैं यहां सुनने और आपका समर्थन करने के लिए हूं। आपका दिन कैसा रहा है?",
@@ -314,7 +320,10 @@ const resources = {
       "chat.cleared": "ચેટ સાફ થઈ ગઈ",
       "chat.clearedDescription": "ગોપનીયતા માટે તમારું ચેટ સત્ર આપમેળે સાફ કરવામાં આવ્યું છે",
       "chat.status.aiActive": "✅ AI સક્રિય",
-      
+      "chat.autoPlayOn": "ઓટો-પ્લે ચાલુ",
+      "chat.autoPlayOff": "ઓટો-પ્લે બંધ",
+      "chat.autoPlayOnDesc": "ડૉ. ચેતના જવાબો બોલશે",
+      "chat.autoPlayOffDesc": "જવાબો આપોઆપ બોલાશે નહીં",
       // Chat Response Templates (fallback responses when AI is not available)
       "chat.responses.hello1": "નમસ્તે! હું ચેતના છું, તમારી માનસિક કલ્યાણ સાથી. આજે તમે કેવું અનુભવો છો?",
       "chat.responses.hello2": "નમસ્તે! હું અહીં સાંભળવા અને તમારો ટેકો આપવા માટે છું. તમારો દિવસ કેવો રહ્યો?",

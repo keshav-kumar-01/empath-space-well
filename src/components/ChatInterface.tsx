@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, LogIn, Mic, MicOff } from "lucide-react";
+import { Send, LogIn, Mic, MicOff, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MessageBubble from "./MessageBubble";
@@ -57,6 +57,13 @@ const ChatInterface: React.FC = () => {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
+  const [autoPlayEnabled, setAutoPlayEnabled] = useState(() => {
+    try {
+      return localStorage.getItem('chetna_autoplay') === 'true';
+    } catch {
+      return false;
+    }
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const autoClearTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -385,17 +392,36 @@ const ChatInterface: React.FC = () => {
 
   return (
     <div className="chat-container flex flex-col h-[60vh] sm:h-[65vh] md:h-[75vh] bg-white dark:bg-chetna-dark/50 rounded-xl shadow-lg overflow-hidden border border-chetna-primary/10 dark:border-chetna-primary/30 w-full max-w-full mx-auto">
-      {/* Chat header with clear button */}
+      {/* Chat header with clear button and auto-play toggle */}
       <div className="flex justify-between items-center p-3 border-b border-chetna-primary/10 dark:border-chetna-primary/30 bg-gradient-to-r from-chetna-primary/5 to-chetna-accent/5">
         <h3 className="font-semibold text-chetna-primary dark:text-chetna-primary">{t('chat.title')}</h3>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={clearChat}
-          className="text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10"
-        >
-          {t('chat.clearChat')}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              const newValue = !autoPlayEnabled;
+              setAutoPlayEnabled(newValue);
+              localStorage.setItem('chetna_autoplay', String(newValue));
+              toast({
+                title: newValue ? t('chat.autoPlayOn') : t('chat.autoPlayOff'),
+                description: newValue ? t('chat.autoPlayOnDesc') : t('chat.autoPlayOffDesc'),
+              });
+            }}
+            className={`text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10 ${autoPlayEnabled ? 'bg-chetna-primary/10' : ''}`}
+            title={autoPlayEnabled ? t('chat.autoPlayOn') : t('chat.autoPlayOff')}
+          >
+            {autoPlayEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clearChat}
+            className="text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10"
+          >
+            {t('chat.clearChat')}
+          </Button>
+        </div>
       </div>
 
       <div className="message-container flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto space-y-4 bg-white/80 dark:bg-chetna-darker/80 w-full">
@@ -445,6 +471,8 @@ const ChatInterface: React.FC = () => {
             message={message.text}
             isUser={message.isUser}
             timestamp={message.timestamp}
+            autoPlay={autoPlayEnabled}
+            isLatest={index === messages.length - 1 && !isTyping}
           />
         ))}
         
