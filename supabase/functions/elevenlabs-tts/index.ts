@@ -22,10 +22,10 @@ serve(async (req) => {
       throw new Error("Text is required");
     }
 
-    // Use Sarah voice - warm female voice
-    const selectedVoiceId = voiceId || "EXAVITQu4vr4xnSDxMaL";
+    // Use Lily voice - warm, smooth Indian-style female voice
+    const selectedVoiceId = voiceId || "pFZP5JQG7iQjIQuC4Bku";
 
-    // Use turbo model for faster response
+    // Use turbo model for faster response with smooth voice settings
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${selectedVoiceId}/stream`,
       {
@@ -39,8 +39,11 @@ serve(async (req) => {
           model_id: "eleven_turbo_v2_5",
           output_format: "mp3_22050_32",
           voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.75,
+            stability: 0.75,
+            similarity_boost: 0.8,
+            style: 0.3,
+            use_speaker_boost: true,
+            speed: 0.85,
           },
         }),
       }

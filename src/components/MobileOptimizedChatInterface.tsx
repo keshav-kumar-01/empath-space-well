@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, LogIn, Mic, MicOff } from "lucide-react";
+import { Send, LogIn, Mic, MicOff, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MessageBubble from "./MessageBubble";
@@ -56,6 +56,13 @@ const MobileOptimizedChatInterface: React.FC = () => {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
+  const [autoPlayEnabled, setAutoPlayEnabled] = useState(() => {
+    try {
+      return localStorage.getItem('chetna_autoplay') === 'true';
+    } catch {
+      return false;
+    }
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const autoClearTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -327,14 +334,33 @@ const MobileOptimizedChatInterface: React.FC = () => {
             </p>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={clearChat}
-          className="text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10 text-xs h-8 px-3 rounded-full"
-        >
-          🗑️ {t('chat.clearChat')}
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              const newValue = !autoPlayEnabled;
+              setAutoPlayEnabled(newValue);
+              localStorage.setItem('chetna_autoplay', String(newValue));
+              toast({
+                title: newValue ? t('chat.autoPlayOn') : t('chat.autoPlayOff'),
+                description: newValue ? t('chat.autoPlayOnDesc') : t('chat.autoPlayOffDesc'),
+              });
+            }}
+            className={`text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10 h-8 w-8 p-0 ${autoPlayEnabled ? 'bg-chetna-primary/10' : ''}`}
+            title={autoPlayEnabled ? t('chat.autoPlayOn') : t('chat.autoPlayOff')}
+          >
+            {autoPlayEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clearChat}
+            className="text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10 text-xs h-8 px-2 rounded-full"
+          >
+            🗑️
+          </Button>
+        </div>
       </div>
 
       {/* Enhanced messages container with better mobile UX */}
@@ -378,6 +404,8 @@ const MobileOptimizedChatInterface: React.FC = () => {
             message={message.text}
             isUser={message.isUser}
             timestamp={message.timestamp}
+            autoPlay={autoPlayEnabled}
+            isLatest={index === messages.length - 1 && !isTyping}
           />
         ))}
         

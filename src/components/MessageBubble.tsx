@@ -9,13 +9,24 @@ interface MessageBubbleProps {
   message: string;
   isUser: boolean;
   timestamp: Date;
+  autoPlay?: boolean;
+  isLatest?: boolean;
 }
 
-const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isUser, timestamp }) => {
+const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isUser, timestamp, autoPlay = false, isLatest = false }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const hasAutoPlayed = useRef(false);
+
+  // Auto-play for latest AI message
+  React.useEffect(() => {
+    if (autoPlay && isLatest && !isUser && !hasAutoPlayed.current) {
+      hasAutoPlayed.current = true;
+      playTTS();
+    }
+  }, [autoPlay, isLatest, isUser]);
 
   const playTTS = async () => {
     if (isPaused && audioRef.current) {
