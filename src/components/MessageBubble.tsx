@@ -11,9 +11,10 @@ interface MessageBubbleProps {
   timestamp: Date;
   autoPlay?: boolean;
   isLatest?: boolean;
+  playbackSpeed?: number;
 }
 
-const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isUser, timestamp, autoPlay = false, isLatest = false }) => {
+const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isUser, timestamp, autoPlay = false, isLatest = false, playbackSpeed = 0.85 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,15 +40,15 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isUser, timestam
     setIsLoading(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+        `https://fqqnbpgoqtnrzjgzllja.supabase.co/functions/v1/elevenlabs-tts`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxcW5icGdvcXRucnpqZ3psbGphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwMDg4NTQsImV4cCI6MjA1OTU4NDg1NH0.7pNJ3hmrED_BM1qB9Z-_KNYPdjAnnRm4cpQYWeEXlTk",
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxcW5icGdvcXRucnpqZ3psbGphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwMDg4NTQsImV4cCI6MjA1OTU4NDg1NH0.7pNJ3hmrED_BM1qB9Z-_KNYPdjAnnRm4cpQYWeEXlTk`,
           },
-          body: JSON.stringify({ text: message }),
+          body: JSON.stringify({ text: message, speed: playbackSpeed }),
         }
       );
 
