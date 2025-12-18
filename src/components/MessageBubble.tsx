@@ -3,7 +3,29 @@ import { format } from "date-fns";
 import ReactMarkdown from 'react-markdown';
 import { Volume2, Pause, Square, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+
+// Audio waveform animation component
+const AudioWaveform: React.FC = () => (
+  <div className="flex items-center gap-0.5 h-4">
+    {[...Array(5)].map((_, i) => (
+      <div
+        key={i}
+        className="w-0.5 bg-chetna-primary rounded-full"
+        style={{
+          height: '100%',
+          animation: `waveform 0.8s ease-in-out infinite`,
+          animationDelay: `${i * 0.1}s`,
+        }}
+      />
+    ))}
+    <style>{`
+      @keyframes waveform {
+        0%, 100% { transform: scaleY(0.3); }
+        50% { transform: scaleY(1); }
+      }
+    `}</style>
+  </div>
+);
 
 interface MessageBubbleProps {
   message: string;
@@ -153,6 +175,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isUser, timestam
               <Loader2 className="h-4 w-4 animate-spin text-chetna-primary" />
             ) : isPlaying ? (
               <>
+                <AudioWaveform />
                 <Button
                   variant="ghost"
                   size="icon"
