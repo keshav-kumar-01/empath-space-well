@@ -73,6 +73,13 @@ const ChatInterface: React.FC = () => {
       return 0.85;
     }
   });
+  const [isMuted, setIsMuted] = useState(() => {
+    try {
+      return localStorage.getItem('chetna_muted') === 'true';
+    } catch {
+      return false;
+    }
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const autoClearTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -447,6 +454,22 @@ const ChatInterface: React.FC = () => {
             variant="ghost"
             size="sm"
             onClick={() => {
+              const newValue = !isMuted;
+              setIsMuted(newValue);
+              localStorage.setItem('chetna_muted', String(newValue));
+              toast({
+                title: newValue ? t('chat.muted') : t('chat.unmuted'),
+              });
+            }}
+            className={`text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10 ${isMuted ? 'bg-red-100 dark:bg-red-900/30' : ''}`}
+            title={isMuted ? t('chat.unmute') : t('chat.mute')}
+          >
+            {isMuted ? <VolumeX className="h-4 w-4 text-red-500" /> : <Volume2 className="h-4 w-4" />}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
               const newValue = !autoPlayEnabled;
               setAutoPlayEnabled(newValue);
               localStorage.setItem('chetna_autoplay', String(newValue));
@@ -455,10 +478,10 @@ const ChatInterface: React.FC = () => {
                 description: newValue ? t('chat.autoPlayOnDesc') : t('chat.autoPlayOffDesc'),
               });
             }}
-            className={`text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10 ${autoPlayEnabled ? 'bg-chetna-primary/10' : ''}`}
+            className={`text-chetna-primary/70 hover:text-chetna-primary hover:bg-chetna-primary/10 px-2 gap-1 ${autoPlayEnabled ? 'bg-chetna-primary/10' : ''}`}
             title={autoPlayEnabled ? t('chat.autoPlayOn') : t('chat.autoPlayOff')}
           >
-            {autoPlayEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+            <span className="text-xs">{autoPlayEnabled ? 'Auto' : 'Manual'}</span>
           </Button>
           <Button
             variant="ghost"
@@ -521,6 +544,7 @@ const ChatInterface: React.FC = () => {
             autoPlay={autoPlayEnabled}
             isLatest={index === messages.length - 1 && !isTyping}
             playbackSpeed={playbackSpeed}
+            isMuted={isMuted}
           />
         ))}
         

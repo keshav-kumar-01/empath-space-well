@@ -34,18 +34,26 @@ interface MessageBubbleProps {
   autoPlay?: boolean;
   isLatest?: boolean;
   playbackSpeed?: number;
+  isMuted?: boolean;
 }
 
-const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isUser, timestamp, autoPlay = false, isLatest = false, playbackSpeed = 0.85 }) => {
+const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isUser, timestamp, autoPlay = false, isLatest = false, playbackSpeed = 0.85, isMuted = false }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hasAutoPlayed = useRef(false);
 
-  // Auto-play for latest AI message
+  // Apply muted state to audio
   React.useEffect(() => {
-    if (autoPlay && isLatest && !isUser && !hasAutoPlayed.current) {
+    if (audioRef.current) {
+      audioRef.current.muted = isMuted;
+    }
+  }, [isMuted]);
+
+  // Auto-play for latest AI message (skip if muted)
+  React.useEffect(() => {
+    if (autoPlay && isLatest && !isUser && !hasAutoPlayed.current && !isMuted) {
       hasAutoPlayed.current = true;
       playTTS();
     }

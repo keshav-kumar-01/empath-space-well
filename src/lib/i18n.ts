@@ -87,6 +87,10 @@ const resources = {
       "chat.autoPlayOffDesc": "Responses will not be spoken automatically",
       "chat.speedControl": "Voice speed",
       "chat.voiceSpeed": "Voice Speed",
+      "chat.muted": "Audio muted",
+      "chat.unmuted": "Audio unmuted",
+      "chat.mute": "Mute audio",
+      "chat.unmute": "Unmute audio",
       // Chat Response Templates (fallback responses when AI is not available)
       "chat.responses.hello1": "Hello! I'm Chetna, your mental wellness companion. How are you feeling today?",
       "chat.responses.hello2": "Hi there! I'm here to listen and support you. How has your day been so far?",
