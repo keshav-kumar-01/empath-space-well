@@ -12,6 +12,7 @@ export const LazyGroupTherapy = lazy(() => import('@/pages/GroupTherapy'));
 export const LazyWellnessPlans = lazy(() => import('@/pages/WellnessPlans'));
 export const LazyAppointmentBooking = lazy(() => import('@/pages/AppointmentBooking'));
 export const LazyTherapistDashboard = lazy(() => import('@/pages/TherapistDashboard'));
+export const LazyGroupSession = lazy(() => import('@/pages/GroupSession'));
 
 // Heavy components that should be lazy loaded
 export const LazyChatInterface = lazy(() => import('@/components/ChatInterface'));
