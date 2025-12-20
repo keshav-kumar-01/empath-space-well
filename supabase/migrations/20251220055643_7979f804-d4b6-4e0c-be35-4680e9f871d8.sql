@@ -1,0 +1,7 @@
+-- Seed sample therapy rooms with valid therapy_type values
+INSERT INTO public.group_therapy_rooms (room_name, description, therapy_type, max_participants, meeting_schedule, is_active) VALUES
+('Anxiety Support Circle', 'A safe and welcoming space to share experiences and learn coping strategies for anxiety together. All feelings are valid here.', 'anxiety', 8, '{"day": "Monday", "time": "7:00 PM", "timezone": "IST"}', true),
+('Depression & Mood Support', 'Connect with others who understand what you''re going through. Share your journey and find hope in community support.', 'depression', 6, '{"day": "Wednesday", "time": "6:00 PM", "timezone": "IST"}', true),
+('Grief & Loss Circle', 'A compassionate space for healing together through shared experiences of loss. Honor your feelings and find support.', 'grief', 6, '{"day": "Tuesday", "time": "5:00 PM", "timezone": "IST"}', true),
+('General Wellness Group', 'Open discussions about mental wellness, self-care practices, and personal growth. All topics welcome.', 'general', 10, '{"day": "Friday", "time": "4:00 PM", "timezone": "IST"}', true),
+('Addiction Recovery Circle', 'A judgment-free space for those in recovery. Share your journey and support each other.', 'addiction', 8, '{"day": "Thursday", "time": "8:00 PM", "timezone": "IST"}', true);

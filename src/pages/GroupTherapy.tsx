@@ -8,12 +8,13 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Users, Video, UserPlus, UserMinus, Calendar, ArrowLeft, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const GroupTherapy = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<any>(null);
 
   // Get current user
@@ -310,7 +311,7 @@ const GroupTherapy = () => {
                           <Button
                             size="sm"
                             className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600"
-                            onClick={() => toast.success('Session will start soon! 🎥')}
+                            onClick={() => navigate(`/group-therapy/${room.id}/session`)}
                           >
                             <Video className="mr-2 h-4 w-4" />
                             Join Session

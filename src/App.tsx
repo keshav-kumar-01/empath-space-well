@@ -50,7 +50,8 @@ import {
   LazyGroupTherapy,
   LazyWellnessPlans,
   LazyAppointmentBooking,
-  LazyTherapistDashboard
+  LazyTherapistDashboard,
+  LazyGroupSession
 } from '@/utils/lazyComponents';
 
 const queryClient = new QueryClient();
@@ -129,6 +130,11 @@ function App() {
                 <Route path="/group-therapy" element={
                   <Suspense fallback={<LoadingSpinner text="Loading Group Therapy..." />}>
                     <LazyGroupTherapy />
+                  </Suspense>
+                } />
+                <Route path="/group-therapy/:roomId/session" element={
+                  <Suspense fallback={<LoadingSpinner text="Joining Session..." />}>
+                    <LazyGroupSession />
                   </Suspense>
                 } />
                 <Route path="/admin-panel" element={
