@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Send, LogIn, Mic, MicOff, Volume2, VolumeX, Gauge } from "lucide-react";
-import FollowUpSuggestions, { generateFollowUps } from "./FollowUpSuggestions";
+import FollowUpSuggestions from "./FollowUpSuggestions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -317,11 +317,14 @@ const ChatInterface: React.FC = () => {
     
     try {
       // Pass user's test results to AI for personalized responses
-      const aiResponseText = await getAIResponse(
+      const aiResult = await getAIResponse(
         userMessage.text, 
         (msg) => getTranslatedResponse(msg, t), 
         userTestResults || []
       );
+      
+      const aiResponseText = aiResult.response;
+      const suggestions = aiResult.followUpSuggestions || [];
       
       const responseTime = Math.max(800, Math.min(2000, aiResponseText.length * 20));
       
@@ -334,7 +337,7 @@ const ChatInterface: React.FC = () => {
         
         setMessages((prev) => [...prev, aiResponse]);
         setIsTyping(false);
-        setFollowUpSuggestions(generateFollowUps(aiResponseText));
+        setFollowUpSuggestions(suggestions);
         
         saveMessageToDatabase(aiResponse.text, false);
       }, responseTime);
@@ -350,7 +353,7 @@ const ChatInterface: React.FC = () => {
         
         setMessages((prev) => [...prev, aiResponse]);
         setIsTyping(false);
-        setFollowUpSuggestions(generateFollowUps(aiResponse.text));
+        setFollowUpSuggestions([]);
         
         saveMessageToDatabase(aiResponse.text, false);
         

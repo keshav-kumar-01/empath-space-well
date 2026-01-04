@@ -238,8 +238,61 @@ serve(async (req) => {
     const data = await response.json()
     const aiResponse = data.choices?.[0]?.message?.content || 'I apologize, but I cannot process your request right now. Please try again later.'
 
+    // Generate AI-powered follow-up suggestions based on the conversation
+    const followUpResponse = await fetch('https://api.mistral.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${mistralApiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'mistral-small-latest',
+        messages: [
+          {
+            role: 'system',
+            content: `You are a helpful assistant that generates follow-up question suggestions for a mental health chatbot conversation. Based on the user's message and AI response, generate exactly 3-4 short, relevant follow-up questions the user might want to ask next. 
+            
+Rules:
+- Each question must be under 50 characters
+- Questions should be natural and conversational
+- Focus on deepening the therapeutic conversation
+- Include a mix of practical advice questions and emotional exploration
+- Return ONLY a JSON array of strings, no other text
+
+Example output: ["How can I practice this daily?", "What if I feel overwhelmed?", "Can you explain more?", "What are the warning signs?"]`
+          },
+          {
+            role: 'user',
+            content: `User asked: "${message}"\n\nAI responded: "${aiResponse.substring(0, 500)}"\n\nGenerate 3-4 follow-up questions.`
+          }
+        ],
+        max_tokens: 200,
+        temperature: 0.7,
+      }),
+    });
+
+    let followUpSuggestions: string[] = [];
+    
+    if (followUpResponse.ok) {
+      const followUpData = await followUpResponse.json();
+      const followUpContent = followUpData.choices?.[0]?.message?.content || '[]';
+      try {
+        // Parse the JSON array from the response
+        const parsed = JSON.parse(followUpContent.trim());
+        if (Array.isArray(parsed)) {
+          followUpSuggestions = parsed.slice(0, 4);
+        }
+      } catch (e) {
+        // If parsing fails, try to extract questions from text
+        const matches = followUpContent.match(/"([^"]+)"/g);
+        if (matches) {
+          followUpSuggestions = matches.map((m: string) => m.replace(/"/g, '')).slice(0, 4);
+        }
+      }
+    }
+
     return new Response(
-      JSON.stringify({ response: aiResponse }),
+      JSON.stringify({ response: aiResponse, followUpSuggestions }),
       { 
         headers: { 
           ...corsHeaders,
