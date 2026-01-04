@@ -11,11 +11,16 @@ export const getAIResponse = async (
   message: string, 
   fallbackFn?: (message: string) => string,
   userTestResults?: any[]
-): Promise<string> => {
+): Promise<AIResponse> => {
   return generateAIResponse(message);
 };
 
-export const generateAIResponse = async (message: string): Promise<string> => {
+export interface AIResponse {
+  response: string;
+  followUpSuggestions: string[];
+}
+
+export const generateAIResponse = async (message: string): Promise<AIResponse> => {
   try {
     // Get the current session to include auth token
     const { data: { session } } = await supabase.auth.getSession();
@@ -62,20 +67,32 @@ export const generateAIResponse = async (message: string): Promise<string> => {
       throw new Error('Invalid response from AI service');
     }
 
-    return data.response;
+    return {
+      response: data.response,
+      followUpSuggestions: data.followUpSuggestions || []
+    };
 
   } catch (error) {
     console.error('AI service error:', error);
     
     // Provide fallback responses for common scenarios
     if (error.message?.includes('Authentication required')) {
-      return "I'm here to help! Please log in to continue our conversation and access personalized mental health support.";
+      return {
+        response: "I'm here to help! Please log in to continue our conversation and access personalized mental health support.",
+        followUpSuggestions: []
+      };
     }
     
     if (error.message?.includes('network') || error.message?.includes('fetch')) {
-      return "I'm experiencing some connectivity issues right now. Please check your internet connection and try again in a moment.";
+      return {
+        response: "I'm experiencing some connectivity issues right now. Please check your internet connection and try again in a moment.",
+        followUpSuggestions: []
+      };
     }
     
-    return "I apologize, but I'm having trouble processing your request right now. Please try again in a few moments, and if the problem persists, our support team is here to help.";
+    return {
+      response: "I apologize, but I'm having trouble processing your request right now. Please try again in a few moments, and if the problem persists, our support team is here to help.",
+      followUpSuggestions: []
+    };
   }
 };
