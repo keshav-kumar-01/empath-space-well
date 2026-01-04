@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Send, LogIn, Mic, MicOff, Volume2, VolumeX, Gauge } from "lucide-react";
+import FollowUpSuggestions, { generateFollowUps } from "./FollowUpSuggestions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -59,6 +60,7 @@ const ChatInterface: React.FC = () => {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
+  const [followUpSuggestions, setFollowUpSuggestions] = useState<string[]>([]);
   const [autoPlayEnabled, setAutoPlayEnabled] = useState(() => {
     try {
       return localStorage.getItem('chetna_autoplay') === 'true';
@@ -305,6 +307,7 @@ const ChatInterface: React.FC = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsTyping(true);
+    setFollowUpSuggestions([]);
     
     if (!user) {
       setMessageCount(prevCount => prevCount + 1);
@@ -331,6 +334,7 @@ const ChatInterface: React.FC = () => {
         
         setMessages((prev) => [...prev, aiResponse]);
         setIsTyping(false);
+        setFollowUpSuggestions(generateFollowUps(aiResponseText));
         
         saveMessageToDatabase(aiResponse.text, false);
       }, responseTime);
@@ -346,6 +350,7 @@ const ChatInterface: React.FC = () => {
         
         setMessages((prev) => [...prev, aiResponse]);
         setIsTyping(false);
+        setFollowUpSuggestions(generateFollowUps(aiResponse.text));
         
         saveMessageToDatabase(aiResponse.text, false);
         
@@ -560,6 +565,17 @@ const ChatInterface: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Follow-up suggestions */}
+        <FollowUpSuggestions
+          suggestions={followUpSuggestions}
+          isVisible={!isTyping && followUpSuggestions.length > 0}
+          onSelect={(suggestion) => {
+            setInput(suggestion);
+            setFollowUpSuggestions([]);
+            setTimeout(() => handleSendMessage(), 100);
+          }}
+        />
         
         <div ref={messagesEndRef} />
       </div>

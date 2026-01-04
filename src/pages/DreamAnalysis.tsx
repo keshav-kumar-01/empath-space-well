@@ -12,10 +12,12 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Moon, Sparkles, Eye, Heart, Lightbulb, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { getAIResponse } from '@/services/aiService';
+import FollowUpSuggestions from '@/components/FollowUpSuggestions';
 
 const DreamAnalysis = () => {
   const [dreamText, setDreamText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [followUpSuggestions, setFollowUpSuggestions] = useState<string[]>([]);
   const queryClient = useQueryClient();
 
   const { data: dreams, isLoading } = useQuery({
@@ -65,10 +67,17 @@ const DreamAnalysis = () => {
         setIsAnalyzing(false);
       }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['dream-analysis'] });
       setDreamText('');
       toast.success('Dream analyzed successfully! 🌙');
+      // Set dream-specific follow-ups
+      setFollowUpSuggestions([
+        "What does this dream symbol mean?",
+        "How can I have more meaningful dreams?",
+        "Is this a recurring pattern?",
+        "What actions should I take based on this?"
+      ]);
     },
   });
 
@@ -173,6 +182,18 @@ const DreamAnalysis = () => {
                   </h4>
                   <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
                     <p className="text-foreground">{dream.ai_interpretation}</p>
+                    
+                    {/* Follow-up suggestions for the most recent dream */}
+                    {dreams && dreams[0]?.id === dream.id && (
+                      <FollowUpSuggestions
+                        suggestions={followUpSuggestions}
+                        isVisible={followUpSuggestions.length > 0}
+                        onSelect={(suggestion) => {
+                          setDreamText(suggestion);
+                          setFollowUpSuggestions([]);
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
 
