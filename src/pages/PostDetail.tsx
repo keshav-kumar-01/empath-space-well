@@ -95,7 +95,7 @@ const PostDetail: React.FC = () => {
     return commentsWithAuthors;
   };
   
-  const { data: post, isLoading: postLoading } = useQuery({
+  const { data: post, isLoading: postLoading, refetch: refetchPost } = useQuery({
     queryKey: ["post", id],
     queryFn: fetchPost,
     enabled: !!id,
@@ -127,14 +127,14 @@ const PostDetail: React.FC = () => {
     if (!post) return;
     
     try {
-      const { data, error } = await supabase
-        .from("community_posts")
-        .update({ upvotes: post.upvotes + 1 })
-        .eq("id", post.id)
-        .select()
-        .single();
+      const { error } = await supabase.rpc('increment_post_upvotes', {
+        post_id: post.id
+      });
         
       if (error) throw error;
+      
+      // Refetch to get updated upvote count
+      refetchPost();
       
       toast({
         title: "Post upvoted",
