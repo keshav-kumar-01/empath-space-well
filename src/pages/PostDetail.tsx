@@ -238,6 +238,34 @@ const PostDetail: React.FC = () => {
       });
     }
   };
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (!user) return;
+    
+    try {
+      const { error } = await supabase
+        .from("post_comments")
+        .delete()
+        .eq("id", commentId)
+        .eq("user_id", user.id);
+        
+      if (error) throw error;
+      
+      refetchComments();
+      
+      toast({
+        title: "Comment deleted",
+        description: "Your comment has been removed",
+      });
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      toast({
+        title: "Failed to delete comment",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
+  };
   
   const getMoodIcon = (mood?: MoodType) => {
     switch(mood) {
@@ -409,18 +437,30 @@ const PostDetail: React.FC = () => {
               comments.map((comment) => (
                 <Card key={comment.id} className="bg-white dark:bg-card border border-border/30 dark:border-border/20">
                   <CardContent className="p-4">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback className="bg-gradient-to-br from-chetna-primary to-purple-400 text-white text-xs">
-                          {comment.author_name?.charAt(0) || "A"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <p className="text-sm font-medium">
-                        {comment.author_name || "Anonymous"} 
-                        <span className="text-muted-foreground font-normal ml-2">
-                          {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
-                        </span>
-                      </p>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className="bg-gradient-to-br from-chetna-primary to-purple-400 text-white text-xs">
+                            {comment.author_name?.charAt(0) || "A"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <p className="text-sm font-medium">
+                          {comment.author_name || "Anonymous"} 
+                          <span className="text-muted-foreground font-normal ml-2">
+                            {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
+                          </span>
+                        </p>
+                      </div>
+                      {user && user.id === comment.user_id && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteComment(comment.id)}
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                     <div className="ml-11">
                       <p className="whitespace-pre-line text-sm">{comment.content}</p>
