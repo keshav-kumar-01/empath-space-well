@@ -36,7 +36,8 @@ type Post = {
   updated_at: string;
   upvotes: number;
   category: string | null;
-  user_id: string;
+  user_id: string | null;
+  is_owner: boolean | null;
   mood?: MoodType;
   author_name?: string;
 };
@@ -59,20 +60,20 @@ const PostDetail: React.FC = () => {
   
   const fetchPost = async (): Promise<Post> => {
     const { data, error } = await supabase
-      .from("community_posts")
+      .from("community_posts_public")
       .select("*")
       .eq("id", id)
-      .single();
+      .maybeSingle();
       
     if (error) {
       throw error;
     }
     
-    // We're not using profiles table anymore since it doesn't exist
-    // Simply use "Anonymous" as the author name
-    const authorName = "Anonymous";
+    if (!data) {
+      throw new Error("Post not found");
+    }
     
-    return { ...(data as Post), author_name: authorName };
+    return { ...(data as Post), author_name: "Anonymous" };
   };
   
   const fetchComments = async (): Promise<Comment[]> => {
@@ -110,7 +111,7 @@ const PostDetail: React.FC = () => {
     enabled: !!id,
   });
   
-  const isAuthor = user && post && user.id === post.user_id;
+  const isAuthor = post?.is_owner === true;
   
   const handleUpvote = async () => {
     if (!user) {
