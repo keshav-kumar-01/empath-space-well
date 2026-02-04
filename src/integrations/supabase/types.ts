@@ -1043,6 +1043,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_post_upvotes: { Args: { post_id: string }; Returns: undefined }
       is_therapist_user: { Args: { _user_id: string }; Returns: boolean }
       user_is_in_room: {
         Args: { room_id_param: string; user_id_param: string }
