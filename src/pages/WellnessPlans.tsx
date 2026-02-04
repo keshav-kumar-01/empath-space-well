@@ -45,13 +45,13 @@ const WellnessPlans = () => {
 
         const { data, error } = await supabase
           .from('wellness_plans')
-          .insert({
+          .insert([{
             plan_type: planType,
             title: `AI-Generated ${planType.charAt(0).toUpperCase() + planType.slice(1)} Wellness Plan`,
-            description: aiResponse,
+            description: aiResponse.response,
             activities: activities,
-            user_id: (await supabase.auth.getUser()).data.user?.id
-          })
+            user_id: (await supabase.auth.getUser()).data.user?.id!
+          }])
           .select()
           .single();
 

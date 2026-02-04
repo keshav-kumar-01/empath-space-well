@@ -58,15 +58,15 @@ const VoiceTherapy = () => {
 
       const { data, error } = await supabase
         .from('voice_therapy_sessions')
-        .insert({
-          user_id: (await supabase.auth.getUser()).data.user?.id,
+        .insert([{
+          user_id: (await supabase.auth.getUser()).data.user?.id!,
           session_type: sessionData.sessionType,
           duration: sessionData.duration,
           transcript: sessionData.transcript,
-          ai_response: aiResponse,
+          ai_response: aiResponse.response,
           mood_before: sessionData.moodBefore,
           mood_after: sessionData.moodAfter,
-        })
+        }])
         .select()
         .single();
 

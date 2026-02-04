@@ -39,7 +39,7 @@ const DreamAnalysis = () => {
       try {
         const prompt = `Analyze this dream from a psychological perspective. Provide insights about themes, emotions, and possible meanings: "${dreamDescription}"`;
         
-        const aiInterpretation = await getAIResponse(prompt, () => 
+        const aiResult = await getAIResponse(prompt, () => 
           "Dreams often reflect our subconscious thoughts and emotions. This dream may represent your current mental state and inner feelings."
         );
 
@@ -50,14 +50,14 @@ const DreamAnalysis = () => {
 
         const { data, error } = await supabase
           .from('dream_analysis')
-          .insert({
-            user_id: (await supabase.auth.getUser()).data.user?.id,
+          .insert([{
+            user_id: (await supabase.auth.getUser()).data.user?.id!,
             dream_description: dreamDescription,
-            ai_interpretation: aiInterpretation,
+            ai_interpretation: aiResult.response,
             themes,
             emotions,
             symbols,
-          })
+          }])
           .select()
           .single();
 
