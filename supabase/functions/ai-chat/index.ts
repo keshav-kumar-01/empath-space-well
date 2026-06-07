@@ -200,12 +200,52 @@ serve(async (req) => {
       throw new Error('Mistral API key not configured')
     }
 
+    // ===== RAG: Retrieve relevant knowledge chunks =====
+    let knowledgeContext = "";
+    try {
+      const embRes = await fetch('https://api.mistral.ai/v1/embeddings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${mistralApiKey}`,
+        },
+        body: JSON.stringify({ model: 'mistral-embed', input: [message] }),
+      });
+      if (embRes.ok) {
+        const embData = await embRes.json();
+        const queryEmbedding = embData.data?.[0]?.embedding;
+        if (queryEmbedding) {
+          const adminClient = createClient(
+            Deno.env.get('SUPABASE_URL') ?? '',
+            Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+          );
+          const { data: matches } = await adminClient.rpc('match_knowledge_chunks', {
+            query_embedding: queryEmbedding as any,
+            match_count: 5,
+            filter_category: null,
+          });
+          if (matches && Array.isArray(matches) && matches.length > 0) {
+            const relevant = matches.filter((m: any) => m.similarity > 0.55);
+            if (relevant.length > 0) {
+              knowledgeContext = `\n==== RELEVANT KNOWLEDGE BASE CONTEXT ====\n` +
+                relevant.map((m: any, i: number) =>
+                  `[Source ${i + 1}: ${m.title}${m.category ? ` (${m.category})` : ''}]\n${m.chunk_text}`
+                ).join('\n\n') +
+                `\n\n✅ Use the above context to ground your answer when relevant. Do not quote it verbatim; weave insights naturally into Dr. Chetna's reply.\n==========================================\n`;
+            }
+          }
+        }
+      }
+    } catch (ragErr) {
+      console.error('RAG retrieval failed (non-fatal):', ragErr);
+    }
+
     // Generate personalized prompt
     const systemPrompt = createPersonalizedMentalHealthPrompt(
       message,
       conversationHistory || [],
       testResults
-    );
+    ) + knowledgeContext;
 
     // Call Mistral API
     const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
