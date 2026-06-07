@@ -35,6 +35,7 @@ import Terms from '@/pages/Terms';
 import Pricing from '@/pages/Pricing';
 import Feedback from '@/pages/Feedback';
 import ContactTeam from '@/pages/ContactTeam';
+import AdminKnowledge from '@/pages/AdminKnowledge';
 
 const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'));
 
@@ -142,6 +143,7 @@ function App() {
                     <LazyAdminDashboard />
                   </Suspense>
                 } />
+                <Route path="/admin/knowledge" element={<AdminKnowledge />} />
                 <Route path="/ai-features" element={<AIFeaturesMenu />} />
                 <Route path="/appointments" element={
                   <Suspense fallback={<LoadingSpinner text="Loading Appointments..." />}>

@@ -379,6 +379,80 @@ export type Database = {
         }
         Relationships: []
       }
+      knowledge_chunks: {
+        Row: {
+          chunk_index: number
+          chunk_text: string
+          created_at: string
+          document_id: string
+          embedding: string | null
+          id: string
+          metadata: Json
+        }
+        Insert: {
+          chunk_index: number
+          chunk_text: string
+          created_at?: string
+          document_id: string
+          embedding?: string | null
+          id?: string
+          metadata?: Json
+        }
+        Update: {
+          chunk_index?: number
+          chunk_text?: string
+          created_at?: string
+          document_id?: string
+          embedding?: string | null
+          id?: string
+          metadata?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_chunks_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_documents: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string
+          created_by: string | null
+          id: string
+          metadata: Json
+          source: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          metadata?: Json
+          source?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          metadata?: Json
+          source?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       mental_health_goals: {
         Row: {
           created_at: string
@@ -1045,6 +1119,22 @@ export type Database = {
       }
       increment_post_upvotes: { Args: { post_id: string }; Returns: undefined }
       is_therapist_user: { Args: { _user_id: string }; Returns: boolean }
+      match_knowledge_chunks: {
+        Args: {
+          filter_category?: string
+          match_count?: number
+          query_embedding: string
+        }
+        Returns: {
+          category: string
+          chunk_text: string
+          document_id: string
+          id: string
+          similarity: number
+          source: string
+          title: string
+        }[]
+      }
       user_is_in_room: {
         Args: { room_id_param: string; user_id_param: string }
         Returns: boolean
