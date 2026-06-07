@@ -17,7 +17,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Handle typing indicator
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

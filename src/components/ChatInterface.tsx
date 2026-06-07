@@ -84,7 +84,7 @@ const ChatInterface: React.FC = () => {
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const autoClearTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const autoClearTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();

@@ -26,7 +26,7 @@ export const usePageAnalytics = (pageName?: string) => {
     }
 
     // Log for development
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.log('Page Analytics:', {
         page: location.pathname,
         title: pageName || document.title,
@@ -47,7 +47,7 @@ export const usePageAnalytics = (pageName?: string) => {
     }
 
     // Log for development
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.log('Event Tracked:', eventName, eventParams);
     }
   };
