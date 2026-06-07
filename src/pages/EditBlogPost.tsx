@@ -160,7 +160,7 @@ const EditBlogPost: React.FC = () => {
         <title>Edit Blog Post | Chetna - Mental Wellness Blog</title>
         <meta name="description" content="Edit your blog post on Chetna mental health platform." />
         <meta name="keywords" content="edit blog post, mental health blog, update article" />
-        <link rel="canonical" href={`https://chetna.life/blog/edit/${id}`} />
+        <link rel="canonical" href={`https://empath-space-well.vercel.app/blog/edit/${id}`} />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       

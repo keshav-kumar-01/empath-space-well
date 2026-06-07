@@ -127,7 +127,7 @@ const ResourceLibrary: React.FC = () => {
       <Helmet>
         <title>Resource Library - Chetna_AI</title>
         <meta name="description" content="Comprehensive mental health resources, articles, exercises, and tools" />
-        <link rel="canonical" href="https://chetna.live/resources" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/resources" />
       </Helmet>
       
       <Header />

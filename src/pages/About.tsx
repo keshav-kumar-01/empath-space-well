@@ -112,7 +112,7 @@ const AboutPage = () => {
       <Helmet>
         <title>About Us - Chetna AI</title>
         <meta name="description" content="Learn about Chetna AI - Your Mental Wellness Companion and the team behind it." />
-        <link rel="canonical" href="https://chetna.live/about" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/about" />
       </Helmet>
       
       <Header />

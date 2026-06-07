@@ -49,7 +49,7 @@ const ForgotPassword: React.FC = () => {
       <Helmet>
         <title>Forgot Password - Chetna_AI</title>
         <meta name="description" content="Reset your Chetna_AI password" />
-        <link rel="canonical" href="https://chetna.live/forgot-password" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/forgot-password" />
       </Helmet>
 
       <Header />

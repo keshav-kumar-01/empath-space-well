@@ -113,7 +113,7 @@ const CreateBlogPost: React.FC = () => {
         <title>Create Blog Post | Chetna - Mental Wellness Blog</title>
         <meta name="description" content="Share your insights and stories about mental health on Chetna blog platform." />
         <meta name="keywords" content="create blog post, mental health blog, wellness writing, share story" />
-        <link rel="canonical" href="https://chetna.life/blog/create" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/blog/create" />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       

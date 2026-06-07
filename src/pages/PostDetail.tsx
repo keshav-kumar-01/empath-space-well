@@ -312,11 +312,11 @@ const PostDetail: React.FC = () => {
         <title>{pageTitle} | Chetna - Mental Wellness Community</title>
         <meta name="description" content={pageDescription} />
         <meta name="keywords" content="mental health community, support forum, peer support, mental wellness discussion" />
-        <link rel="canonical" href={`https://chetna.life/community/post/${id}`} />
+        <link rel="canonical" href={`https://empath-space-well.vercel.app/community/post/${id}`} />
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDescription} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={`https://chetna.life/community/post/${id}`} />
+        <meta property="og:url" content={`https://empath-space-well.vercel.app/community/post/${id}`} />
       </Helmet>
       
       <PageLayout>

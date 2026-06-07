@@ -93,7 +93,7 @@ const DreamAnalysis = () => {
       <Helmet>
         <title>Dream Analysis - Chetna_AI</title>
         <meta name="description" content="AI-powered dream interpretation and analysis for mental wellness insights with Chetna_AI" />
-        <link rel="canonical" href="https://chetna.live/dream-analysis" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/dream-analysis" />
       </Helmet>
 
       <Header />

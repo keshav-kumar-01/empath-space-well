@@ -65,7 +65,7 @@ const CrisisSupport: React.FC = () => {
       <Helmet>
         <title>Crisis Support - Chetna_AI</title>
         <meta name="description" content="Immediate crisis support and emergency mental health resources" />
-        <link rel="canonical" href="https://chetna.live/crisis-support" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/crisis-support" />
       </Helmet>
       
       <Header />

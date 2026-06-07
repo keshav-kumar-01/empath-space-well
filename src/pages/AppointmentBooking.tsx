@@ -223,7 +223,7 @@ const AppointmentBooking: React.FC = () => {
       <Helmet>
         <title>Book Appointment - Chetna_AI</title>
         <meta name="description" content="Book therapy sessions with licensed professionals" />
-        <link rel="canonical" href="https://chetna.live/appointments" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/appointments" />
       </Helmet>
       
       <Header />

@@ -109,7 +109,7 @@ const TestResultsPage = () => {
         <title>Your Test Results | Chetna - Mental Health Assessment</title>
         <meta name="description" content="View your comprehensive psychological test results including anxiety, depression, and cognitive assessments on Chetna platform." />
         <meta name="keywords" content="test results, psychological assessment, mental health tests, GAD-7, PHQ-9, BAI, BDI-II" />
-        <link rel="canonical" href="https://chetna.life/test-results" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/test-results" />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       
