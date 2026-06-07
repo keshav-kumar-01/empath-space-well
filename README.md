@@ -2,7 +2,7 @@
 
 ChetnaAI is an AI-powered mental health platform designed to provide emotional support, journaling tools, anonymous community engagement, and personal growth through intelligent conversation. Built with empathy and technology, ChetnaAI aims to break mental health stigmas and make emotional wellness accessible to everyone.
 
-🌐 Website: [chetna.life](https://chetna.life)
+🌐 Website: [empath-space-well.vercel.app](https://empath-space-well.vercel.app)
 
 ## ✨ Features
 
@@ -61,7 +61,7 @@ ChetnaAI is an AI-powered mental health platform designed to provide emotional s
 - **AI Integration:** Mistral AI (Free version)
 - **Database & Auth:** Supabase
 - **Hosting:** Vercel
-- **Domain:** [chetna.life](https://chetna.life)
+- **Domain:** [empath-space-well.vercel.app](https://empath-space-well.vercel.app)
 
 
 💡 Vision
@@ -88,6 +88,6 @@ This project is licensed under the MIT License.
 
 📸 Instagram: @chetna_ai
 
-🌐 Website: chetna.life
+🌐 Website: empath-space-well.vercel.app
 
 “Healing takes time, and asking for help is a courageous step.” — Mariska Hargitay

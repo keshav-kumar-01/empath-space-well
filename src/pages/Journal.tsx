@@ -261,7 +261,7 @@ const Journal: React.FC = () => {
       <Helmet>
         <title>My Journal - Chetna AI</title>
         <meta name="description" content="Document your thoughts, track your moods, and reflect on your mental wellness journey with Chetna AI journal." />
-        <link rel="canonical" href="https://chetna.live/journal" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/journal" />
       </Helmet>
 
       {/* Background elements */}

@@ -39,11 +39,11 @@
   "redirects": [
     {
       "source": "/:path*",
-      "destination": "https://chetna.life/:path*",
+      "destination": "https://empath-space-well.vercel.app/:path*",
       "has": [
         {
           "type": "host",
-          "value": "www.chetna.life"
+          "value": "www.empath-space-well.vercel.app"
         }
       ],
       "permanent": true

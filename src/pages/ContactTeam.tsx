@@ -14,7 +14,7 @@ const ContactTeam = () => {
       icon: Code,
       color: "from-purple-500 to-indigo-600",
       bgColor: "bg-purple-100 dark:bg-purple-900/30",
-      email: "keshav@chetna.life",
+      email: "keshav@empath-space-well.vercel.app",
       linkedin: "https://linkedin.com/in/keshavkumar",
       twitter: "https://twitter.com/keshavkumar"
     },
@@ -25,7 +25,7 @@ const ContactTeam = () => {
       icon: TrendingUp,
       color: "from-blue-500 to-cyan-600",
       bgColor: "bg-blue-100 dark:bg-blue-900/30",
-      email: "ashutosh@chetna.life",
+      email: "ashutosh@empath-space-well.vercel.app",
       linkedin: "https://linkedin.com/in/ashutoshpratapsingh",
       twitter: "https://twitter.com/ashutoshpsingh"
     },
@@ -36,7 +36,7 @@ const ContactTeam = () => {
       icon: Megaphone,
       color: "from-pink-500 to-rose-600",
       bgColor: "bg-pink-100 dark:bg-pink-900/30",
-      email: "anchal@chetna.life",
+      email: "anchal@empath-space-well.vercel.app",
       linkedin: "https://linkedin.com/in/anchalsingh",
       twitter: "https://twitter.com/anchalsingh"
     }
@@ -48,7 +48,7 @@ const ContactTeam = () => {
         <title>Contact Our Team - Chetna AI | Meet the Founders</title>
         <meta name="description" content="Meet the passionate team behind Chetna AI. Contact our founders - Keshav Kumar (CEO), Ashutosh Pratap Singh (Business Head), and Anchal Singh (CMO)." />
         <meta name="keywords" content="Chetna AI team, Keshav Kumar, Ashutosh Pratap Singh, Anchal Singh, mental health startup, contact Chetna" />
-        <link rel="canonical" href="https://chetna.life/contact-team" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/contact-team" />
       </Helmet>
 
       <main className="flex-grow container mx-auto px-4 py-12">
@@ -148,16 +148,16 @@ const ContactTeam = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 className="bg-gradient-to-r from-chetna-primary to-chetna-accent hover:opacity-90 text-white gap-2"
-                onClick={() => window.location.href = 'mailto:hello@chetna.life'}
+                onClick={() => window.location.href = 'mailto:hello@empath-space-well.vercel.app'}
               >
                 <Mail className="h-4 w-4" />
-                hello@chetna.life
+                hello@empath-space-well.vercel.app
               </Button>
               
               <Button 
                 variant="outline"
                 className="gap-2 hover:bg-chetna-primary/10"
-                onClick={() => window.open('https://chetna.life', '_blank')}
+                onClick={() => window.open('https://empath-space-well.vercel.app', '_blank')}
               >
                 <Globe className="h-4 w-4" />
                 Visit Our Website

@@ -132,7 +132,7 @@ const EmotionRecognition = () => {
       <Helmet>
         <title>Emotion Recognition - Chetna_AI</title>
         <meta name="description" content="AI-powered facial emotion analysis for mental wellness insights with Chetna_AI" />
-        <link rel="canonical" href="https://chetna.live/emotion-recognition" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/emotion-recognition" />
       </Helmet>
 
       <Header />

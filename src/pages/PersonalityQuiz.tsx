@@ -119,7 +119,7 @@ const PersonalityQuiz: React.FC = () => {
       <Helmet>
         <title>Chetna Quest - Psychological Assessment Center | Chetna AI</title>
         <meta name="description" content="Take scientifically validated psychological tests to better understand your mental health, personality, and support needs through Chetna Quest." />
-        <link rel="canonical" href="https://chetna.live/quiz" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/quiz" />
       </Helmet>
       
       <Header />

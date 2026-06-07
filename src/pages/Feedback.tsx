@@ -93,7 +93,7 @@ const Feedback: React.FC = () => {
       <Helmet>
         <title>Feedback - Chetna AI</title>
         <meta name="description" content="Share your feedback and help us improve Chetna AI mental wellness platform." />
-        <link rel="canonical" href="https://chetna.live/feedback" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/feedback" />
       </Helmet>
 
       <Header />

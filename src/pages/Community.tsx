@@ -137,7 +137,7 @@ const Community: React.FC = () => {
       <Helmet>
         <title>Community Support - Chetna AI</title>
         <meta name="description" content="Join our supportive mental health community. Share experiences, connect with others, and find understanding in a safe space." />
-        <link rel="canonical" href="https://chetna.live/community" />
+        <link rel="canonical" href="https://empath-space-well.vercel.app/community" />
       </Helmet>
 
       {/* Background elements */}

@@ -33,8 +33,8 @@ const SEO: React.FC<SEOProps> = ({
   title = "Chetna AI - Mental Health AI | AI Therapy & Psychological Support Platform",
   description = "Chetna AI: Leading mental health AI platform. Get 24/7 AI therapy, psychological tests, psychologist appointments, and mental wellness support. Instant help for anxiety, depression, stress. Free mental health AI companion.",
   keywords = "mental health AI, AI therapy, chetna, chetna ai, chetna_ai, health AI, mental wellness AI, psychological tests, psychologist appointment, anxiety help, depression support, stress management, mental health chatbot, AI counseling, therapy AI, mental health support, online therapy, psychological evaluation, mental health assessment, wellness AI, therapy chatbot, AI psychiatrist",
-  image = "https://chetna.life/og-image.png",
-  url = "https://chetna.life",
+  image = "https://empath-space-well.vercel.app/og-image.png",
+  url = "https://empath-space-well.vercel.app",
   type = "website",
   article,
   noindex = false,
@@ -55,7 +55,7 @@ const SEO: React.FC<SEOProps> = ({
       ...(type === "website" && {
         "potentialAction": {
           "@type": "SearchAction",
-          "target": "https://chetna.live/search?q={search_term_string}",
+          "target": "https://empath-space-well.vercel.app/search?q={search_term_string}",
           "query-input": "required name=search_term_string"
         }
       }),
@@ -72,7 +72,7 @@ const SEO: React.FC<SEOProps> = ({
           "name": "Chetna AI",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://chetna.live/logo.png"
+            "url": "https://empath-space-well.vercel.app/logo.png"
           }
         }
       })
@@ -83,8 +83,8 @@ const SEO: React.FC<SEOProps> = ({
       "@type": ["Organization", "MedicalBusiness"],
       "name": "Chetna AI",
       "alternateName": ["Chetna", "Chetna_AI", "Chetna Mental Health AI"],
-      "url": "https://chetna.life",
-      "logo": "https://chetna.life/logo.png",
+      "url": "https://empath-space-well.vercel.app",
+      "logo": "https://empath-space-well.vercel.app/logo.png",
       "description": "Leading mental health AI platform providing 24/7 AI therapy, psychological tests, psychologist appointments, and comprehensive mental wellness support. Helping millions with anxiety, depression, and stress management.",
       "foundingDate": "2024",
       "specialty": ["Mental Health", "AI Therapy", "Psychological Assessment", "Wellness Support"],
@@ -153,7 +153,7 @@ const SEO: React.FC<SEOProps> = ({
       },
       "description": "AI-powered mental health platform providing therapy, psychological assessments, and comprehensive wellness support",
       "featureList": ["AI Therapy", "Psychological Tests", "Mood Tracking", "Journal", "Crisis Support", "Psychologist Appointments"],
-      "screenshot": "https://chetna.life/og-image.png"
+      "screenshot": "https://empath-space-well.vercel.app/og-image.png"
     };
 
     // Breadcrumb Schema
