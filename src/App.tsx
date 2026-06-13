@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from '@/context/AuthContext';
 import { TherapistAuthProvider } from '@/context/TherapistAuthContext';
 import SecurityMonitor from '@/components/SecurityMonitor';
@@ -65,6 +66,7 @@ function App() {
           <SecurityMonitor />
           <Router>
             <div className="App">
+              <Analytics />
               <Routes>
                 <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
