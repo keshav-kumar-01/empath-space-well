@@ -20,7 +20,10 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    sourcemap: true,
+    // Disable source maps in production so original TypeScript source can't be
+    // reconstructed in Chrome DevTools → Sources. Keep them in dev for debugging.
+    sourcemap: mode === 'development',
+    minify: 'esbuild',
     rollupOptions: {
       output: {
         manualChunks: {
@@ -32,6 +35,11 @@ export default defineConfig(({ mode }) => ({
       },
     },
     chunkSizeWarningLimit: 1000,
+  },
+  esbuild: {
+    // Strip console.* and debugger statements from production bundles.
+    drop: mode === 'production' ? ['console', 'debugger'] : [],
+    legalComments: 'none',
   },
   css: {
     devSourcemap: true,
