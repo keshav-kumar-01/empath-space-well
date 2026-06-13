@@ -43,7 +43,7 @@ Allow: /feedback
 Crawl-delay: 1
 
 # Sitemap location
-Sitemap: https://empath-space-well.vercel.app/sitemap.xml
+Sitemap: https://chetna-ai.vercel.app/sitemap.xml
 
 # Specific agent rules for better indexing
 User-agent: Googlebot

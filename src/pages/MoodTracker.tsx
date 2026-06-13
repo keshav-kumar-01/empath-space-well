@@ -102,7 +102,7 @@ const MoodTracker: React.FC = () => {
       <Helmet>
         <title>Mood Tracker - Chetna_AI</title>
         <meta name="description" content="Track your daily mood and emotional wellness with Chetna_AI" />
-        <link rel="canonical" href="https://empath-space-well.vercel.app/mood-tracker" />
+        <link rel="canonical" href="https://chetna-ai.vercel.app/mood-tracker" />
       </Helmet>
       
       <Header />

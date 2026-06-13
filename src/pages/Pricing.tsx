@@ -121,7 +121,7 @@ const Pricing: React.FC = () => {
       <Helmet>
         <title>Pricing Plans - Chetna AI | Mental Wellness Subscriptions</title>
         <meta name="description" content="Choose the right mental wellness plan for you. Flexible subscription and per-session pricing for AI therapy, professional counseling, and mental health support." />
-        <link rel="canonical" href="https://empath-space-well.vercel.app/pricing" />
+        <link rel="canonical" href="https://chetna-ai.vercel.app/pricing" />
       </Helmet>
 
       <Header />

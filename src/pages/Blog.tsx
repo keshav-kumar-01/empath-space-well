@@ -84,11 +84,11 @@ const Blog: React.FC = () => {
         title="Mental Wellness Blog | Chetna_AI Community Stories"
         description="Read inspiring mental health stories, tips, and experiences from the Chetna_AI community. Share your wellness journey and connect with others."
         keywords="mental health blog, wellness stories, depression recovery, anxiety support, mental health tips, community stories, therapy experiences"
-        url="https://empath-space-well.vercel.app/blog"
-        canonical="https://empath-space-well.vercel.app/blog"
+        url="https://chetna-ai.vercel.app/blog"
+        canonical="https://chetna-ai.vercel.app/blog"
         breadcrumbs={[
-          { name: "Home", url: "https://empath-space-well.vercel.app" },
-          { name: "Blog", url: "https://empath-space-well.vercel.app/blog" }
+          { name: "Home", url: "https://chetna-ai.vercel.app" },
+          { name: "Blog", url: "https://chetna-ai.vercel.app/blog" }
         ]}
       />
 

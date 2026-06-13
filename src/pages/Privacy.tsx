@@ -10,7 +10,7 @@ const Privacy: React.FC = () => {
       <Helmet>
         <title>Privacy Policy - Chetna AI</title>
         <meta name="description" content="Read the privacy policy for Chetna AI - Your Mental Wellness Companion." />
-        <link rel="canonical" href="https://empath-space-well.vercel.app/privacy" />
+        <link rel="canonical" href="https://chetna-ai.vercel.app/privacy" />
       </Helmet>
       
       <Header />
@@ -25,7 +25,7 @@ const Privacy: React.FC = () => {
             </p>
             
             <p className="mb-4">
-              At Chetna AI, accessible from https://empath-space-well.vercel.app, we are committed to protecting your privacy. 
+              At Chetna AI, accessible from https://chetna-ai.vercel.app, we are committed to protecting your privacy. 
               This Privacy Policy explains how your personal information is collected, used, and disclosed when you use our services.
             </p>
             
