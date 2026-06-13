@@ -202,7 +202,7 @@ const CreatePost: React.FC = () => {
         <title>Create Post - Community | Chetna - Mental Wellness</title>
         <meta name="description" content="Share your thoughts and experiences with our supportive mental health community." />
         <meta name="keywords" content="create post, community forum, mental health discussion, peer support" />
-        <link rel="canonical" href="https://empath-space-well.vercel.app/community/create" />
+        <link rel="canonical" href="https://chetna-ai.vercel.app/community/create" />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       

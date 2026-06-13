@@ -119,7 +119,7 @@ const PsychTests: React.FC = () => {
       <Helmet>
         <title>Psychological Tests - Chetna Quest | Chetna AI</title>
         <meta name="description" content="Take scientifically validated psychological tests including GAD-7, PHQ-9, BAI, and BDI-2 to better understand your mental health." />
-        <link rel="canonical" href="https://empath-space-well.vercel.app/psych-tests" />
+        <link rel="canonical" href="https://chetna-ai.vercel.app/psych-tests" />
       </Helmet>
 
       <Header />

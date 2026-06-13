@@ -10,7 +10,7 @@ const Terms: React.FC = () => {
       <Helmet>
         <title>Terms of Service - Chetna AI</title>
         <meta name="description" content="Read the terms of service for Chetna AI - Your Mental Wellness Companion." />
-        <link rel="canonical" href="https://empath-space-well.vercel.app/terms" />
+        <link rel="canonical" href="https://chetna-ai.vercel.app/terms" />
       </Helmet>
       
       <Header />
@@ -92,7 +92,7 @@ const Terms: React.FC = () => {
               📧 <a href="mailto:keshavkumarhf@gmail.com" className="text-chetna-primary hover:text-chetna-accent transition-colors">keshavkumarhf@gmail.com</a>
             </p>
             <p className="mb-4">
-              🌐 <a href="https://empath-space-well.vercel.app" className="text-chetna-primary hover:text-chetna-accent transition-colors">https://empath-space-well.vercel.app</a>
+              🌐 <a href="https://chetna-ai.vercel.app" className="text-chetna-primary hover:text-chetna-accent transition-colors">https://chetna-ai.vercel.app</a>
             </p>
           </div>
         </div>

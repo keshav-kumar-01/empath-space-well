@@ -73,7 +73,7 @@ export const generateArticleSchema = (article: ArticleSchema) => {
       "name": "Chetna AI",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://empath-space-well.vercel.app/logo.png"
+        "url": "https://chetna-ai.vercel.app/logo.png"
       }
     },
     "description": article.description,
@@ -103,8 +103,8 @@ export const generateLocalBusinessSchema = () => {
     "@context": "https://schema.org",
     "@type": "MedicalBusiness",
     "name": "Chetna AI",
-    "image": "https://empath-space-well.vercel.app/logo.png",
-    "url": "https://empath-space-well.vercel.app",
+    "image": "https://chetna-ai.vercel.app/logo.png",
+    "url": "https://chetna-ai.vercel.app",
     "telephone": "+1-XXX-XXX-XXXX",
     "address": {
       "@type": "PostalAddress",
@@ -145,7 +145,7 @@ export const generateWebApplicationSchema = () => {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Chetna AI",
-    "url": "https://empath-space-well.vercel.app",
+    "url": "https://chetna-ai.vercel.app",
     "description": "AI-powered mental wellness companion providing 24/7 support for anxiety, depression, and stress management",
     "applicationCategory": "HealthApplication",
     "operatingSystem": "Web, iOS, Android",

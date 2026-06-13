@@ -158,7 +158,7 @@ const BlogPost: React.FC = () => {
       <SEO
         title={`${post.title} | Chetna_AI Blog`}
         description={post.content.substring(0, 160)}
-        url={`https://empath-space-well.vercel.app/blog/post/${post.id}`}
+        url={`https://chetna-ai.vercel.app/blog/post/${post.id}`}
         type="article"
         article={{
           publishedTime: post.created_at,

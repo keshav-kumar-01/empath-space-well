@@ -94,11 +94,11 @@ const Index = () => {
         title="Chetna AI - Mental Health AI | AI Therapy & Psychological Support Platform"
         description="Chetna AI: Leading mental health AI platform. Get 24/7 AI therapy, psychological tests, psychologist appointments, and mental wellness support. Instant help for anxiety, depression, stress. Free mental health AI companion."
         keywords="mental health AI, AI therapy, chetna, chetna ai, chetna_ai, health AI, mental wellness AI, psychological tests, psychologist appointment, anxiety help AI, depression support AI, stress management, mental health chatbot, AI counseling, therapy AI, mental health support, online therapy, psychological evaluation, mental health assessment, wellness AI, therapy chatbot, AI psychiatrist, mental health screening, psychological tests online"
-        url="https://empath-space-well.vercel.app"
-        image="https://empath-space-well.vercel.app/og-image.png"
-        canonical="https://empath-space-well.vercel.app"
+        url="https://chetna-ai.vercel.app"
+        image="https://chetna-ai.vercel.app/og-image.png"
+        canonical="https://chetna-ai.vercel.app"
         breadcrumbs={[
-          { name: "Home", url: "https://empath-space-well.vercel.app/" }
+          { name: "Home", url: "https://chetna-ai.vercel.app/" }
         ]}
         faqSchema={[
           {

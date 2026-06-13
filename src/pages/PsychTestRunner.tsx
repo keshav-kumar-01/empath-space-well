@@ -101,7 +101,7 @@ const PsychTestRunner = () => {
         title={testInfo.title}
         description={testInfo.description}
         keywords={testInfo.keywords}
-        url={`https://empath-space-well.vercel.app/psych-tests/${testType}`}
+        url={`https://chetna-ai.vercel.app/psych-tests/${testType}`}
       />
       
       <Header />
