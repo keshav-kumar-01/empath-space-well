@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Authenticated users can list therapist images" ON storage.objects;
